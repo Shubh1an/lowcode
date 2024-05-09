@@ -6,20 +6,24 @@ import FormBuilder from "./Form";
 import FillForm from "./FormFill";
 import ViewFormData from "./ViewForm";
 import Layout from "./Layout/Layout";
+import Listview from "./Components/ListView";
 function App() {
   return (
     <div className="App">
-       <Layout> 
-    </Layout>
-      {/* <BrowserRouter>
-        <Routes>
-        <Route path="" element={<Modules />} />
+      
+      <Layout>
+      <Routes>
+      <Route path="/" element={<Listview />} />
+          {/* <Route path="" element={<Modules />} />
           <Route path="/modules" element={<Modules />} />
           <Route path="/entity" element={<Entity />} />
           <Route path="/form" element={<FormBuilder />} />
           <Route path="/fill-form" element={<FillForm />} />
-          <Route path="/view-form" element={<ViewFormData />} />
+          <Route path="/view-form" element={<ViewFormData />} /> */}
         </Routes>
+      </Layout>
+      {/* <BrowserRouter>
+       
       </BrowserRouter> */}
     </div>
   );
