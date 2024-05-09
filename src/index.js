@@ -4,6 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { FieldButton } from './Components/Buttons/FieldButton';
+import { CustomButton } from './Components/Buttons/CustomButton';
+import { CustomInput } from './Components/inputs/CustomInput';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
