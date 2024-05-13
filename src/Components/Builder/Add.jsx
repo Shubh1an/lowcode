@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SubTab from '../Tab/SubTab'
 import { BiText } from 'react-icons/bi';
 import { RiCheckboxBlankCircleLine } from 'react-icons/ri';
@@ -11,7 +11,13 @@ import BuildFormNav from '../BreadcrumNavigation/BuildFormNav';
 import { useDrop } from 'react-dnd'
 import AddPageField from '../inputs/AddPageField';
 import FormInput from '../FormInput/FormInput';
+import saveForm from '../../Requests/form';
 
+
+function toSnakeCase(input) {
+    // Replace spaces with underscores and convert to lowercase
+    return input.replace(/\s+/g, '_').toLowerCase();
+}
 
 const Add = () => {
     const FieldTabs = [
@@ -121,16 +127,15 @@ const Add = () => {
     const [activeField, setActiveField] = useState(0)
     const [activeProperties, setActiveProperties] = useState(0)
     const [activePropertiesField, setActivePropertiesField] = useState(0)
+    const [formName, setFormName] = useState("Untitled Form")
 
     const handleProperties = (data) => {
         let changeId = activePropertiesField
         let currentData = formFields
-        console.log("CHANGE ID", changeId)
-        console.log("PAYLOAD", data)
-        console.log("CURRENT DATA", currentData)
 
         if (data.id === "displayName") {
             currentData[changeId].title = data.value
+            currentData[changeId].name = "crm_" + "lead_" +toSnakeCase(data.value)
         } else if (data.id === "name") {
             currentData[changeId].name = data.value
         }
@@ -149,8 +154,10 @@ const Add = () => {
     }
 
     const handleDrop = (item) => {
-        const { field } = item;
+        let { field } = item;
+        delete field.icon
         setFormFields([...formFields, field]);
+        setActivePropertiesField(formFields.length)
     };
 
     const [{ canDrop, isOver }, drop] = useDrop({
@@ -162,6 +169,16 @@ const Add = () => {
         }),
     });
     const isActive = canDrop && isOver;
+
+
+    const handleFormSubmit = async () => {
+        saveForm({
+            fields: formFields,
+            name: formName || "Untitled Form",
+            form_id: "a72d8544-df7e-477a-8959-bf9e32cca62b"
+        })
+    }
+
     return (
         <div className='w-full h-full flex flex-row px-6 pb-6'>
 
@@ -187,15 +204,15 @@ const Add = () => {
                 </div>
             </div>
             <div className='flex flex-col w-2/4 h-full bg-[#fff] rounded-2xl mx-6 flex overflow-auto' ref={drop}>
-                <BuildFormNav />
+                <BuildFormNav setFormName={setFormName} formName={formName}/>
                 <div className={`w-full h-[80%] border-2 ${isActive ? " border-[#227A60]" : "border-transparent"} p-4 overflow-scroll`}>
                     {formFields.map((field, index) => (
                         <div key={index}>
-                            <FormInput field={{...field, id: index}} setActiveField={setActivePropertiesField} activePropertiesField={activePropertiesField}/>
+                            <FormInput field={{ ...field, id: index }} setActiveField={setActivePropertiesField} activePropertiesField={activePropertiesField} />
                         </div>
                     ))}
                 </div>
-                <Footer />
+                <Footer handleFormSubmit={handleFormSubmit} />
             </div>
             <div className='w-1/4 h-full bg-[#fff] rounded-2xl flex flex-col overflow-auto'>
                 <SubTab tabs={PropertiesFields} active={activeProperties} setActive={setActiveProperties} />
@@ -209,6 +226,7 @@ const Add = () => {
                                     key={index}
                                     field={field}
                                     handleProperties={handleProperties}
+                                    defaultValue={formFields[activePropertiesField]}
                                 />
                                 )
                             }
@@ -221,11 +239,11 @@ const Add = () => {
     )
 }
 
-const Footer = () => {
+const Footer = ({ handleFormSubmit }) => {
     return (
         <div className='w-full h-[60px] border-t-[1px] border-[#E9E9E9]'>
             <div className='flex justify-start items-center h-full py-4'>
-                <button className='bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mx-4 font-bold'>Save</button>
+                <button className='bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mx-4 font-bold' onClick={handleFormSubmit}>Save</button>
                 <button className='text-[#227A60] px-4 py-1 rounded-md border border-[#227A60] font-bold'>Cancel</button>
             </div>
         </div>

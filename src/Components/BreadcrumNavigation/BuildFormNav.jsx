@@ -1,17 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IoIosArrowForward } from "react-icons/io";
 
-const BuildFormNav = () => {
+const BuildFormNav = ({ setFormName, formName }) => {
     const pathArray = ['CRM', 'Lead', 'Add']
-    const heading = 'Untitled Form'
+    const [editName, setEditName] = useState(false)
+
     return (
         <div className='w-full'>
             <div className='w-full flex flex-row items-center'>
                 <div className='w-full flex flex-col'>
                     <BreadCrumNav pathArray={pathArray} />
-                    <p className='text-2xl px-4 text-[#4D4D4D font-bold] mt-3'>
-                        {heading}
-                    </p>
+                    <input type="text" className='text-2xl mx-2 px-2 text-[#4D4D4D font-bold] mt-3 cursor-pointer hover:underline focus:outline-none' value={formName} onChange={(e) => setFormName(e.target.value)} />
                 </div>
                 <button className='bg-[#E9F2EF] text-[#212121] px-4 py-2 rounded-md mx-4'>Add</button>
             </div>
