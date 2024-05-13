@@ -12,7 +12,7 @@ const SubTab = ({ tabs, active, setActive }) => {
 
 const Tab = ({ title, active, index, setActive }) => {
     return (
-        <div className={`px-4 py-2 ${active && 'text-[#227A60] border-b-[3px] border-[#227A60]'} ${!active && "border-b-[1px] border-[#E9E9E9]"} cursor-pointer hover:text-[#227A60] text-xl text-center h-[45px] items-center text-base`} onClick={() => setActive(index)}>
+        <div className={`w-full px-4 py-2 ${active && 'text-[#227A60] border-b-[3px] border-[#227A60]'} ${!active && "border-b-[1px] border-[#E9E9E9]"} cursor-pointer hover:text-[#227A60] text-xl text-center h-[45px] items-center text-base`} onClick={() => setActive(index)}>
             {title}
         </div>
     )
