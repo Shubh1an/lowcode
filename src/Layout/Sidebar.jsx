@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 // @ts-ignore
 import LCNC from "../assets/LCNC.svg"
 import { IoHomeOutline } from "react-icons/io5";
@@ -57,13 +57,22 @@ const Sidebar = () => {
       subMenu: []
     }
   ]
-  const { selectedMenu, setSelectedMenu, selectedSubMenu, setSelectedSubMenu } = useContext(GlobalContext)
-  console.log("SELECTED MENU", selectedMenu)
-  console.log("SELECTED SUB MENU", selectedSubMenu)
+  const { setSelectedMenu, setSelectedSubMenu } = useContext(GlobalContext)
   const [active, setActive] = useState(0)
   const [activeSub, setActiveSub] = useState(0)
 
-  // useE
+  useEffect(() => {
+    setSelectedMenu(menuData[active])
+  }, [active])
+
+  useEffect(() => {
+    setSelectedSubMenu(menuData[active].subMenu[activeSub])
+  }, [activeSub])
+
+  useEffect(() => {
+    setActive(0)
+    setActiveSub(0)
+  }, [])
   return (
     <div className='h-full w-[13%] bg-[#FFFFFF] h-screen'>
       <div className='flex flex-col items-center py-7 '>
@@ -85,7 +94,7 @@ const Sidebar = () => {
               return (
                 <SidebarSubMenu key={index} menu={menu} setActive={setActiveSub} active={activeSub} index={index} />
               )
-            }) : <SidebarSubMenu menu={{ title: "No Sub Menu", url: "/builder" }} setActive={setActiveSub} active={0} index={0}/>
+            }) : <SidebarSubMenu menu={{ title: "No Sub Menu", url: "/builder" }} setActive={setActiveSub} active={0} index={0} />
           }
         </div>
       </div>
