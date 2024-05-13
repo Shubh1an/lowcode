@@ -36,7 +36,16 @@ const Sidebar = () => {
       title: "Template",
       icon: <RiStackLine />,
       url: "/template",
-      subMenu: []
+      subMenu: [
+        {
+          title: "List",
+          url: "/template/list",
+        },
+        {
+          title: "Category",
+          url: "/template/category",
+        }
+      ]
     },
     {
       title: "Apps",
@@ -74,7 +83,7 @@ const Sidebar = () => {
     setActiveSub(0)
   }, [])
   return (
-    <div className='h-full w-[13%] bg-[#FFFFFF] h-screen'>
+    <div className='h-full w-[13%] bg-[#FFFFFF]'>
       <div className='flex flex-col items-center py-7 '>
         <img src={LCNC} alt="LCNC" className='' />
       </div>
