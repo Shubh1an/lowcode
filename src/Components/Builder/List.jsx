@@ -85,10 +85,10 @@ const List = () => {
   const [hideColumns, setHideColumns] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [modalForm, setModalForm] = useState(null)
-  const searchableHeaders = ["name", "category", "description"]
+  const [searchableHeaders, setSearchableHeaders] = useState(["name", "category", "description"])
   useEffect(() => {
     getForms().then(data => {
-      setForms(data.data )
+      setForms(data.data)
       let headers_gen = Object.keys(data.data[0])
       headers_gen.forEach((header, index) => {
         // if data type is Object, do not show
@@ -132,7 +132,7 @@ const List = () => {
   useEffect(() => {
     setFormsToRender(forms)
     setHashTable(preprocessSearchData(forms, searchableHeaders))
-  }, [forms])
+  }, [forms, searchableHeaders])
 
   const handleSearch = (value) => {
     if (value) {
@@ -144,17 +144,49 @@ const List = () => {
     }
   }
 
+  const handleHeaderSelect = (value, checked) => {
+    if (checked) {
+      setSearchableHeaders(prev => [...prev, value])
+    }
+    else {
+      setSearchableHeaders(prev => prev.filter(header => header !== value))
+    }
+  }
+
   return (
     <div className='w-full h-full flex flex-row px-6 pb-6'>
       <div className='w-full h-full bg-[#fff] rounded-2xl flex flex-col overflow-auto'>
-        <TopBar showModal={showModal} setShowModal={setShowModal} modalForm={modalForm} setModalForm={setModalForm} headers={headers} hideColumns={hideColumns} setHideColumns={setHideColumns} handleHide={handleHide} handleSearch={handleSearch} />
+        <TopBar
+          showModal={showModal}
+          setShowModal={setShowModal}
+          modalForm={modalForm}
+          setModalForm={setModalForm}
+          headers={headers}
+          hideColumns={hideColumns}
+          setHideColumns={setHideColumns}
+          handleHide={handleHide}
+          handleSearch={handleSearch}
+          searchableHeaders={searchableHeaders}
+          handleHeaderSelect={handleHeaderSelect}
+        />
         <Table headers={renderHeaders} data={formsToRender} />
       </div>
     </div>
   )
 }
 
-const TopBar = ({ showModal, setShowModal, modalForm, setModalForm, headers, hideColumns, setHideColumns, handleHide, handleSearch }) => {
+const TopBar = ({ showModal,
+  setShowModal,
+  modalForm,
+  setModalForm,
+  headers,
+  hideColumns,
+  setHideColumns,
+  handleHide,
+  handleSearch,
+  searchableHeaders,
+  handleHeaderSelect
+}) => {
   const [showSearch, setShowSearch] = useState(false)
   return (
     <div className='h-[60px] mx-6 border-b justify-center'>
@@ -163,9 +195,18 @@ const TopBar = ({ showModal, setShowModal, modalForm, setModalForm, headers, hid
         <AddNewButton />
         <div className='flex items-center h-full ml-auto'>
 
-          <CustomSearch initialComponent={<ListHeaderButton icon={<IoSearch />} label='Search' onclick={() => {
-            setShowSearch(!showSearch)
-          }} />} searchActive={showSearch} setShowSearch={setShowSearch} customClass={""} handleSearch={handleSearch} />
+          <CustomSearch
+            initialComponent={<ListHeaderButton icon={<IoSearch />} label='Search' onclick={() => { setShowSearch(!showSearch) }} />}
+            searchHeaders={searchableHeaders}
+            headers={headers}
+            searchActive={showSearch}
+            setShowSearch={setShowSearch}
+            customClass={""}
+            handleSearch={handleSearch}
+            handleHeaderSelect={(header_label, checked) => {
+              handleHeaderSelect(header_label, checked)
+            }}
+          />
           <ListHeaderButton icon={<LiaUserCircle />} label='Person' onclick={() => { setShowModal(true); setModalForm("Person") }} />
           <ListHeaderButton icon={<CiFilter />} label='Filter' onclick={() => { setShowModal(true); setModalForm("Filter") }} />
           <ListHeaderButton icon={<MdOutlineSwapVert />} label='Sort' onclick={() => { setShowModal(true); setModalForm("Sort") }} />
@@ -203,7 +244,7 @@ const Table = ({ headers, data }) => {
         })
         }
       </div>
-      {data.map((row, index) => {
+      {data.length > 0 ? data.map((row, index) => {
         return (
           <div className='w-full flex flex-row px-[2px] py-[1px]'>
             {headers.map((header, index) => {
@@ -218,7 +259,14 @@ const Table = ({ headers, data }) => {
             }
           </div>
         )
-      })}
+      })
+        :
+        <div className='w-full flex flex-row px-[2px] py-[1px]'>
+          <div className='w-full flex justify-center items-center text-base	font-medium	mx-[2px] py-2 bg-[#E9F2EF]'>
+            No Records Found
+          </div>
+        </div>
+    }
     </div>
   )
 }
