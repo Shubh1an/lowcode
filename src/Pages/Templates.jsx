@@ -1,27 +1,28 @@
 import React, { useState } from 'react'
 import MainTab from '../Components/Tab/MainTab'
-import List from '../Components/Builder/List'
+import List from '../Components/Template/List'
 import View from '../Components/Builder/View'
 import Add from '../Components/Builder/Add'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
-const Builder = () => {
-    const tabs = [{ title: "All List" }, { title: "Add New" },
-    { title: "View" },
+const Templates = () => {
+    const tabs = [{ title: "All List" },
     ]
     const [active, setActive] = useState(0)
     return (
         <div className='w-full h-full bg-[#E9F2EF] flex flex-col'>
+            <div className='w-[90%] mx-auto flex justify-between'>
             <MainTab tabs={tabs} active={active} setActive={setActive} />
+            <div className='content-center min-w-fit'>Search Button</div>
+            </div>
             {
-                active === 0 ? <List /> : active === 1 ?
-                    <DndProvider backend={HTML5Backend}>
-                        <Add />
-                    </DndProvider> : <View />
+                <DndProvider backend={HTML5Backend}>
+                        <List />
+                </DndProvider>
             }
         </div>
     )
 }
 
-export default Builder
+export default Templates

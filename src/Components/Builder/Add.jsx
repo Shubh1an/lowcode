@@ -1,13 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SubTab from '../Tab/SubTab'
-import { MdOutlineErrorOutline } from "react-icons/md";
+import { BiText } from 'react-icons/bi';
+import { RiCheckboxBlankCircleLine } from 'react-icons/ri';
+import { AiOutlineCalendar, AiOutlineClockCircle, AiOutlinePhone } from 'react-icons/ai';
+import { HiOutlineMail } from 'react-icons/hi';
+import { BsMap } from 'react-icons/bs';
+import { MdPeopleAlt } from "react-icons/md";
 import { FieldButton } from '../Buttons/FieldButton';
+import BuildFormNav from '../BreadcrumNavigation/BuildFormNav';
+import { useDrop } from 'react-dnd'
+import AddPageField from '../inputs/AddPageField';
+import FormInput from '../FormInput/FormInput';
+import saveForm from '../../Requests/form';
+
+
+function toSnakeCase(input) {
+    // Replace spaces with underscores and convert to lowercase
+    return input.replace(/\s+/g, '_').toLowerCase();
+}
 
 const Add = () => {
     const FieldTabs = [
         "Basic Fields",
         "Advanced Fields"
     ]
+
+    const PropertiesFields = [
+        "Edit",
+        "Style",
+    ]
+
+
     // const basicFields = [
     //     "Single Line",
     //     "Multi Line",
@@ -22,105 +45,144 @@ const Add = () => {
     const basicFields = [
         {
             title: "Single Line",
-            icon: <MdOutlineErrorOutline />
+            inputType: "text",
+            icon: <BiText />
         },
         {
             title: "Multi Line",
-            icon: <MdOutlineErrorOutline />
+            inputType: "textarea",
+            icon: <BiText />
         },
         {
             title: "Number",
-            icon: <MdOutlineErrorOutline />
+            inputType: "number",
+            icon: <RiCheckboxBlankCircleLine />
         },
         {
             title: "Date",
-            icon: <MdOutlineErrorOutline />
+            inputType: "date",
+            icon: <AiOutlineCalendar />
         },
         {
             title: "Time",
-            icon: <MdOutlineErrorOutline />
+            inputType: "time",
+            icon: <AiOutlineClockCircle />
         },
         {
             title: "Email",
-            icon: <MdOutlineErrorOutline />
+            inputType: "email",
+            icon: <HiOutlineMail />
         },
         {
             title: "Phone",
-            icon: <MdOutlineErrorOutline />
+            inputType: "tel",
+            icon: <AiOutlinePhone />
         },
         {
             title: "Address",
-            icon: <MdOutlineErrorOutline />
+            inputType: "text",
+            icon: <BsMap />
         },
         {
-            title: "Single Line",
-            icon: <MdOutlineErrorOutline />
+            title: "Gender",
+            inputType: "radio",
+            icon: <MdPeopleAlt />,
+            options: ["Male", "Female"]
+        }
+    ];
+
+    const fieldProperties = [
+        {
+            title: "Display Name",
+            type: "text",
+            id: "displayName"
         },
         {
-            title: "Multi Line",
-            icon: <MdOutlineErrorOutline />
+            title: "Name",
+            type: "text",
+            id: "name"
         },
         {
-            title: "Number",
-            icon: <MdOutlineErrorOutline />
+            title: "Description",
+            type: "text",
+            id: "description"
         },
         {
-            title: "Date",
-            icon: <MdOutlineErrorOutline />
+            title: "Mandatory",
+            type: "radio",
+            options: ["Yes", "No"],
+            id: "mandatory"
         },
         {
-            title: "Time",
-            icon: <MdOutlineErrorOutline />
+            title: "Default Value",
+            type: "text",
+            id: "defaultValue"
         },
-        {
-            title: "Email",
-            icon: <MdOutlineErrorOutline />
-        },
-        {
-            title: "Phone",
-            icon: <MdOutlineErrorOutline />
-        },
-        {
-            title: "Address",
-            icon: <MdOutlineErrorOutline />
-        },
-        {
-            title: "Single Line",
-            icon: <MdOutlineErrorOutline />
-        },
-        {
-            title: "Multi Line",
-            icon: <MdOutlineErrorOutline />
-        },
-        {
-            title: "Number",
-            icon: <MdOutlineErrorOutline />
-        },
-        {
-            title: "Date",
-            icon: <MdOutlineErrorOutline />
-        },
-        {
-            title: "Time",
-            icon: <MdOutlineErrorOutline />
-        },
-        {
-            title: "Email",
-            icon: <MdOutlineErrorOutline />
-        },
-        {
-            title: "Phone",
-            icon: <MdOutlineErrorOutline />
-        },
-        {
-            title: "Address",
-            icon: <MdOutlineErrorOutline />
-        },
+
+
     ]
+
+    const [formFields, setFormFields] = useState([])
+
     const [activeField, setActiveField] = useState(0)
+    const [activeProperties, setActiveProperties] = useState(0)
+    const [activePropertiesField, setActivePropertiesField] = useState(0)
+    const [formName, setFormName] = useState("Untitled Form")
+
+    const handleProperties = (data) => {
+        let changeId = activePropertiesField
+        let currentData = formFields
+
+        if (data.id === "displayName") {
+            currentData[changeId].title = data.value
+            currentData[changeId].name = "crm_" + "lead_" +toSnakeCase(data.value)
+        } else if (data.id === "name") {
+            currentData[changeId].name = data.value
+        }
+        else if (data.id === "description") {
+            currentData[changeId].description = data.value
+        }
+        else if (data.id === "mandatory") {
+            currentData[changeId].mandatory = data.value
+        }
+        else if (data.id === "defaultValue") {
+            currentData[changeId].defaultValue = data.value
+        }
+
+        setFormFields([...currentData])
+
+    }
+
+    const handleDrop = (item) => {
+        let { field } = item;
+        delete field.icon
+        setFormFields([...formFields, field]);
+        setActivePropertiesField(formFields.length)
+    };
+
+    const [{ canDrop, isOver }, drop] = useDrop({
+        accept: "FIELD",
+        drop: (item) => handleDrop(item),
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+            canDrop: monitor.canDrop(),
+        }),
+    });
+    const isActive = canDrop && isOver;
+
+
+    const handleFormSubmit = async () => {
+        saveForm({
+            fields: formFields,
+            name: formName || "Untitled Form",
+            form_id: "a72d8544-df7e-477a-8959-bf9e32cca62b"
+        })
+    }
+
     return (
         <div className='w-full h-full flex flex-row px-6 pb-6'>
-            <div className='w-1/4 h-full bg-[#fff] rounded-2xl flex flex-col'>
+
+            <div className='w-1/4 h-full bg-[#fff] rounded-2xl flex flex-col overflow-auto'>
                 <SubTab tabs={FieldTabs} active={activeField} setActive={setActiveField} />
                 <div className=''>
                     {
@@ -133,18 +195,56 @@ const Add = () => {
                                     onclick={() => setActiveField(index)}
                                     titleClass={""}
                                     extraClass='w-full text-[#4D4D4D] hover:text-[#FFFFFF] hover:bg-[#227A60] text-center text-sm border border-[#E9E9E9] rounded-lg py-2'
-
+                                    index={index}
+                                    field={field}
                                 />)
                             }
                         </div> : null
                     }
                 </div>
             </div>
-            <div className='w-2/4 h-full bg-[#fff] rounded-2xl mx-6 flex'>
-
+            <div className='flex flex-col w-2/4 h-full bg-[#fff] rounded-2xl mx-6 flex overflow-auto' ref={drop}>
+                <BuildFormNav setFormName={setFormName} formName={formName}/>
+                <div className={`w-full h-[80%] border-2 ${isActive ? " border-[#227A60]" : "border-transparent"} p-4 overflow-scroll`}>
+                    {formFields.map((field, index) => (
+                        <div key={index}>
+                            <FormInput field={{ ...field, id: index }} setActiveField={setActivePropertiesField} activePropertiesField={activePropertiesField} />
+                        </div>
+                    ))}
+                </div>
+                <Footer handleFormSubmit={handleFormSubmit} />
             </div>
-            <div className='w-1/4 h-full bg-[#fff] rounded-2xl flex'>
+            <div className='w-1/4 h-full bg-[#fff] rounded-2xl flex flex-col overflow-auto'>
+                <SubTab tabs={PropertiesFields} active={activeProperties} setActive={setActiveProperties} />
+                <div
+                    className={`w-full h-full overflow-auto`}
+                >
+                    {
+                        activeProperties === 0 ? <div className='grid grid-cols-1 w-full  p-4'>
+                            {
+                                fieldProperties.map((field, index) => <AddPageField
+                                    key={index}
+                                    field={field}
+                                    handleProperties={handleProperties}
+                                    defaultValue={formFields[activePropertiesField]}
+                                />
+                                )
+                            }
+                        </div> : null
+                    }
 
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const Footer = ({ handleFormSubmit }) => {
+    return (
+        <div className='w-full h-[60px] border-t-[1px] border-[#E9E9E9]'>
+            <div className='flex justify-start items-center h-full py-4'>
+                <button className='bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mx-4 font-bold' onClick={handleFormSubmit}>Save</button>
+                <button className='text-[#227A60] px-4 py-1 rounded-md border border-[#227A60] font-bold'>Cancel</button>
             </div>
         </div>
     )
