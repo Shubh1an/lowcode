@@ -30,7 +30,11 @@
     "lint": "prettier --check .",
     "format": "prettier --write ."
   },
-
+  "husky": {
+    "hooks": {
+      "pre-commit": "prettier --write . && git add -A ."
+    }
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
