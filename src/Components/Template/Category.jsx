@@ -5,7 +5,7 @@ import GlobalContext from '../../Context/Context';
 import ShortModal from '../ShortModal/ShortModal';
 export const Category = () => {
   const { category, setCategory } = useContext(GlobalContext);
-  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState([category[0]]);
   const [isopen, setIsOpen] = useState(false);
   const [addcategory, setAddCategory] = useState('');
   const [subcategory, setSubCategory] = useState(false);
