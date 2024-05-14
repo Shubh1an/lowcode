@@ -2,6 +2,11 @@
   "name": "lowcodenocodefrontend",
   "version": "0.1.0",
   "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "prettier --write ."
+    }
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -30,11 +35,7 @@
     "lint": "prettier --check .",
     "format": "prettier --write ."
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "prettier --write . && git add -A ."
-    }
-  },
+  
   "eslintConfig": {
     "extends": [
       "react-app",
