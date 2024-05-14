@@ -54,32 +54,48 @@ const List = () => {
           headers_gen.splice(index, 1)
         }
       })
-      setRenderHeaders(headers_gen)
-      setHeaders(headers_gen)
+      setRenderHeaders([...headers_gen])
+      setHeaders([...headers_gen])
     }).catch(err => console.log(err))
   }, [])
 
   useEffect(() => {
-    let lastRenderHeaders = renderHeaders
-    lastRenderHeaders.forEach((header, index) => {
-      if (hideColumns.includes(header)) {
-        lastRenderHeaders.splice(index, 1)
+    // Remove hidden columns
+    setRenderHeaders(prev => {
+      let newHeaders = [...headers]
+      hideColumns.forEach(col => {
+        newHeaders = newHeaders.filter(header => header !== col)
+      })
+      return newHeaders
+    })
+    // Add unhidden columns
+  }, [hideColumns, forms])
+
+  useEffect(() => {
+  }, [renderHeaders])
+
+  const handleHide = (column, checked) => {
+    setHideColumns(prev => {
+      if (!checked) {
+        return [...prev, column]
+      }
+      else {
+        return prev.filter(col => col !== column)
       }
     })
-    setRenderHeaders(lastRenderHeaders)
-  }, [hideColumns, forms])
+  }
 
   return (
     <div className='w-full h-full flex flex-row px-6 pb-6'>
       <div className='w-full h-full bg-[#fff] rounded-2xl flex flex-col overflow-auto'>
-        <TopBar showModal={showModal} setShowModal={setShowModal} modalForm={modalForm} setModalForm={setModalForm} headers={headers} hideColumns={hideColumns} setHideColumns={setHideColumns} />
+        <TopBar showModal={showModal} setShowModal={setShowModal} modalForm={modalForm} setModalForm={setModalForm} headers={headers} hideColumns={hideColumns} setHideColumns={setHideColumns} handleHide={handleHide} />
         <Table headers={renderHeaders} data={forms} />
       </div>
     </div>
   )
 }
 
-const TopBar = ({ showModal, setShowModal, modalForm, setModalForm, headers, hideColumns, setHideColumns }) => {
+const TopBar = ({ showModal, setShowModal, modalForm, setModalForm, headers, hideColumns, setHideColumns, handleHide }) => {
   return (
     <div className='h-[60px] mx-6 border-b justify-center'>
       <div className='flex items-center h-full'>
@@ -98,7 +114,7 @@ const TopBar = ({ showModal, setShowModal, modalForm, setModalForm, headers, hid
           <ShortModal isOpen={showModal} onClose={() => {
             setShowModal(false)
           }} children={
-            modalComponents(headers, hideColumns, setHideColumns)[modalForm]
+            modalComponents(headers, hideColumns, setHideColumns, handleHide)[modalForm]
           } />
         </div>
       </div>
@@ -106,18 +122,9 @@ const TopBar = ({ showModal, setShowModal, modalForm, setModalForm, headers, hid
   )
 }
 
-const modalComponents = (headers, hideColumns, setHideColumns) => {
+const modalComponents = (headers, hideColumns, setHideColumns, handleHide) => {
   return {
-    Hide: <HideModal hideArray={headers} hideColumns={hideColumns} handleHide={(column, checked) => {
-      let newHideColumns = [...hideColumns]
-      if (checked) {
-        newHideColumns.push(column)
-      }
-      else {
-        newHideColumns.splice(newHideColumns.indexOf(column), 1)
-      }
-      setHideColumns(newHideColumns)
-    }} />,
+    Hide: <HideModal hideArray={headers} hideColumns={hideColumns} handleHide={handleHide} />,
   }
 }
 
