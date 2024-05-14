@@ -4,12 +4,14 @@
   "private": true,
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm run format"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
-    "*.js": "eslint"
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
