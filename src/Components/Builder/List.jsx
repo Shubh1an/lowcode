@@ -82,7 +82,11 @@ const List = () => {
   const [hideColumns, setHideColumns] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalForm, setModalForm] = useState(null);
-  const searchableHeaders = ['name', 'category', 'description'];
+  const [searchableHeaders, setSearchableHeaders] = useState([
+    'name',
+    'category',
+    'description',
+  ]);
   useEffect(() => {
     getForms()
       .then((data) => {
@@ -129,7 +133,7 @@ const List = () => {
   useEffect(() => {
     setFormsToRender(forms);
     setHashTable(preprocessSearchData(forms, searchableHeaders));
-  }, [forms]);
+  }, [forms, searchableHeaders]);
 
   const handleSearch = (value) => {
     if (value) {
@@ -137,6 +141,14 @@ const List = () => {
       setFormsToRender(results);
     } else {
       setFormsToRender(forms);
+    }
+  };
+
+  const handleHeaderSelect = (value, checked) => {
+    if (checked) {
+      setSearchableHeaders((prev) => [...prev, value]);
+    } else {
+      setSearchableHeaders((prev) => prev.filter((header) => header !== value));
     }
   };
 
@@ -153,6 +165,8 @@ const List = () => {
           setHideColumns={setHideColumns}
           handleHide={handleHide}
           handleSearch={handleSearch}
+          searchableHeaders={searchableHeaders}
+          handleHeaderSelect={handleHeaderSelect}
         />
         <Table headers={renderHeaders} data={formsToRender} />
       </div>
@@ -170,6 +184,8 @@ const TopBar = ({
   setHideColumns,
   handleHide,
   handleSearch,
+  searchableHeaders,
+  handleHeaderSelect,
 }) => {
   const [showSearch, setShowSearch] = useState(false);
   return (
@@ -188,10 +204,15 @@ const TopBar = ({
                 }}
               />
             }
+            searchHeaders={searchableHeaders}
+            headers={headers}
             searchActive={showSearch}
             setShowSearch={setShowSearch}
             customClass={''}
             handleSearch={handleSearch}
+            handleHeaderSelect={(header_label, checked) => {
+              handleHeaderSelect(header_label, checked);
+            }}
           />
           <ListHeaderButton
             icon={<LiaUserCircle />}
@@ -269,22 +290,30 @@ const Table = ({ headers, data }) => {
           );
         })}
       </div>
-      {data.map((row, index) => {
-        return (
-          <div className="w-full flex flex-row px-[2px] py-[1px]">
-            {headers.map((header, index) => {
-              return (
-                <div
-                  className="w-full flex justify-center items-center text-base	font-medium	mx-[2px] py-2 bg-[#E9F2EF]"
-                  key={index + '_cell'}
-                >
-                  {formatValue(row[header])}
-                </div>
-              );
-            })}
+      {data.length > 0 ? (
+        data.map((row, index) => {
+          return (
+            <div className="w-full flex flex-row px-[2px] py-[1px]">
+              {headers.map((header, index) => {
+                return (
+                  <div
+                    className="w-full flex justify-center items-center text-base	font-medium	mx-[2px] py-2 bg-[#E9F2EF]"
+                    key={index + '_cell'}
+                  >
+                    {formatValue(row[header])}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })
+      ) : (
+        <div className="w-full flex flex-row px-[2px] py-[1px]">
+          <div className="w-full flex justify-center items-center text-base	font-medium	mx-[2px] py-2 bg-[#E9F2EF]">
+            No Records Found
           </div>
-        );
-      })}
+        </div>
+      )}
     </div>
   );
 };
