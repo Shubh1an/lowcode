@@ -1,7 +1,14 @@
 import React from 'react';
 
 const FormInput = ({ field, setActiveField, activePropertiesField }) => {
-  const { title: label, inputType: type, options, id, defaultValue } = field;
+  const {
+    title: label,
+    inputType: type,
+    options,
+    id,
+    defaultValue,
+    rows,
+  } = field;
   return (
     <div className={`w-full`}>
       <label
@@ -15,11 +22,12 @@ const FormInput = ({ field, setActiveField, activePropertiesField }) => {
         options={options}
         id={id}
         defaultValue={defaultValue}
+        rows={rows}
       />
     </div>
   );
 };
-const InputByType = ({ type, options, id, defaultValue }) => {
+const InputByType = ({ type, options, id, defaultValue, rows }) => {
   switch (type) {
     case 'text':
       return (
@@ -32,8 +40,9 @@ const InputByType = ({ type, options, id, defaultValue }) => {
     case 'textarea':
       return (
         <textarea
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
           placeholder={defaultValue}
+          rows={rows}
         />
       );
     case 'email':
@@ -95,7 +104,7 @@ const InputByType = ({ type, options, id, defaultValue }) => {
       );
     case 'radio': {
       return (
-        <div>
+        <div className="flex flex-row space-x-4">
           {options.map((option, index) => {
             return (
               <div

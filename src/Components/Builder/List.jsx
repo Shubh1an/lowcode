@@ -10,7 +10,7 @@ import { getForms } from '../../Requests/form';
 import moment from 'moment';
 import ShortModal from '../ShortModal/ShortModal';
 import HideModal from '../Modals/Hide';
-import CustomSearch from '../CustomSearch/CustomSearch';
+import CustomSearch from '../CustomSearch/CustomSearch.jsx';
 
 const checkValidDate = (date) => {
   // 2024-05-13T12:21:48.200+00:00

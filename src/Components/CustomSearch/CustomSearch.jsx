@@ -57,3 +57,5 @@ const CustomSearch = ({
     </div>
   );
 };
+
+export default CustomSearch;

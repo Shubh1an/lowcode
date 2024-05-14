@@ -4,6 +4,7 @@ export const CustomInput = ({
   label = '',
   extraClasses = '',
   name = '',
+  placeholder = '',
 }) => {
   return (
     <div className="mb-6">
@@ -50,6 +51,7 @@ export const CustomInput = ({
           <input
             type={type}
             id={id}
+            placeholder={placeholder}
             className={`block w-full font-semibold p-2 text-[#212121] border border-gray-300 rounded-lg bg-[#BDD7CF] text-base focus:ring-blue-500 focus:border-blue-500 ${extraClasses}`}
           />
         </div>

@@ -5,7 +5,7 @@ import MainTab from '../Components/Tab/MainTab';
 import { Category } from '../Components/Template/Category';
 import List from '../Components/Template/List';
 import GlobalContext from '../Context/Context';
-import CustomSearch from '../Components/CustomSearch/CustomSearch';
+import CustomSearch from '../Components/CustomSearch/CustomSearch.jsx';
 import ListHeaderButton from '../Components/inputs/ListHeaderButton';
 import { IoSearch } from 'react-icons/io5';
 
@@ -17,7 +17,7 @@ const Templates = () => {
 
   return (
     <div className="w-full h-full bg-[#E9F2EF] flex flex-col">
-      <div className="w-[90%] mx-auto flex justify-between">
+      <div className="flex justify-between">
         <MainTab tabs={tabs} active={active} setActive={setActive} />
         <div className="content-center min-w-fit">
           <CustomSearch
