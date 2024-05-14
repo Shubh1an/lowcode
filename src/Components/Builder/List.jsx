@@ -11,6 +11,7 @@ import moment from 'moment';
 import ShortModal from '../ShortModal/ShortModal';
 import HideModal from '../Modals/Hide';
 import CustomSearch from '../CustomSearch/CustomSearch';
+import PersonModal from '../Modals/PersonModal';
 
 const checkValidDate = (date) => {
   // 2024-05-13T12:21:48.200+00:00
@@ -21,8 +22,20 @@ const checkValidDate = (date) => {
   return isValid
 }
 
-const formatValue = (value) => {
+const UserPill = ({ user }) => {
+  return (
+    <div className="flex items-center gap-2 rounded-full bg-[#225091] p-2 text-[#fff]">
+      <LiaUserCircle className="w-4 h-4" />
+      <span className="text-14">{user.name}</span>
+    </div>
+  )
+}
+
+const formatValue = (value, header) => {
   if (typeof value === "object") {
+    if (header === "created_by") {
+      return <UserPill user={value} />
+    }
     return "Custom Object"
   }
   else if (checkValidDate(value)) {
@@ -86,6 +99,7 @@ const List = () => {
   const [showModal, setShowModal] = useState(false)
   const [modalForm, setModalForm] = useState(null)
   const [searchableHeaders, setSearchableHeaders] = useState(["name", "category", "description"])
+  const [people, setPeoples] = useState({})
   useEffect(() => {
     getForms().then(data => {
       setForms(data.data)
@@ -93,6 +107,14 @@ const List = () => {
       headers_gen.forEach((header, index) => {
         // if data type is Object, do not show
         if (typeof data.data[0][header] === "object") {
+          if (header === "created_by") {
+
+          }
+          else {
+            headers_gen.splice(index, 1)
+          }
+        }
+        if (header.includes("created_at") || header.includes("updated_at") || header.includes("_id")) {
           headers_gen.splice(index, 1)
         }
       })
@@ -152,6 +174,21 @@ const List = () => {
       setSearchableHeaders(prev => prev.filter(header => header !== value))
     }
   }
+  useEffect(() => {
+    formsToRender.forEach((form, index) => {
+      let header = Object.keys(form)
+      header.forEach(header => {
+        if (header == "created_by") {
+          let user_id = form[header]?.user_id
+          if (!people[user_id]) {
+            setPeoples(prev => {
+              return { ...prev, [user_id]: form[header] }
+            })
+          }
+        }
+      })
+    })
+  }, [formsToRender])
 
   return (
     <div className='w-full h-full flex flex-row px-6 pb-6'>
@@ -168,6 +205,7 @@ const List = () => {
           handleSearch={handleSearch}
           searchableHeaders={searchableHeaders}
           handleHeaderSelect={handleHeaderSelect}
+          people={people}
         />
         <Table headers={renderHeaders} data={formsToRender} />
       </div>
@@ -185,7 +223,8 @@ const TopBar = ({ showModal,
   handleHide,
   handleSearch,
   searchableHeaders,
-  handleHeaderSelect
+  handleHeaderSelect,
+  people
 }) => {
   const [showSearch, setShowSearch] = useState(false)
   return (
@@ -217,7 +256,7 @@ const TopBar = ({ showModal,
           <ShortModal isOpen={showModal} onClose={() => {
             setShowModal(false)
           }} children={
-            modalComponents(headers, hideColumns, setHideColumns, handleHide)[modalForm]
+            modalComponents(headers, hideColumns, setHideColumns, handleHide, people)[modalForm]
           } />
         </div>
       </div>
@@ -225,19 +264,20 @@ const TopBar = ({ showModal,
   )
 }
 
-const modalComponents = (headers, hideColumns, setHideColumns, handleHide) => {
+const modalComponents = (headers, hideColumns, setHideColumns, handleHide, people) => {
   return {
     Hide: <HideModal hideArray={headers} hideColumns={hideColumns} handleHide={handleHide} />,
+    Person: <PersonModal people={people} />,
   }
 }
 
 const Table = ({ headers, data }) => {
   return (
-    <div className='w-full h-full flex flex-col overflow-auto '>
-      <div className='w-full flex flex-row px-[2px] py-[12px] sticky top-0 bg-[#fff]'>
+    <div className='w-full h-full flex flex-col overflow-auto px-4'>
+      <div className='w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]'>
         {headers.map((header, index) => {
           return (
-            <div className='w-full flex justify-center items-center text-base	font-medium	mx-[2px] py-2 bg-[#E9F2EF]' key={index + "_heading"}>
+            <div className='w-full flex justify-center items-center text-base	font-medium py-2 border border-[#E9E9E9] overflow-hidden' key={index + "_heading"}>
               {header}
             </div>
           )
@@ -246,12 +286,12 @@ const Table = ({ headers, data }) => {
       </div>
       {data.length > 0 ? data.map((row, index) => {
         return (
-          <div className='w-full flex flex-row px-[2px] py-[1px]'>
+          <div className='w-full flex flex-row px-[2px]'>
             {headers.map((header, index) => {
               return (
-                <div className='w-full flex justify-center items-center text-base	font-medium	mx-[2px] py-2 bg-[#E9F2EF]' key={index + "_cell"}>
+                <div className='w-full flex justify-center items-center text-base	font-medium	py-2 border border-[#E9E9E9]' key={index + "_cell"}>
                   {
-                    formatValue(row[header])
+                    formatValue(row[header], header)
                   }
                 </div>
               )
@@ -266,7 +306,7 @@ const Table = ({ headers, data }) => {
             No Records Found
           </div>
         </div>
-    }
+      }
     </div>
   )
 }
