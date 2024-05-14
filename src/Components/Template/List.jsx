@@ -5,11 +5,42 @@ import { CiBoxList } from "react-icons/ci";
 import ListHeaderButton from '../inputs/ListHeaderButton';
 import { ChangeViewBtn } from '../Buttons/ChangeViewBtn';
 import Accordion from '../Accordion/CustomAccordion';
+import { FaFileWord } from "react-icons/fa";
 
 
 const List = () => {
 
     const [view, setView] = useState(false)
+    const [dummyData, setDummyData] = useState([
+        {
+            img: 'Frame 1261155984.svg',
+            name: 'offer_Letter',
+            type: 'pdf',
+            icon: <FaFileWord />
+        },
+        {
+            img: 'Frame 1261155983.svg',
+            name: 'offer_Letter',
+            type: 'pdf',
+            icon: <FaFileWord />
+
+        },
+        {
+            img: 'Frame 1261155983.svg',
+            name: 'offer_Letter',
+            type: 'pdf',
+            icon: <FaFileWord />
+
+        },
+        {
+            img: 'Frame 1261155983.svg',
+            name: 'offer_Letter',
+            type: 'pdf',
+            icon: <FaFileWord />
+
+        }
+    ])
+
 
     return (
         <div className='flex'>
@@ -68,58 +99,23 @@ const List = () => {
                     <hr />
                 </div>
                 <div className={`mb-2 w-[98%] m-auto ${view ? 'grid grid-cols-4 space-x-4' : 'space-y-4'}`}>
-                    <div className='py-2 px-2 flex space-x-2 bg-[#E9F2EF] rounded-xl'>
-                        <div className='cursor-pointer'>
-                            <img src={process.env.PUBLIC_URL + 'Frame 1261155983.svg'} alt="filler" />
-                        </div>
-                        <div className='text-center min-h-full content-center'>
-                            <div>
-                                Offer Letter
-                            </div>
-                            <div>
-                                Type_Word
-                            </div>
-                        </div>
-                    </div>
-                    <div className='py-2 px-2 flex space-x-2 bg-[#E9F2EF] rounded-xl'>
-                        <div className='cursor-pointer'>
-                            <img src={process.env.PUBLIC_URL + 'Frame 1261155983.svg'} alt="filler" />
-                        </div>
-                        <div className='text-center min-h-full content-center'>
-                            <div>
-                                Offer Letter
-                            </div>
-                            <div>
-                                Type_Word
+                    {dummyData.map((data, key) => (
+                        <div className={`py-2 px-2 bg-[#E9F2EF] rounded-xl`}>
+                            <div className={`space-x-2 ${!view ? 'flex' : 'flex-col w-[90%] mx-auto space-y-4'}`}>
+                                <div className='cursor-pointer'>
+                                    <img src={process.env.PUBLIC_URL + data.img} className={`${!view ? 'w-32':'w-56'}`} alt="filler" />
+                                </div>
+                                <div className={`${!view && 'content-center'}`}>
+                                    <div className='font-bold text-[#212121] '>
+                                        {data.name}
+                                    </div>
+                                    <div className='space-x-1 flex items-center'>
+                                        <span>{data.icon}</span><span>{data.type}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className='py-2 px-2 flex space-x-2 bg-[#E9F2EF] rounded-xl'>
-                        <div className='cursor-pointer'>
-                            <img src={process.env.PUBLIC_URL + 'Frame 1261155983.svg'} alt="filler" />
-                        </div>
-                        <div className='text-center min-h-full content-center'>
-                            <div>
-                                Offer Letter
-                            </div>
-                            <div>
-                                Type_Word
-                            </div>
-                        </div>
-                    </div>
-                    <div className='py-2 px-2 flex space-x-2 bg-[#E9F2EF] rounded-xl'>
-                        <div className='cursor-pointer'>
-                            <img src={process.env.PUBLIC_URL + 'Frame 1261155983.svg'} alt="filler" />
-                        </div>
-                        <div className='text-center min-h-full content-center'>
-                            <div>
-                                Offer Letter
-                            </div>
-                            <div>
-                                Type_Word
-                            </div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>

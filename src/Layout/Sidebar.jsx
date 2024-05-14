@@ -70,7 +70,6 @@ const Sidebar = () => {
   const { setSelectedMenu, setSelectedSubMenu } = useContext(GlobalContext)
   const [active, setActive] = useState(0)
   const [activeSub, setActiveSub] = useState(0)
-
   useEffect(() => {
     setSelectedMenu(menuData[active])
   }, [active])
