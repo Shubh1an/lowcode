@@ -1,3 +1,3 @@
 export const ItemTypes = {
-    FIELD: 'field',
+  FIELD: 'field',
 };
