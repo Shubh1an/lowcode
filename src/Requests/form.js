@@ -9,4 +9,13 @@ const saveForm = async (data) => {
     })
 }
 
-export default saveForm
+const getForms = async () => {
+    let data = await apiInstance.get("/form/all")
+    return data
+}
+
+
+module.exports = {
+    saveForm,
+    getForms
+}
