@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { CiGrid41 } from "react-icons/ci";
 import { CiBoxList } from "react-icons/ci";
@@ -6,11 +6,13 @@ import ListHeaderButton from '../inputs/ListHeaderButton';
 import { ChangeViewBtn } from '../Buttons/ChangeViewBtn';
 import Accordion from '../Accordion/CustomAccordion';
 import { FaFileWord } from "react-icons/fa";
+import GlobalContext from '../../Context/Context';
 
 
 const List = () => {
 
     const [view, setView] = useState(false)
+    const { category } = useContext(GlobalContext)
     const [dummyData, setDummyData] = useState([
         {
             img: 'Frame 1261155984.svg',
@@ -50,40 +52,18 @@ const List = () => {
                         Category
                     </div>
                     <div>
-                        <Accordion title="HR">
-                            <ul>
-                                <li>HR Manager</li>
-                                <li>HR Manager</li>
-                                <li>HR Manager</li>
-                                <li>HR Manager</li>
-                            </ul>
-                            <Accordion title="HR">
-                                <ul>
-                                    <li>HR Manager</li>
-                                    <li>HR Manager</li>
-                                    <li>HR Manager</li>
-                                    <li>HR Manager</li>
-                                </ul>
-                            </Accordion>
-                        </Accordion>
+                        {
+                            category.map((cat) => (
+                                <Accordion title={cat?.category}>
+                                    <ul>
+                                    {cat?.subCategory.map((subcat) => (
+                                        <li>{subcat}</li>
+                                    ))}
+                                    </ul>  
+                                </Accordion>
+                            ))
+                        }
 
-                        <Accordion title="Project Manager">
-                            <ul>
-                                <li>HR Manager</li>
-                                <li>HR Manager</li>
-                                <li>HR Manager</li>
-                                <li>HR Manager</li>
-                            </ul>
-                        </Accordion>
-
-                        <Accordion title="Developer">
-                            <ul>
-                                <li>HR Manager</li>
-                                <li>HR Manager</li>
-                                <li>HR Manager</li>
-                                <li>HR Manager</li>
-                            </ul>
-                        </Accordion>
                     </div>
                 </div>
             </div>
@@ -100,10 +80,10 @@ const List = () => {
                 </div>
                 <div className={`mb-2 w-[98%] m-auto ${view ? 'grid grid-cols-4 space-x-4' : 'space-y-4'}`}>
                     {dummyData.map((data, key) => (
-                        <div className={`py-2 px-2 bg-[#E9F2EF] rounded-xl`}>
+                        <div className={`py-2 px-2 bg-[#E9F2EF] rounded-xl`} key={key}>
                             <div className={`space-x-2 ${!view ? 'flex' : 'flex-col w-[90%] mx-auto space-y-4'}`}>
                                 <div className='cursor-pointer'>
-                                    <img src={process.env.PUBLIC_URL + data.img} className={`${!view ? 'w-32':'w-56'}`} alt="filler" />
+                                    <img src={process.env.PUBLIC_URL + data.img} className={`${!view ? 'w-32' : 'w-56'}`} alt="filler" />
                                 </div>
                                 <div className={`${!view && 'content-center'}`}>
                                     <div className='font-bold text-[#212121] '>
