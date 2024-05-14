@@ -11,7 +11,7 @@ import BuildFormNav from '../BreadcrumNavigation/BuildFormNav';
 import { useDrop } from 'react-dnd'
 import AddPageField from '../inputs/AddPageField';
 import FormInput from '../FormInput/FormInput';
-import saveForm from '../../Requests/form';
+import { saveForm } from '../../Requests/form';
 
 
 function toSnakeCase(input) {
@@ -135,7 +135,7 @@ const Add = () => {
 
         if (data.id === "displayName") {
             currentData[changeId].title = data.value
-            currentData[changeId].name = "crm_" + "lead_" +toSnakeCase(data.value)
+            currentData[changeId].name = "crm_" + "lead_" + toSnakeCase(data.value)
         } else if (data.id === "name") {
             currentData[changeId].name = data.value
         }
@@ -204,7 +204,7 @@ const Add = () => {
                 </div>
             </div>
             <div className='flex flex-col w-2/4 h-full bg-[#fff] rounded-2xl mx-6 flex overflow-auto' ref={drop}>
-                <BuildFormNav setFormName={setFormName} formName={formName}/>
+                <BuildFormNav setFormName={setFormName} formName={formName} />
                 <div className={`w-full h-[80%] border-2 ${isActive ? " border-[#227A60]" : "border-transparent"} p-4 overflow-scroll`}>
                     {formFields.map((field, index) => (
                         <div key={index}>
