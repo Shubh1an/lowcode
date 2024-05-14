@@ -1,8 +1,6 @@
-import React ,{useState} from 'react';
+import React from 'react';
 import Task from './Task';
     const Column = ({ title, tasks, setTasks,color}) => {
-
-      const [color1, setstate] = useState(color);
         const onDragStart = (e, id) => {
             e.dataTransfer.setData('id', id);
         };
@@ -23,7 +21,7 @@ import Task from './Task';
         <div className="flex flex-col p-4"
         onDragOver={(e) => onDragOver(e)}
         onDrop={(e) => onDrop(e, title)}>
-       <h2 className={`bg-[red] p-2 text-lg font-semibold mb-4 `}>{title}</h2>
+       <h2 className={`bg-[${color}] p-2 text-lg font-semibold mb-4 `}>{title}</h2>
        <div className="bg-gray-200 p-4 rounded-md w-80">
            {tasks.filter(task => task.status === title).map(task => (
                <div key={task.id} draggable onDragStart={(e) => onDragStart(e, task.id)}>

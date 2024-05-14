@@ -18,6 +18,8 @@ function Board(props) {
                 
             </div>
         </div>
+
+        
     );
 }
 
