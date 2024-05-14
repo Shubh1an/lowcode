@@ -56,10 +56,10 @@ const List = () => {
                             category.map((cat) => (
                                 <Accordion title={cat?.category}>
                                     <ul>
-                                    {cat?.subCategory.map((subcat) => (
-                                        <li>{subcat}</li>
-                                    ))}
-                                    </ul>  
+                                        {cat?.subCategory.map((subcat) => (
+                                            <li>{subcat}</li>
+                                        ))}
+                                    </ul>
                                 </Accordion>
                             ))
                         }
@@ -83,9 +83,9 @@ const List = () => {
                         <div className={`py-2 px-2 bg-[#E9F2EF] rounded-xl`} key={key}>
                             <div className={`space-x-2 ${!view ? 'flex' : 'flex-col w-[90%] mx-auto space-y-4'}`}>
                                 <div className='cursor-pointer'>
-                                    <img src={process.env.PUBLIC_URL + data.img} className={`${!view ? 'w-32' : 'w-56'}`} alt="filler" />
-                                </div>
-                                <div className={`${!view && 'content-center'}`}>
+                    <img src={process.env.PUBLIC_URL + data.img} className={`${!view ? 'w-32' : 'w-56'}`} alt="filler" />
+                        </div>
+          <div className={`${!view && 'content-center'}`}>
                                     <div className='font-bold text-[#212121] '>
                                         {data.name}
                                     </div>
