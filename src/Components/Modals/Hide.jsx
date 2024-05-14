@@ -24,10 +24,10 @@ const Hide = ({ hideObject, handleHide, checked }) => {
                 type="checkbox"
                 className='border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4'
                 name={hideObject}
-                checked={checked}
                 onChange={(e) => {
                     handleHide(hideObject, e.target.checked)
                 }}
+                checked={checked}
             />
             <label className='ml-2'>{
                 hideObject

@@ -10,6 +10,7 @@ import { getForms } from '../../Requests/form';
 import moment from 'moment';
 import ShortModal from '../ShortModal/ShortModal';
 import HideModal from '../Modals/Hide';
+import CustomSearch from '../CustomSearch/CustomSearch';
 
 const checkValidDate = (date) => {
   // 2024-05-13T12:21:48.200+00:00
@@ -37,16 +38,57 @@ const formatValue = (value) => {
   }
 }
 
+function preprocessSearchData(searchData, searchableHeaders) {
+  const hashTable = {};
+  // Initialize hash table with empty arrays for each searchable header
+  searchableHeaders.forEach(header => {
+    hashTable[header] = [];
+  });
+
+  // Populate hash table with search data
+  searchData.forEach(item => {
+    searchableHeaders.forEach(header => {
+      if (item.hasOwnProperty(header) && typeof item[header] === 'string') {
+        // Convert header value to lowercase for case-insensitive search
+        const value = item[header].toLowerCase();
+        hashTable[header].push({ item, value });
+      }
+    });
+  });
+
+  return hashTable;
+}
+
+function search(searchValue, searchableHeaders, hashTable) {
+  const results = [];
+
+  // Convert search value to lowercase for case-insensitive search
+  const searchTerm = searchValue.toLowerCase();
+
+  // Search through hash table for matches
+  searchableHeaders.forEach(header => {
+    hashTable?.[header]?.forEach(({ item, value }) => {
+      if (value.includes(searchTerm)) {
+        results.push(item);
+      }
+    });
+  });
+
+  return results;
+}
+
 const List = () => {
   const [forms, setForms] = useState([])
+  const [formsToRender, setFormsToRender] = useState([])
   const [headers, setHeaders] = useState([])
   const [renderHeaders, setRenderHeaders] = useState([])
   const [hideColumns, setHideColumns] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [modalForm, setModalForm] = useState(null)
+  const searchableHeaders = ["name", "category", "description"]
   useEffect(() => {
     getForms().then(data => {
-      setForms(data.data)
+      setForms(data.data )
       let headers_gen = Object.keys(data.data[0])
       headers_gen.forEach((header, index) => {
         // if data type is Object, do not show
@@ -54,32 +96,66 @@ const List = () => {
           headers_gen.splice(index, 1)
         }
       })
-      setRenderHeaders(headers_gen)
-      setHeaders(headers_gen)
+      setRenderHeaders([...headers_gen])
+      setHeaders([...headers_gen])
     }).catch(err => console.log(err))
   }, [])
 
   useEffect(() => {
-    let lastRenderHeaders = renderHeaders
-    lastRenderHeaders.forEach((header, index) => {
-      if (hideColumns.includes(header)) {
-        lastRenderHeaders.splice(index, 1)
+    // Remove hidden columns
+    setRenderHeaders(prev => {
+      let newHeaders = [...headers]
+      hideColumns.forEach(col => {
+        newHeaders = newHeaders.filter(header => header !== col)
+      })
+      return newHeaders
+    })
+    // Add unhidden columns
+  }, [hideColumns, forms])
+
+  useEffect(() => {
+  }, [renderHeaders])
+
+  const handleHide = (column, checked) => {
+    setHideColumns(prev => {
+      if (!checked) {
+        return [...prev, column]
+      }
+      else {
+        return prev.filter(col => col !== column)
       }
     })
-    setRenderHeaders(lastRenderHeaders)
-  }, [hideColumns, forms])
+  }
+
+  const [hashTable, setHashTable] = useState({})
+
+  useEffect(() => {
+    setFormsToRender(forms)
+    setHashTable(preprocessSearchData(forms, searchableHeaders))
+  }, [forms])
+
+  const handleSearch = (value) => {
+    if (value) {
+      const results = search(value, searchableHeaders, hashTable)
+      setFormsToRender(results)
+    }
+    else {
+      setFormsToRender(forms)
+    }
+  }
 
   return (
     <div className='w-full h-full flex flex-row px-6 pb-6'>
       <div className='w-full h-full bg-[#fff] rounded-2xl flex flex-col overflow-auto'>
-        <TopBar showModal={showModal} setShowModal={setShowModal} modalForm={modalForm} setModalForm={setModalForm} headers={headers} hideColumns={hideColumns} setHideColumns={setHideColumns} />
-        <Table headers={renderHeaders} data={forms} />
+        <TopBar showModal={showModal} setShowModal={setShowModal} modalForm={modalForm} setModalForm={setModalForm} headers={headers} hideColumns={hideColumns} setHideColumns={setHideColumns} handleHide={handleHide} handleSearch={handleSearch} />
+        <Table headers={renderHeaders} data={formsToRender} />
       </div>
     </div>
   )
 }
 
-const TopBar = ({ showModal, setShowModal, modalForm, setModalForm, headers, hideColumns, setHideColumns }) => {
+const TopBar = ({ showModal, setShowModal, modalForm, setModalForm, headers, hideColumns, setHideColumns, handleHide, handleSearch }) => {
+  const [showSearch, setShowSearch] = useState(false)
   return (
     <div className='h-[60px] mx-6 border-b justify-center'>
       <div className='flex items-center h-full'>
@@ -87,7 +163,9 @@ const TopBar = ({ showModal, setShowModal, modalForm, setModalForm, headers, hid
         <AddNewButton />
         <div className='flex items-center h-full ml-auto'>
 
-          <ListHeaderButton icon={<IoSearch />} label='Search' onclick={() => { setShowModal(true); setModalForm("Search") }} />
+          <CustomSearch initialComponent={<ListHeaderButton icon={<IoSearch />} label='Search' onclick={() => {
+            setShowSearch(!showSearch)
+          }} />} searchActive={showSearch} setShowSearch={setShowSearch} customClass={""} handleSearch={handleSearch} />
           <ListHeaderButton icon={<LiaUserCircle />} label='Person' onclick={() => { setShowModal(true); setModalForm("Person") }} />
           <ListHeaderButton icon={<CiFilter />} label='Filter' onclick={() => { setShowModal(true); setModalForm("Filter") }} />
           <ListHeaderButton icon={<MdOutlineSwapVert />} label='Sort' onclick={() => { setShowModal(true); setModalForm("Sort") }} />
@@ -98,7 +176,7 @@ const TopBar = ({ showModal, setShowModal, modalForm, setModalForm, headers, hid
           <ShortModal isOpen={showModal} onClose={() => {
             setShowModal(false)
           }} children={
-            modalComponents(headers, hideColumns, setHideColumns)[modalForm]
+            modalComponents(headers, hideColumns, setHideColumns, handleHide)[modalForm]
           } />
         </div>
       </div>
@@ -106,18 +184,9 @@ const TopBar = ({ showModal, setShowModal, modalForm, setModalForm, headers, hid
   )
 }
 
-const modalComponents = (headers, hideColumns, setHideColumns) => {
+const modalComponents = (headers, hideColumns, setHideColumns, handleHide) => {
   return {
-    Hide: <HideModal hideArray={headers} hideColumns={hideColumns} handleHide={(column, checked) => {
-      let newHideColumns = [...hideColumns]
-      if (checked) {
-        newHideColumns.push(column)
-      }
-      else {
-        newHideColumns.splice(newHideColumns.indexOf(column), 1)
-      }
-      setHideColumns(newHideColumns)
-    }} />,
+    Hide: <HideModal hideArray={headers} hideColumns={hideColumns} handleHide={handleHide} />,
   }
 }
 
