@@ -24,8 +24,8 @@ const checkValidDate = (date) => {
 
 const UserPill = ({ user }) => {
   return (
-    <div className="flex items-center gap-2 rounded-full bg-[#225091] p-2 text-[#fff]">
-      <LiaUserCircle className="w-4 h-4" />
+    <div className="flex items-center gap-2 rounded-full bg-[#227A60] p-2 text-[#fff]">
+      <img src={user?.profile_image} className='w-8 h-8 rounded-full' />
       <span className="text-14">{user.name}</span>
     </div>
   )
