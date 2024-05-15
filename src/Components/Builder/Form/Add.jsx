@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import SubTab from '../Tab/SubTab';
+import SubTab from '../../Tab/SubTab';
 import { BiText } from 'react-icons/bi';
 import { RiCheckboxBlankCircleLine } from 'react-icons/ri';
 import {
@@ -10,12 +10,12 @@ import {
 import { HiOutlineMail } from 'react-icons/hi';
 import { BsMap } from 'react-icons/bs';
 import { MdPeopleAlt } from 'react-icons/md';
-import { FieldButton } from '../Buttons/FieldButton';
-import BuildFormNav from '../BreadcrumNavigation/BuildFormNav';
+import { FieldButton } from '../../Buttons/FieldButton';
+import BuildFormNav from '../../BreadcrumNavigation/BuildFormNav';
 import { useDrop } from 'react-dnd';
-import AddPageField from '../inputs/AddPageField';
-import FormInput from '../FormInput/FormInput';
-import { saveForm } from '../../Requests/form';
+import AddPageField from '../../inputs/AddPageField';
+import FormInput from '../../FormInput/FormInput';
+import { saveForm } from '../../../Requests/form';
 
 function toSnakeCase(input) {
   // Replace spaces with underscores and convert to lowercase

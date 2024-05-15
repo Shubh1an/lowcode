@@ -24,12 +24,8 @@ const Sidebar = () => {
           url: '/builder/entity',
         },
         {
-          title: 'Field',
+          title: 'Pages',
           url: '/builder/field',
-        },
-        {
-          title: 'Dashboard',
-          url: '/builder/dashboard',
         },
       ],
     },

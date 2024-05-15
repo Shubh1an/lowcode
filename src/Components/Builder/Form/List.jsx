@@ -1,52 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import AddNewButton from '../inputs/AddNewButton';
+import AddNewButton from '../../inputs/AddNewButton.jsx';
 import { IoSearch } from 'react-icons/io5';
 import { LiaUserCircle } from 'react-icons/lia';
 import { CiFilter } from 'react-icons/ci';
 import { MdOutlineSwapVert } from 'react-icons/md';
 import { BiHide } from 'react-icons/bi';
-import ListHeaderButton from '../inputs/ListHeaderButton';
-import { getForms } from '../../Requests/form';
+import ListHeaderButton from '../../inputs/ListHeaderButton.jsx';
+import { getForms } from '../../../Requests/form.js';
 import moment from 'moment';
-import ShortModal from '../ShortModal/ShortModal';
-import HideModal from '../Modals/Hide';
-import CustomSearch from '../CustomSearch/CustomSearch.jsx';
-import PersonModal from '../Modals/PersonModal';
+import ShortModal from '../../ShortModal/ShortModal.jsx';
+import HideModal from '../../Modals/Hide.jsx';
+import CustomSearch from '../../CustomSearch/CustomSearch.jsx';
+import PersonModal from '../../Modals/PersonModal.jsx';
+import { formatValue } from '../../../Utility/utility.js';
 
-const checkValidDate = (date) => {
-  // 2024-05-13T12:21:48.200+00:00
-  let isValid = moment(date, 'YYYY-MM-DD', true).isValid();
-  if (!isValid) {
-    isValid = moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ', true).isValid();
-  }
-  return isValid;
-};
 
-const UserPill = ({ user }) => {
-  return (
-    <div className="flex items-center gap-2 rounded-full bg-[#227A60] p-2 text-[#fff]">
-      <img src={user?.profile_image} className='w-8 h-8 rounded-full' />
-      <span className="text-14">{user.name}</span>
-    </div>
-  )
-}
-
-const formatValue = (value, header) => {
-  if (typeof value === 'object') {
-    if (header === "created_by") {
-      return <UserPill user={value} />
-    }
-    return 'Custom Object';
-  } else if (checkValidDate(value)) {
-    return moment(value).format('DD/MM/YYYY');
-  } else {
-    if (value.length > 20) {
-      return value.slice(0, 10) + '...' + value.slice(-5);
-    } else {
-      return value;
-    }
-  }
-};
 
 function preprocessSearchData(searchData, searchableHeaders) {
   const hashTable = {};
@@ -109,14 +77,14 @@ const List = () => {
         headers_gen.forEach((header, index) => {
           // if data type is Object, do not show
           if (typeof data.data[0][header] === 'object') {
-          if (header === "created_by") {
+            if (header === "created_by") {
 
+            }
+            else {
+              headers_gen.splice(index, 1)
+            }
           }
-          else {
-            headers_gen.splice(index, 1)
-          }
-        }
-        if (header.includes("created_at") || header.includes("updated_at") || header.includes("_id")) {
+          if (header.includes("created_at") || header.includes("updated_at") || header.includes("_id")) {
             headers_gen.splice(index, 1);
           }
         });
@@ -138,7 +106,7 @@ const List = () => {
     // Add unhidden columns
   }, [hideColumns, forms]);
 
-  useEffect(() => {}, [renderHeaders]);
+  useEffect(() => { }, [renderHeaders]);
 
   const handleHide = (column, checked) => {
     setHideColumns((prev) => {
@@ -231,7 +199,7 @@ const TopBar = ({
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold	">Fields</p>
-        <AddNewButton />
+        <AddNewButton onclick={() => { }} />
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -292,7 +260,7 @@ const TopBar = ({
             }}
             children={
               modalComponents(headers, hideColumns, setHideColumns, handleHide, people)[
-                modalForm
+              modalForm
               ]
             }
           />
@@ -353,7 +321,7 @@ const Table = ({ headers, data }) => {
             No Records Found
           </div>
         </div>
-        )}
+      )}
     </div>
   );
 };

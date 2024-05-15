@@ -1,6 +1,6 @@
-const { default: apiInstance } = require('./instance');
+import apiInstance from './instance';
 
-const saveForm = async (data) => {
+export const saveForm = async (data) => {
   console.log(data);
   apiInstance
     .post('/form', data)
@@ -12,12 +12,7 @@ const saveForm = async (data) => {
     });
 };
 
-const getForms = async () => {
+export const getForms = async () => {
   let data = await apiInstance.get('/form/all');
   return data;
-};
-
-module.exports = {
-  saveForm,
-  getForms,
 };
