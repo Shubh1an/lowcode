@@ -18,8 +18,7 @@ code {
     monospace;
 }
 
-
 * {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-optical-sizing: auto;
 }
