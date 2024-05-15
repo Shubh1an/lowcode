@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import MainTab from '../Components/Tab/MainTab';
@@ -8,12 +8,30 @@ import GlobalContext from '../Context/Context';
 import CustomSearch from '../Components/CustomSearch/CustomSearch.jsx';
 import ListHeaderButton from '../Components/inputs/ListHeaderButton';
 import { IoSearch } from 'react-icons/io5';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 const Templates = () => {
   const tabs = [{ title: 'All List' }];
   const [active, setActive] = useState(0);
   const { selectedSubMenu } = useContext(GlobalContext);
   const [showSearch, setShowSearch] = useState(false);
+
+  const location = useLocation();
+  const { pathname } = location;
+
+  const [componentToRender, setComponentToRender] = useState(null);
+
+  useEffect(() => {
+    // Update the current component based on the pathname
+    switch (pathname) {
+      case `/template/category`:
+        setComponentToRender(<Category />);
+        break;
+      default:
+        setComponentToRender(<List />);
+        break;
+    }
+  }, [pathname]);
 
   return (
     <div className="w-full h-full bg-[#E9F2EF] flex flex-col">
@@ -39,7 +57,8 @@ const Templates = () => {
       </div>
       {
         <DndProvider backend={HTML5Backend}>
-          {selectedSubMenu?.title === 'Category' ? <Category /> : <List />}
+          {componentToRender}
+          {/* {selectedSubMenu?.title === 'Category' ? <Category /> : <List />} */}
         </DndProvider>
       }
     </div>

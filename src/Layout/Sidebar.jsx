@@ -7,6 +7,7 @@ import { AiOutlineAppstoreAdd } from 'react-icons/ai';
 import { PiGraphLight } from 'react-icons/pi';
 import { GoWorkflow } from 'react-icons/go';
 import GlobalContext from '../Context/Context';
+import { Link, BrowserRouter as router } from 'react-router-dom';
 const Sidebar = () => {
   const menuData = [
     {
@@ -70,6 +71,7 @@ const Sidebar = () => {
   const { setSelectedMenu, setSelectedSubMenu } = useContext(GlobalContext);
   const [active, setActive] = useState(0);
   const [activeSub, setActiveSub] = useState(0);
+
   useEffect(() => {
     setSelectedMenu(menuData[active]);
   }, [active]);
@@ -131,28 +133,32 @@ const Sidebar = () => {
 
 const SidebarMenu = ({ menu, index, length, setActive, active }) => {
   return (
-    <div
-      className={`flex flex-col w-full items-center ${active === index ? 'bg-[#E9F2EF] text-[#227A60]' : 'bg-[#E9E9E9] text-[#7A7A7A]'} ml-3 mb-1 cursor-pointer ${index === 0 ? 'rounded-t-lg' : index === length - 1 ? 'rounded-b-lg' : ''}`}
-      onClick={() => setActive(index)}
-    >
-      <div className="flex flex-col w-full items-center my-2">
-        <div className="w-full flex flex-row items-center text-2xl  justify-center ">
-          {menu.icon}
+    <Link to={`${menu.url}`}>
+      <div
+        className={`flex flex-col w-full items-center ${active === index ? 'bg-[#E9F2EF] text-[#227A60]' : 'bg-[#E9E9E9] text-[#7A7A7A]'} ml-3 mb-1 cursor-pointer ${index === 0 ? 'rounded-t-lg' : index === length - 1 ? 'rounded-b-lg' : ''}`}
+        onClick={() => setActive(index)}
+      >
+        <div className="flex flex-col w-full items-center my-2">
+          <div className="w-full flex flex-row items-center text-2xl  justify-center ">
+            {menu.icon}
+          </div>
+          <span className="text-xs">{menu.title}</span>
         </div>
-        <span className="text-xs">{menu.title}</span>
       </div>
-    </div>
+    </Link>
   );
 };
 
 const SidebarSubMenu = ({ menu, setActive, active, index }) => {
   return (
-    <div
-      className={`w-full mb-2 text-sm ${active === index ? 'text-[#227A60]' : 'text-[#7A7A7A]'} cursor-pointer`}
-      onClick={() => setActive(index)}
-    >
-      {menu.title}
-    </div>
+    <Link to={`${menu.url}`}>
+      <div
+        className={`w-full mb-2 text-sm ${active === index ? 'text-[#227A60]' : 'text-[#7A7A7A]'} cursor-pointer`}
+        onClick={() => setActive(index)}
+      >
+        {menu.title}
+      </div>
+    </Link>
   );
 };
 
