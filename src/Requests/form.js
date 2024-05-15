@@ -1,12 +1,18 @@
-const { default: apiInstance } = require("./instance")
+import apiInstance from './instance';
 
-const saveForm = async (data) => {
-    console.log(data)
-    apiInstance.post("/form", data).then((res) => {
-        return res
-    }).catch((err) => {
-        console.log(err)
+export const saveForm = async (data) => {
+  console.log(data);
+  apiInstance
+    .post('/form', data)
+    .then((res) => {
+      return res;
     })
-}
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-export default saveForm
+export const getForms = async () => {
+  let data = await apiInstance.get('/form/all');
+  return data;
+};

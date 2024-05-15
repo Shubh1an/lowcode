@@ -1,0 +1,11 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run ESLint on staged files
+# npx eslint --ignore-path .gitignore .
+
+# Run Prettier on staged files
+npx prettier --write .
+
+# Add all modified files to the staging area
+git add .

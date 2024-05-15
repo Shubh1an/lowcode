@@ -1,21 +1,24 @@
-import "./App.css";
-import {Route,Routes  } from 'react-router-dom';
-import Layout from "./Layout/Layout";
-import Builder from "./Pages/Builder";
-import Board from "./Pages/Board/Board";
-import GlobalProvider from "./Context/Provider";
-import { useContext } from "react";
-import GlobalContext from "./Context/Context";
-import Templates from "./Pages/Templates";
+import { useContext } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import React from 'react';
+import './App.css';
+import GlobalContext from './Context/Context';
+import GlobalProvider from './Context/Provider';
+import Layout from './Layout/Layout';
+import Builder from './Pages/Builder';
+import Board from './Pages/Board/Board';
+import Templates from './Pages/Templates';
+import List from './Components/Template/List';
+import { Category } from './Components/Template/Category';
 function App() {
   return (
     <div className="App">
       <GlobalProvider>
         <Layout>
           <Routes>
-            <Route path="/" element={<Home />} />
-          <Route path="/Board" element={<Board />} />
-      
+            <Route path="/builder/*" element={<Builder />} />
+            <Route path="/template/*" element={<Templates />} />
+            <Route path="/Board" element={<Board />} />
           </Routes>
         </Layout>
       </GlobalProvider>
@@ -24,8 +27,9 @@ function App() {
 }
 
 const Home = () => {
-  const { selectedMenu } = useContext(GlobalContext)
-  return selectedMenu?.title === 'Template' ? <Templates /> : <Builder /> 
-}
+  // @ts-ignore
+  const { selectedMenu } = useContext(GlobalContext);
+  return selectedMenu?.title === 'Template' ? <Templates /> : <Builder />;
+};
 
 export default App;
