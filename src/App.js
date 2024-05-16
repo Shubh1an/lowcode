@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { Route, Routes } from 'react-router-dom';
 import React from 'react';
 import './App.css';
 import GlobalContext from './Context/Context';
@@ -8,8 +7,8 @@ import Layout from './Layout/Layout';
 import Builder from './Pages/Builder';
 import Board from './Pages/Board/Board';
 import Templates from './Pages/Templates';
-import List from './Components/Template/List';
-import { Category } from './Components/Template/Category';
+import { Route, Routes } from 'react-router-dom';
+
 function App() {
   return (
     <div className="App">
