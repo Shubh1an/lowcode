@@ -4,11 +4,11 @@ import { AiFillEdit } from 'react-icons/ai';
 import CustomInput from '../../Components/inputs/CustomInput';
 const Column = ({
   columnfeilds,
-  tasks,
-  setTasks,
+  // tasks,
+  // setTasks,
   color,
-  setcolumnfeilds,
-  onChange,
+  // setcolumnfeilds,
+  // onChange,
 }) => {
   const [isEdit, setisEdit] = useState(false);
 
@@ -22,24 +22,24 @@ const Column = ({
 
   const isEditable = (isEdit) => {
     setisEdit(!isEdit);
-    setcolumnfeilds(columnfeilds);
+    // setcolumnfeilds(columnfeilds);
   };
 
-  const onDrop = (e, column) => {
-    const id = e.dataTransfer.getData('id');
-    const task = tasks.find((task) => task.id === parseInt(id));
-    if (task) {
-      const newTasks = tasks.filter((task) => task.id !== parseInt(id));
-      setTasks([...newTasks, { ...task, status: column }]);
-    }
-  };
+  // const onDrop = (e, column) => {
+  //   const id = e.dataTransfer.getData('id');
+  //   const task = tasks.find((task) => task.id === parseInt(id));
+  //   if (task) {
+  //     const newTasks = tasks.filter((task) => task.id !== parseInt(id));
+  //     setTasks([...newTasks, { ...task, status: column }]);
+  //   }
+  // };
   return (
     <div
       className="flex flex-col p-4"
-      onDragOver={(e) => onDragOver(e)}
-      onDrop={(e) => onDrop(e, columnfeilds)}
+      // onDragOver={(e) => onDragOver(e)}
+      // onDrop={(e) => onDrop(e, columnfeilds)}
     >
-      {isEdit ? (
+      {/* {isEdit ? (
         <CustomInput
           inputs={{
             title: columnfeilds,
@@ -48,16 +48,17 @@ const Column = ({
           }}
           onChange={onChange}
         />
-      ) : (
-        <h2
-          className={`bg-[${color}] p-2 text-lg font-semibold mb-4 flex gap-1  items-center justify-center`}
-        >
-          {columnfeilds} <AiFillEdit onClick={() => isEditable(isEdit)} />{' '}
-        </h2>
-      )}
+      ) : ( */}
+      <h2
+        className={`bg-[${color}] p-2 text-lg font-semibold mb-4 flex gap-1  items-center justify-center`}
+      >
+        {columnfeilds}
+        {/* <AiFillEdit onClick={() => isEditable(isEdit)} />{' '} */}
+      </h2>
+      {/* )} */}
 
       <div className="bg-gray-200 p-4 rounded-md w-80">
-        {tasks
+        {/* {tasks
           .filter((task) => task.status === columnfeilds)
           .map((task) => (
             <div
@@ -67,7 +68,7 @@ const Column = ({
             >
               <Task task={task} />
             </div>
-          ))}
+          ))} */}
       </div>
     </div>
   );

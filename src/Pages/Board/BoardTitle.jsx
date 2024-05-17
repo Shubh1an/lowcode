@@ -1,6 +1,7 @@
 import React from 'react';
+import Board from './Board';
 
-function BoardTitle({ draggedItem }) {
+function BoardTitle({ draggedItem, defaultValue }) {
   return (
     <>
       {draggedItem.map((data, index) => (
@@ -11,6 +12,8 @@ function BoardTitle({ draggedItem }) {
           {data?.title}
         </label>
       ))}
+
+      <Board defaultValue={defaultValue} />
     </>
   );
 }
