@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Column from './Column';
 import KanbanCard from '../../Components/Builder/KanbanCard';
 import Footer from '../../Components/inputs/Footer';
+import Column from './Column';
 function Board(props) {
   const [tasks, setTasks] = useState([
     { id: 1, content: 'Task 1', status: 'Todo' },
@@ -57,6 +57,7 @@ function Board(props) {
               setTasks={setTasks}
               color={'yellow'}
               setcolumnfeilds={setcolumnfeilds}
+              onChange={(event) => setcolumnfeilds(event.target.value)}
             />
             <Column
               columnfeilds="Inprogress"
@@ -64,6 +65,7 @@ function Board(props) {
               setTasks={setTasks}
               color={'blue'}
               setcolumnfeilds={setcolumnfeilds}
+              onChange={(event) => setcolumnfeilds(event.target.value)}
             />
             <Column
               columnfeilds="Done"
@@ -71,6 +73,7 @@ function Board(props) {
               setTasks={setTasks}
               color={'red'}
               setcolumnfeilds={setcolumnfeilds}
+              onChange={(event) => setcolumnfeilds(event.target.value)}
             />
           </div>
           <Footer handleFormSubmit={handleFormSubmit} />

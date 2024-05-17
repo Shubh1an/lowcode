@@ -8,6 +8,9 @@ import Builder from './Pages/Builder';
 import Board from './Pages/Board/Board';
 import Templates from './Pages/Templates';
 import { Route, Routes } from 'react-router-dom';
+import Kanban from './Pages/Board/Kanban';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 function App() {
   return (
@@ -17,7 +20,15 @@ function App() {
           <Routes>
             <Route path="/builder/*" element={<Builder />} />
             <Route path="/template/*" element={<Templates />} />
-            <Route path="/Board" element={<Board />} />
+            <Route path="/board" element={<Board />} />
+            <Route
+              path="/kanban"
+              element={
+                <DndProvider backend={HTML5Backend}>
+                  <Kanban />
+                </DndProvider>
+              }
+            />
           </Routes>
         </Layout>
       </GlobalProvider>

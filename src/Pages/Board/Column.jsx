@@ -65,7 +65,7 @@ const Column = ({
               draggable
               onDragStart={(e) => onDragStart(e, task.id)}
             >
-              <Task task={task} icon={task.icon} />
+              <Task task={task} />
             </div>
           ))}
       </div>
