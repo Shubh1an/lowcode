@@ -19,53 +19,11 @@ function Board({ defaultValue }) {
           <div className="flex">
             {tasks &&
               tasks.length > 0 &&
-              tasks.map((data, index) => (
-                <Column
-                  key={index}
-                  columnfeilds={data.status}
-                  color={data.color}
-                />
+              tasks.map((data, i) => (
+                <Column key={i} columnfeilds={data.status} color={data.color} />
               ))}
-
-            {/* <Column
-              columnfeilds="Todo"
-              tasks={tasks}
-              setTasks={setTasks}
-              color={'yellow'}
-              setcolumnfeilds={setcolumnfeilds}
-              onChange={(event) => setcolumnfeilds(event.target.value)}
-            />
-            <Column
-              columnfeilds="Inprogress"
-              tasks={tasks}
-              setTasks={setTasks}
-              color={'blue'}
-              setcolumnfeilds={setcolumnfeilds}
-              onChange={(event) => setcolumnfeilds(event.target.value)}
-            />
-            <Column
-              columnfeilds="Done"
-              tasks={tasks}
-              setTasks={setTasks}
-              color={'red'}
-              setcolumnfeilds={setcolumnfeilds}
-              onChange={(event) => setcolumnfeilds(event.target.value)}
-            /> */}
           </div>
         </div>
-        {/* <div className="w-1/3 h-full bg-[#fff] rounded-2xl flex flex-col overflow-auto">
-          {kanbanprop.map((field, index) => (
-            <KanbanCard
-              key={index}
-              field={field}
-              onChange={(event) =>
-                setcolumnfeilds(
-                  event.target.value ? event.target.value : columnfeilds,
-                )
-              }
-            />
-          ))}
-        </div> */}
       </div>
     </>
   );

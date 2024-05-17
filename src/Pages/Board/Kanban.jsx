@@ -46,7 +46,7 @@ function Kanban() {
       optionset: [
         {
           status: 'open',
-          color: 'skyblue',
+          color: '#0080FF',
           id: uuidv4(),
         },
         {
@@ -56,12 +56,12 @@ function Kanban() {
         },
         {
           status: 'inprogress',
-          color: 'orange',
+          color: '#ff5722',
           id: uuidv4(),
         },
         {
           status: 'close',
-          color: 'green',
+          color: '#227A60',
           id: uuidv4(),
         },
       ],
