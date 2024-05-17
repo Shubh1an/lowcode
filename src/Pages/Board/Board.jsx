@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Column from './Column';
 function Board({ defaultValue }) {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(defaultValue.choicename);
   const [toggle, setToggle] = useState(false);
   const [column, setcolumn] = useState([]);
   const [columnfeilds, setcolumnfeilds] = useState();
