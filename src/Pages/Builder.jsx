@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Entity from '../Components/Builder/Entity';
 import Module from '../Components/Builder/Module';
-import Form from '../Components/Builder/Form';
+import Form from '../Components/Builder/Form/index';
 
 const Builder = () => {
   const location = useLocation();
