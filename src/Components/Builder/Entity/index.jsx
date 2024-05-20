@@ -1,16 +1,39 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AddNewButton from '../../inputs/AddNewButton';
 import CustomSearch from '../../CustomSearch/CustomSearch';
 import ListHeaderButton from '../../inputs/ListHeaderButton';
 import { IoSearch } from 'react-icons/io5';
 import ShortModal from '../../ShortModal/ShortModal';
 import { ChangeViewBtn } from '../../Buttons/ChangeViewBtn';
+import { getEntities } from '../../../Requests/entity';
+import { formatValue } from '../../../Utility/utility';
+import { Link } from 'react-router-dom';
 
 const Entity = () => {
     const [showModal, setShowModal] = useState(false);
     const [modalForm, setModalForm] = useState({})
     const [headers, setHeaders] = useState([])
     const [view, setView] = useState(true)
+    const [cells, setCells] = useState([])
+
+    let module_id = location.search.split('=')[1]
+
+    useEffect(() => {
+        const fetchModules = async () => {
+            const entity = await getEntities(module_id);
+            let data = entity?.data
+            let headers_gen = Object.keys(data?.[0] || {});
+            headers_gen.forEach((header, index) => {
+                if (header === "_id" || header === "__v") {
+                    headers_gen.splice(index, 1)
+                }
+            })
+            setHeaders(headers_gen)
+            setCells(data)
+        }
+
+        fetchModules()
+    }, [])
 
     const handleSearch = (value) => { };
     return (
@@ -27,6 +50,7 @@ const Entity = () => {
                     setView={setView}
                     view={view}
                 />
+                 <TableView data={{ headers, cells }} />
             </div>
         </div>
     )
@@ -84,7 +108,7 @@ const TopBar = ({
         </div>
     );
 };
-const ModalComponent = ({closeModal}) => {
+const ModalComponent = ({ closeModal }) => {
     return (
         <div className="w-[400px]">
             <div className="text-2xl font-bold text-[#227A60]">Add Entities</div>
@@ -119,5 +143,43 @@ const ModalComponent = ({closeModal}) => {
         </div>
     )
 };
+
+const TableView = ({ data }) => {
+    const { headers, cells } = data
+    return (
+        <div className="w-full h-full flex flex-col overflow-auto px-4">
+            <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]">
+                {headers.map((header, index) => {
+                    return (
+                        <div
+                            className="w-full flex justify-center items-center text-base	font-medium py-2 border border-[#E9E9E9] overflow-hidden"
+                            key={index + '_heading'}
+                        >
+                            {header}
+                        </div>
+                    );
+                })}
+            </div>
+            {cells.map((row, index) => {
+                return (
+                    <Link to={`/builder/pages?entity_id=${row?._id}`}>
+                        <div className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer">
+                            {headers.map((header, index) => {
+                                return (
+                                    <div
+                                        className="w-full flex justify-center items-center text-base font-medium py-2 border border-[#E9E9E9]"
+                                        key={index + '_cell'}
+                                    >
+                                        {formatValue(row[header], header)}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </Link>
+                );
+            })}
+        </div>
+    )
+}
 
 export default Entity

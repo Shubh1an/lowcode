@@ -7,6 +7,7 @@ import ShortModal from '../../ShortModal/ShortModal';
 import { ChangeViewBtn } from '../../Buttons/ChangeViewBtn';
 import { getModules, saveModule } from '../../../Requests/module';
 import { formatValue } from '../../../Utility/utility';
+import { Link } from 'react-router-dom';
 
 const Module = () => {
     const [showModal, setShowModal] = useState(false);
@@ -136,18 +137,20 @@ const TableView = ({ data }) => {
             </div>
             {cells.map((row, index) => {
                 return (
-                    <div className="w-full flex flex-row px-[2px]">
-                        {headers.map((header, index) => {
-                            return (
-                                <div
-                                    className="w-full flex justify-center items-center text-base	font-medium	py-2 border border-[#E9E9E9]"
-                                    key={index + '_cell'}
-                                >
-                                    {formatValue(row[header], header)}
-                                </div>
-                            );
-                        })}
-                    </div>
+                    <Link to={`/builder/entity?module_id=${row?._id}`}>
+                        <div className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer">
+                            {headers.map((header, index) => {
+                                return (
+                                    <div
+                                        className="w-full flex justify-center items-center text-base font-medium py-2 border border-[#E9E9E9]"
+                                        key={index + '_cell'}
+                                    >
+                                        {formatValue(row[header], header)}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </Link>
                 );
             })}
         </div>

@@ -1,7 +1,7 @@
 import apiInstance from "./instance";
 
-export const getEntities = async () => {
-    let data = await apiInstance.get('/entity');
+export const getEntities = async (module_id) => {
+    let data = await apiInstance.get('/entity?module_id=' + module_id);
     return data;
 }
 

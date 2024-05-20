@@ -16,7 +16,7 @@ const Builder = () => {
       case `/builder/entity`:
         setComponentToRender(<Entity />);
         break;
-      case `/builder/field`:
+      case `/builder/pages`:
         setComponentToRender(<Form />);
         break;
       case `/builder/dashboard`:

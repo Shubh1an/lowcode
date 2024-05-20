@@ -6,7 +6,7 @@ import { CiFilter } from 'react-icons/ci';
 import { MdOutlineSwapVert } from 'react-icons/md';
 import { BiHide } from 'react-icons/bi';
 import ListHeaderButton from '../../inputs/ListHeaderButton.jsx';
-import { getForms } from '../../../Requests/form.js';
+import { getPages } from '../../../Requests/form.js';
 import moment from 'moment';
 import ShortModal from '../../ShortModal/ShortModal.jsx';
 import HideModal from '../../Modals/Hide.jsx';
@@ -55,7 +55,7 @@ function search(searchValue, searchableHeaders, hashTable) {
   return results;
 }
 
-const List = () => {
+const List = ({ setNewPageData, newPageData, setActive }) => {
   const [forms, setForms] = useState([]);
   const [formsToRender, setFormsToRender] = useState([]);
   const [headers, setHeaders] = useState([]);
@@ -69,8 +69,9 @@ const List = () => {
     'description',
   ]);
   const [people, setPeoples] = useState({})
+  let entity_id = location.search.split('=')[1]
   useEffect(() => {
-    getForms()
+    getPages(entity_id)
       .then((data) => {
         setForms(data.data);
         let headers_gen = Object.keys(data.data[0]);
@@ -141,6 +142,21 @@ const List = () => {
       setSearchableHeaders((prev) => prev.filter((header) => header !== value));
     }
   };
+
+  const handleAddNewPage = (type) => {
+    setNewPageData((prev) => {
+      return { ...prev, type: type, entity_id: entity_id, id: null, mode: "add" };
+    });
+    setActive(1);
+  }
+
+  const handleEditPage = (id, type) => {
+    setNewPageData((prev) => {
+      return { ...prev, id: id, type: type, entity_id: entity_id, mode: "edit"};
+    });
+    setActive(1);
+    
+  }
   useEffect(() => {
     formsToRender.forEach((form, index) => {
       let header = Object.keys(form)
@@ -173,8 +189,9 @@ const List = () => {
           searchableHeaders={searchableHeaders}
           handleHeaderSelect={handleHeaderSelect}
           people={people}
+          onNewPage={handleAddNewPage}
         />
-        <Table headers={renderHeaders} data={formsToRender} />
+        <Table headers={renderHeaders} data={formsToRender} onNewPage={handleEditPage}/>
       </div>
     </div>
   );
@@ -193,13 +210,16 @@ const TopBar = ({
   searchableHeaders,
   handleHeaderSelect,
   people,
+  onNewPage
 }) => {
   const [showSearch, setShowSearch] = useState(false);
   return (
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
-        <p className="text-2xl font-bold	">Fields</p>
-        <AddNewButton onclick={() => { }} />
+        <p className="text-2xl font-bold	">Pages</p>
+        <AddNewButton onclick={(type) => {
+          onNewPage(type)
+        }} />
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -283,7 +303,7 @@ const modalComponents = (headers, hideColumns, setHideColumns, handleHide, peopl
   };
 };
 
-const Table = ({ headers, data }) => {
+const Table = ({ headers, data, onNewPage }) => {
   return (
     <div className="w-full h-full flex flex-col overflow-auto px-4">
       <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]">
@@ -301,7 +321,7 @@ const Table = ({ headers, data }) => {
       {data.length > 0 ? (
         data.map((row, index) => {
           return (
-            <div className="w-full flex flex-row px-[2px]">
+            <div className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer" key={index + '_cell'} onClick={() => onNewPage(row._id, row.page_type)}>
               {headers.map((header, index) => {
                 return (
                   <div
@@ -325,5 +345,7 @@ const Table = ({ headers, data }) => {
     </div>
   );
 };
+
+
 
 export default List;
