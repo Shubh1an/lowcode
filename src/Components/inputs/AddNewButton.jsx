@@ -2,14 +2,19 @@ import React, { useState } from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
-const AddNewButton = ({ onclick }) => {
+const AddNewButton = ({ onclick, isDropDown }) => {
   const types = ["Form", "View"]
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   return (
     <div>
 
       <button className="bg-[#227A60] text-[#fff] px-1 py-1 rounded-md mx-4 font-bold flex" onClick={() => {
-        setIsDropDownOpen(prev => !prev)
+        if (!isDropDown){
+          onclick("add")
+        }
+        else{
+          setIsDropDownOpen(prev => !prev)
+        }
       }}>
         <IoIosAddCircle className="text-2xl ml-1 text-[#fff]" />
         <p className="mx-1">Add New</p>

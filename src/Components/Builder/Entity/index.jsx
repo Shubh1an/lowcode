@@ -5,7 +5,7 @@ import ListHeaderButton from '../../inputs/ListHeaderButton';
 import { IoSearch } from 'react-icons/io5';
 import ShortModal from '../../ShortModal/ShortModal';
 import { ChangeViewBtn } from '../../Buttons/ChangeViewBtn';
-import { getEntities } from '../../../Requests/entity';
+import { getEntities, saveEntity } from '../../../Requests/entity';
 import { formatValue } from '../../../Utility/utility';
 import { Link } from 'react-router-dom';
 
@@ -22,21 +22,21 @@ const Entity = () => {
 
   let module_id = location.search.split('=')[1]
 
+  const fetchEntities = async () => {
+    const entity = await getEntities(module_id);
+    let data = entity?.data
+    let headers_gen = Object.keys(data?.[0] || {});
+    headers_gen.forEach((header, index) => {
+      if (header === "_id" || header === "__v") {
+        headers_gen.splice(index, 1)
+      }
+    })
+    setHeaders(headers_gen)
+    setCells(data)
+  }
   useEffect(() => {
-    const fetchModules = async () => {
-      const entity = await getEntities(module_id);
-      let data = entity?.data
-      let headers_gen = Object.keys(data?.[0] || {});
-      headers_gen.forEach((header, index) => {
-        if (header === "_id" || header === "__v") {
-          headers_gen.splice(index, 1)
-        }
-      })
-      setHeaders(headers_gen)
-      setCells(data)
-    }
 
-    fetchModules()
+    fetchEntities()
   }, [])
 
   const handleSearch = (value) => { };
@@ -44,9 +44,11 @@ const Entity = () => {
     let data = {
       name: modalForm?.name,
       description: modalForm?.description,
-      module_id: module_id
+      moduleId: module_id
     }
-    console.log(modalForm)
+    saveEntity(data).then(() => {
+      fetchEntities()
+    })
   };
   return (
     <div className="w-full h-full bg-[#E9F2EF] flex justify-center items-center px-6 py-6 ">
@@ -86,7 +88,7 @@ const TopBar = ({
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold">Entities</p>
-        <AddNewButton onclick={() => setShowModal(!showModal)} />
+        <AddNewButton onclick={() => setShowModal(!showModal)} isDropDown={false}/>
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -153,6 +155,7 @@ const ModalComponent = ({ closeModal, handleSubmit, modalForm, setModalForm }) =
           className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
           onClick={() => {
             handleSubmit();
+            closeModal();
           }}
         >
           Save

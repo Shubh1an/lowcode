@@ -21,26 +21,28 @@ const Module = () => {
 
   const [cells, setCells] = useState([]);
 
+  const fetchModules = async () => {
+    const modules = await getModules();
+    let data = modules?.data;
+    let headers_gen = Object.keys(data[0]);
+    headers_gen.forEach((header, index) => {
+      if (header === '_id' || header === '__v') {
+        headers_gen.splice(index, 1);
+      }
+    });
+    setHeaders(headers_gen);
+    setCells(data);
+  };
   useEffect(() => {
-    const fetchModules = async () => {
-      const modules = await getModules();
-      let data = modules?.data;
-      let headers_gen = Object.keys(data[0]);
-      headers_gen.forEach((header, index) => {
-        if (header === '_id' || header === '__v') {
-          headers_gen.splice(index, 1);
-        }
-      });
-      setHeaders(headers_gen);
-      setCells(data);
-    };
     fetchModules();
   }, []);
 
   const handleSearch = (value) => {};
 
   const handleSubmit = () => {
-    saveModule(modalForm);
+    saveModule(modalForm).then(() => {
+      fetchModules();
+    })
   };
   return (
     <div className="w-full h-full bg-[#E9F2EF] flex justify-center items-center px-6 py-6 ">
@@ -80,7 +82,7 @@ const TopBar = ({
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold">Modules</p>
-        <AddNewButton onclick={() => setShowModal(!showModal)} />
+        <AddNewButton onclick={() => setShowModal(!showModal)} isDropDown={false}/>
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -192,6 +194,7 @@ const ModalComponent = ({ closeModal, modalForm, setModalForm, handleSubmit }) =
                     className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
                     onClick={() => {
                         handleSubmit()
+                        closeModal()
                     }}
                 >
                     Save

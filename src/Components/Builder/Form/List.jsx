@@ -219,7 +219,7 @@ const TopBar = ({
         <p className="text-2xl font-bold	">Pages</p>
         <AddNewButton onclick={(type) => {
           onNewPage(type)
-        }} />
+        }} isDropDown={true}/>
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
