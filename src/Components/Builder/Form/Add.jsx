@@ -15,7 +15,13 @@ import BuildFormNav from '../../BreadcrumNavigation/BuildFormNav';
 import { useDrop } from 'react-dnd';
 import AddPageField from '../../inputs/AddPageField';
 import FormInput from '../../FormInput/FormInput';
-import { getControls, getPageData, getPageDetails, getPages, savePage } from '../../../Requests/form';
+import {
+  getControls,
+  getPageData,
+  getPageDetails,
+  getPages,
+  savePage,
+} from '../../../Requests/form';
 
 function toSnakeCase(input) {
   // Replace spaces with underscores and convert to lowercase
@@ -40,23 +46,23 @@ const Add = ({ newPageData, setActive }) => {
 
   useEffect(() => {
     if (Object.keys(newPageData).length > 0) {
-      let mode = newPageData?.mode
-      console.log("newPageData", newPageData)
-      if (mode === "edit") {
+      let mode = newPageData?.mode;
+      console.log('newPageData', newPageData);
+      if (mode === 'edit') {
         getPageDetails(newPageData?.id).then(({ data }) => {
-          let page_data = data?.[0]?.page_data || []
-          console.log("Page Data", page_data)
+          let page_data = data?.[0]?.page_data || [];
+          console.log('Page Data', page_data);
           page_data.forEach(async (field) => {
             getPageData(field).then(({ data }) => {
               getControls(data.control_id).then(({ data }) => {
-                console.log("Data", data)
-              })
-            })
-          })
-        })
+                console.log('Data', data);
+              });
+            });
+          });
+        });
       }
     }
-  }, [newPageData])
+  }, [newPageData]);
   const basicFields = [
     {
       title: 'Single Line',
@@ -182,19 +188,19 @@ const Add = ({ newPageData, setActive }) => {
   const handleFormSubmit = async () => {
     savePage({
       fields: formFields,
-      name: formName || "Untitled Form",
-      form_id: "a72d8544-df7e-477a-8959-bf9e32cca62b",
+      name: formName || 'Untitled Form',
+      form_id: 'a72d8544-df7e-477a-8959-bf9e32cca62b',
       created_by: {
         user_id: 1,
-        name: "Akhilesh Gandhi",
-        profile_image: "https://randomuser.me/api/"
+        name: 'Akhilesh Gandhi',
+        profile_image: 'https://randomuser.me/api/',
       },
-      module: "CRM",
-      module_id: "23432",
-      entity: "Lead",
-      entity_id: "2343443"
-    })
-  }
+      module: 'CRM',
+      module_id: '23432',
+      entity: 'Lead',
+      entity_id: '2343443',
+    });
+  };
 
   return (
     <div className="w-full h-full flex flex-row px-6 pb-6">

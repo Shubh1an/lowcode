@@ -126,82 +126,92 @@ const TopBar = ({
 };
 
 const TableView = ({ data }) => {
-    const { headers, cells } = data
-    return (
-        <div className="w-full h-full flex flex-col overflow-auto px-4">
-            <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]">
-                {headers.map((header, index) => {
-                    return (
-                        <div
-                            className="w-full flex justify-center items-center text-base	font-medium py-2 border border-[#E9E9E9] overflow-hidden"
-                            key={index + '_heading'}
-                        >
-                            {header}
-                        </div>
-                    );
-                })}
+  const { headers, cells } = data;
+  return (
+    <div className="w-full h-full flex flex-col overflow-auto px-4">
+      <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]">
+        {headers.map((header, index) => {
+          return (
+            <div
+              className="w-full flex justify-center items-center text-base	font-medium py-2 border border-[#E9E9E9] overflow-hidden"
+              key={index + '_heading'}
+            >
+              {header}
             </div>
-            {cells.map((row, index) => {
+          );
+        })}
+      </div>
+      {cells.map((row, index) => {
+        return (
+          <Link to={`/builder/entity?module_id=${row?._id}`}>
+            <div className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer">
+              {headers.map((header, index) => {
                 return (
-                    <Link to={`/builder/entity?module_id=${row?._id}`}>
-                        <div className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer">
-                            {headers.map((header, index) => {
-                                return (
-                                    <div
-                                        className="w-full flex justify-center items-center text-base font-medium py-2 border border-[#E9E9E9]"
-                                        key={index + '_cell'}
-                                    >
-                                        {formatValue(row[header], header)}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </Link>
+                  <div
+                    className="w-full flex justify-center items-center text-base font-medium py-2 border border-[#E9E9E9]"
+                    key={index + '_cell'}
+                  >
+                    {formatValue(row[header], header)}
+                  </div>
                 );
-            })}
-        </div>
-    )
-}
-const ModalComponent = ({ closeModal, modalForm, setModalForm, handleSubmit }) => {
-    return (
-        <div className="w-[400px]">
-            <div className="text-2xl font-bold text-[#227A60]">Add Modules</div>
-            <div className="w-full h-[1px] bg-[#E9E9E9]" />
-            <div className="w-full mt-5">
-                <p className="mb-2 text-lg font-bold">Module Name</p>
-                <input
-                    type="text"
-                    className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#227A60] focus:border-[#227A60] focus:outline-none"
-                    placeholder="Enter Module Name"
-                    value={modalForm.name}
-                    onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
-                />
+              })}
             </div>
-            <div className="w-full mt-5">
-                <p className="mb-2 text-lg font-bold">Description</p>
-                <textarea
-                    className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#227A60] focus:border-[#227A60] focus:outline-none "
-                    placeholder="Enter Description"
-                    rows={3}
-                    value={modalForm.description}
-                    onChange={(e) => setModalForm({ ...modalForm, description: e.target.value })}
-                />
-            </div>
-            <div className="flex justify-start items-center mt-5">
-                <button
-                    className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
-                    onClick={() => {
-                        handleSubmit()
-                    }}
-                >
-                    Save
-                </button>
-                <button className="text-[#227A60] px-4 py-1 rounded-md border border-[#227A60] font-bold" onClick={closeModal}>
-                    Cancel
-                </button>
-            </div>
-        </div>
-    )
+          </Link>
+        );
+      })}
+    </div>
+  );
+};
+const ModalComponent = ({
+  closeModal,
+  modalForm,
+  setModalForm,
+  handleSubmit,
+}) => {
+  return (
+    <div className="w-[400px]">
+      <div className="text-2xl font-bold text-[#227A60]">Add Modules</div>
+      <div className="w-full h-[1px] bg-[#E9E9E9]" />
+      <div className="w-full mt-5">
+        <p className="mb-2 text-lg font-bold">Module Name</p>
+        <input
+          type="text"
+          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#227A60] focus:border-[#227A60] focus:outline-none"
+          placeholder="Enter Module Name"
+          value={modalForm.name}
+          onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
+        />
+      </div>
+      <div className="w-full mt-5">
+        <p className="mb-2 text-lg font-bold">Description</p>
+        <textarea
+          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#227A60] focus:border-[#227A60] focus:outline-none "
+          placeholder="Enter Description"
+          rows={3}
+          value={modalForm.description}
+          onChange={(e) =>
+            setModalForm({ ...modalForm, description: e.target.value })
+          }
+        />
+      </div>
+      <div className="flex justify-start items-center mt-5">
+        <button
+          className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
+          onClick={() => {
+            handleSubmit();
+          }}
+        >
+          Save
+        </button>
+        <button
+          className="text-[#227A60] px-4 py-1 rounded-md border border-[#227A60] font-bold"
+          onClick={closeModal}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default Module;
