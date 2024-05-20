@@ -3,6 +3,7 @@ import { useDrop } from 'react-dnd';
 import { BiText } from 'react-icons/bi';
 import ViewKanban from './ViewKanban';
 import BoardTitle from './BoardTitle';
+import Board from './Board';
 import BoardInput from './BoardInput';
 import { v4 as uuidv4 } from 'uuid';
 import Footer from '../../Components/inputs/Footer';
@@ -20,6 +21,7 @@ function Kanban() {
     let { field } = item;
     delete field.icon;
     setDraggedItem([field, ...draggedItem]);
+    setDefaultValue({ kanbanname: field.title });
   };
 
   const [, drop] = useDrop({
@@ -83,10 +85,9 @@ function Kanban() {
     },
   ]);
 
-  useEffect(() => {}, [defaultValue]);
-  const handleFormSubmit = () => {
-    setDraggedItem([{ title: defaultValue['kanbanname'] }]);
-  };
+  useEffect(() => {}, [draggedItem]);
+
+  const handleFormSubmit = () => {};
 
   return (
     <div className="w-full h-full flex flex-row px-7 py-5 pb-6 gap-5">
@@ -100,7 +101,10 @@ function Kanban() {
         className="w-1/2 h-full bg-[#fff] rounded-2xl flex flex-col"
         ref={drop}
       >
-        <BoardTitle draggedItem={draggedItem} defaultValue={defaultValue} />
+        {draggedItem.map((data, index) => (
+          <BoardTitle title={data.title} key={index} />
+        ))}
+        <Board defaultValue={defaultValue} />
         <Footer handleFormSubmit={handleFormSubmit} />
       </div>
       <ViewKanban
@@ -108,6 +112,7 @@ function Kanban() {
         entity={entity}
         defaultValue={defaultValue}
         setDefaultValue={setDefaultValue}
+        setDraggedItem={setDraggedItem}
         draggedItem={draggedItem}
       />
     </div>

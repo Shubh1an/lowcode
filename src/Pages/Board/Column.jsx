@@ -11,7 +11,8 @@ const Column = ({
   // onChange,
 }) => {
   const [isEdit, setisEdit] = useState(false);
-
+  const [title, setTitle] = useState('');
+  const task = col ? col.tasks.find((task, index) => index === taskIndex) : [];
   const onDragStart = (e, id) => {
     e.dataTransfer.setData('id', id);
   };
@@ -69,6 +70,16 @@ const Column = ({
               <Task task={task} />
             </div>
           ))} */}
+        <div className="flex flex-col space-y-1">
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            id="task-name-input"
+            type="text"
+            className=" bg-transparent  px-4 py-2 outline-none focus:border-0 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-1  ring-0  "
+            placeholder="coffee break"
+          />
+        </div>
       </div>
     </div>
   );

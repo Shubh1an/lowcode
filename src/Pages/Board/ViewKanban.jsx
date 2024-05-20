@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { AiFillEdit } from 'react-icons/ai';
 import { IoMdAddCircle } from 'react-icons/io';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,6 +7,7 @@ function ViewKanban({
   entity,
   defaultValue,
   setDefaultValue,
+  setDraggedItem,
   draggedItem,
 }) {
   const [coulmnindex, setcoulmnindex] = useState(null);
@@ -28,6 +29,13 @@ function ViewKanban({
     setcoulmnindex(index);
     issetEdit(!isEdit);
   };
+
+  const updateColumnname = (value, key) => {
+    console.log('first', value, key);
+    console.log('--------', newColumn);
+    const column = newColumn.filter((elm, index) => index === key);
+    console.log('first', column);
+  };
   return (
     <div className="w-1/3 h-full bg-[#fff] rounded-2xl flex flex-col">
       <div className="flex flex-col space-y-1 p-2">
@@ -39,7 +47,13 @@ function ViewKanban({
           name="kanbanname"
           placeholder="kanban name"
           value={defaultValue.kanbanname}
-          onChange={(e) => setDefaultValue({ kanbanname: e.target.value })}
+          onChange={(e) => {
+            setDefaultValue({
+              kanbanname: e.target.value,
+              choicename: newColumn,
+            });
+            setDraggedItem([{ title: e.target.value }]);
+          }}
           className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
         />
       </div>
@@ -90,25 +104,17 @@ function ViewKanban({
           Choice{' '}
           <IoMdAddCircle
             onClick={() => {
-              setnewColumn((state) => [
-                ...state,
-                {
-                  status: '',
-                  color: '',
-                  id: uuidv4(),
-                },
-              ]);
+              setnewColumn((state) => [...state, {}]);
             }}
           />
         </label>
         {newColumn.map((column, j) => (
           <div key={j} className="w-80 flex items-center">
             <input
-              name="choicename"
               className={`bg-[${column.color}] flex-grow px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-[1px] `}
               type="text"
               value={column.status}
-              disabled={j === coulmnindex ? isEdit : true}
+              onChange={(e) => updateColumnname(e.target.value, j)}
             />
             <AiFillEdit
               onClick={() => {
