@@ -3,12 +3,12 @@ import { BiUserCircle } from "react-icons/bi";
 import { BsTable, BsViewList } from "react-icons/bs";
 
 export const checkValidDate = (date) => {
-    // 2024-05-13T12:21:48.200+00:00
-    let isValid = moment(date, 'YYYY-MM-DD', true).isValid();
-    if (!isValid) {
-        isValid = moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ', true).isValid();
-    }
-    return isValid;
+  // 2024-05-13T12:21:48.200+00:00
+  let isValid = moment(date, 'YYYY-MM-DD', true).isValid();
+  if (!isValid) {
+    isValid = moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ', true).isValid();
+  }
+  return isValid;
 };
 
 export const UserPill = ({ user }) => {

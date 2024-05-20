@@ -1,0 +1,19 @@
+{
+  "emmet.preferences": {},
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  },
+  "autoimport.filesToScan": "**/*.{ts,tsx.js,jsx}",
+  "typescript.extension.sortImports.enableJavascript": true
+
+  // "javascriptBooster.formattingOptions": {
+  // },
+  // "easySnippet.lintDisableHeader": {
+
+  //     "javascript": "/* eslint-disable */",
+  //     "typescript": "/* eslint-disable */",
+  //     "javascriptreact": "/* eslint-disable */",
+  //     "typescriptreact": "/* eslint-disable */",
+  // },
+}

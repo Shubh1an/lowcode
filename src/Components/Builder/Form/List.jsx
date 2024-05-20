@@ -14,8 +14,6 @@ import CustomSearch from '../../CustomSearch/CustomSearch.jsx';
 import PersonModal from '../../Modals/PersonModal.jsx';
 import { formatValue } from '../../../Utility/utility.js';
 
-
-
 function preprocessSearchData(searchData, searchableHeaders) {
   const hashTable = {};
   // Initialize hash table with empty arrays for each searchable header
@@ -78,14 +76,16 @@ const List = ({ setNewPageData, newPageData, setActive }) => {
         headers_gen.forEach((header, index) => {
           // if data type is Object, do not show
           if (typeof data.data[0][header] === 'object') {
-            if (header === "created_by") {
-
-            }
-            else {
-              headers_gen.splice(index, 1)
+            if (header === 'created_by') {
+            } else {
+              headers_gen.splice(index, 1);
             }
           }
-          if (header.includes("created_at") || header.includes("updated_at") || header.includes("_id")) {
+          if (
+            header.includes('created_at') ||
+            header.includes('updated_at') ||
+            header.includes('_id')
+          ) {
             headers_gen.splice(index, 1);
           }
         });
@@ -107,7 +107,7 @@ const List = ({ setNewPageData, newPageData, setActive }) => {
     // Add unhidden columns
   }, [hideColumns, forms]);
 
-  useEffect(() => { }, [renderHeaders]);
+  useEffect(() => {}, [renderHeaders]);
 
   const handleHide = (column, checked) => {
     setHideColumns((prev) => {
@@ -159,19 +159,19 @@ const List = ({ setNewPageData, newPageData, setActive }) => {
   }
   useEffect(() => {
     formsToRender.forEach((form, index) => {
-      let header = Object.keys(form)
-      header.forEach(header => {
-        if (header == "created_by") {
-          let user_id = form[header]?.user_id
+      let header = Object.keys(form);
+      header.forEach((header) => {
+        if (header == 'created_by') {
+          let user_id = form[header]?.user_id;
           if (!people[user_id]) {
-            setPeoples(prev => {
-              return { ...prev, [user_id]: form[header] }
-            })
+            setPeoples((prev) => {
+              return { ...prev, [user_id]: form[header] };
+            });
           }
         }
-      })
-    })
-  }, [formsToRender])
+      });
+    });
+  }, [formsToRender]);
 
   return (
     <div className="w-full h-full flex flex-row px-6 pb-6">
@@ -279,9 +279,13 @@ const TopBar = ({
               setShowModal(false);
             }}
             children={
-              modalComponents(headers, hideColumns, setHideColumns, handleHide, people)[
-              modalForm
-              ]
+              modalComponents(
+                headers,
+                hideColumns,
+                setHideColumns,
+                handleHide,
+                people,
+              )[modalForm]
             }
           />
         </div>
@@ -290,7 +294,13 @@ const TopBar = ({
   );
 };
 
-const modalComponents = (headers, hideColumns, setHideColumns, handleHide, people) => {
+const modalComponents = (
+  headers,
+  hideColumns,
+  setHideColumns,
+  handleHide,
+  people,
+) => {
   return {
     Hide: (
       <HideModal

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import AddNewButton from '../../inputs/AddNewButton';
 import CustomSearch from '../../CustomSearch/CustomSearch';
 import ListHeaderButton from '../../inputs/ListHeaderButton';
@@ -10,114 +10,120 @@ import { formatValue } from '../../../Utility/utility';
 import { Link } from 'react-router-dom';
 
 const Module = () => {
-    const [showModal, setShowModal] = useState(false);
-    const [modalForm, setModalForm] = useState({
-        name: '',
-        description: '',
-        ownerId: "erfgjhw"
-    })
-    const [headers, setHeaders] = useState([])
-    const [view, setView] = useState(true)
+  const [showModal, setShowModal] = useState(false);
+  const [modalForm, setModalForm] = useState({
+    name: '',
+    description: '',
+    ownerId: 'erfgjhw',
+  });
+  const [headers, setHeaders] = useState([]);
+  const [view, setView] = useState(true);
 
-    const [cells, setCells] = useState([])
+  const [cells, setCells] = useState([]);
 
-    useEffect(() => {
-        const fetchModules = async () => {
-            const modules = await getModules();
-            let data = modules?.data
-            let headers_gen = Object.keys(data[0]);
-            headers_gen.forEach((header, index) => {
-                if (header === "_id" || header === "__v") {
-                    headers_gen.splice(index, 1)
-                }
-            })
-            setHeaders(headers_gen)
-            setCells(data)
+  useEffect(() => {
+    const fetchModules = async () => {
+      const modules = await getModules();
+      let data = modules?.data;
+      let headers_gen = Object.keys(data[0]);
+      headers_gen.forEach((header, index) => {
+        if (header === '_id' || header === '__v') {
+          headers_gen.splice(index, 1);
         }
-        fetchModules()
+      });
+      setHeaders(headers_gen);
+      setCells(data);
+    };
+    fetchModules();
+  }, []);
 
-    }, [])
+  const handleSearch = (value) => {};
 
-    const handleSearch = (value) => { };
-
-    const handleSubmit = () => {
-        saveModule(modalForm)
-    }
-    return (
-        <div className="w-full h-full bg-[#E9F2EF] flex justify-center items-center px-6 py-6 ">
-            <div className="w-full h-full bg-[#FFF] rounded-2xl">
-                <TopBar
-                    showModal={showModal}
-                    setShowModal={setShowModal}
-                    modalForm={modalForm}
-                    setModalForm={setModalForm}
-                    headers={headers}
-                    handleSearch={handleSearch}
-                    searchableHeaders={headers}
-                    setView={setView}
-                    view={view}
-                    handleSubmit={handleSubmit}
-                />
-                <TableView data={{ headers, cells }} />
-            </div>
-        </div>
-    )
-}
-
-const TopBar = ({
-    showModal,
-    setShowModal,
-    modalForm,
-    setModalForm,
-    headers,
-    handleSearch,
-    searchableHeaders,
-    setView,
-    view,
-    handleSubmit
-}) => {
-    const [showSearch, setShowSearch] = useState(false);
-    return (
-        <div className="h-[60px] mx-6 border-b justify-center">
-            <div className="flex items-center h-full">
-                <p className="text-2xl font-bold">Modules</p>
-                <AddNewButton onclick={() => setShowModal(!showModal)} />
-                <div className="flex items-center h-full ml-auto">
-                    <CustomSearch
-                        initialComponent={
-                            <ListHeaderButton
-                                icon={<IoSearch />}
-                                label="Search"
-                                onclick={() => {
-                                    setShowSearch(!showSearch);
-                                }}
-                            />
-                        }
-                        searchHeaders={searchableHeaders}
-                        headers={headers}
-                        searchActive={showSearch}
-                        setShowSearch={setShowSearch}
-                        customClass={''}
-                        handleSearch={handleSearch}
-                    />
-                    <ChangeViewBtn onclick={() => {
-                        setView(!view)
-                    }} view={view} />
-                    <ShortModal
-                        isOpen={showModal}
-                        onClose={() => {
-                            setShowModal(false);
-                        }}
-                        children={
-                            <ModalComponent closeModal={() => setShowModal(false)} modalForm={modalForm} setModalForm={setModalForm} handleSubmit={handleSubmit} />
-                        }
-                    />
-                </div>
-            </div>
-        </div>
-    );
+  const handleSubmit = () => {
+    saveModule(modalForm);
+  };
+  return (
+    <div className="w-full h-full bg-[#E9F2EF] flex justify-center items-center px-6 py-6 ">
+      <div className="w-full h-full bg-[#FFF] rounded-2xl">
+        <TopBar
+          showModal={showModal}
+          setShowModal={setShowModal}
+          modalForm={modalForm}
+          setModalForm={setModalForm}
+          headers={headers}
+          handleSearch={handleSearch}
+          searchableHeaders={headers}
+          setView={setView}
+          view={view}
+          handleSubmit={handleSubmit}
+        />
+        <TableView data={{ headers, cells }} />
+      </div>
+    </div>
+  );
 };
 
+const TopBar = ({
+  showModal,
+  setShowModal,
+  modalForm,
+  setModalForm,
+  headers,
+  handleSearch,
+  searchableHeaders,
+  setView,
+  view,
+  handleSubmit,
+}) => {
+  const [showSearch, setShowSearch] = useState(false);
+  return (
+    <div className="h-[60px] mx-6 border-b justify-center">
+      <div className="flex items-center h-full">
+        <p className="text-2xl font-bold">Modules</p>
+        <AddNewButton onclick={() => setShowModal(!showModal)} />
+        <div className="flex items-center h-full ml-auto">
+          <CustomSearch
+            initialComponent={
+              <ListHeaderButton
+                icon={<IoSearch />}
+                label="Search"
+                onclick={() => {
+                  setShowSearch(!showSearch);
+                }}
+              />
+            }
+            searchHeaders={searchableHeaders}
+            headers={headers}
+            searchActive={showSearch}
+            setShowSearch={setShowSearch}
+            customClass={''}
+            handleSearch={handleSearch}
+          />
+          <ChangeViewBtn
+            onclick={() => {
+              setView(!view);
+            }}
+            view={view}
+          />
+          <ShortModal
+            isOpen={showModal}
+            onClose={() => {
+              setShowModal(false);
+            }}
+            children={
+              <ModalComponent
+                closeModal={() => setShowModal(false)}
+                modalForm={modalForm}
+                setModalForm={setModalForm}
+                handleSubmit={handleSubmit}
+              />
+            }
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const TableView = ({ data }) => {
     const { headers, cells } = data
@@ -198,4 +204,4 @@ const ModalComponent = ({ closeModal, modalForm, setModalForm, handleSubmit }) =
     )
 };
 
-export default Module
+export default Module;

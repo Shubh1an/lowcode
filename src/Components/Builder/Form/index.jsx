@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import MainTab from '../../Tab/MainTab';
 import List from './List';
 import { DndProvider } from 'react-dnd';
@@ -36,5 +36,3 @@ const Form = () => {
         </div>
     );
 }
-
-export default Form
