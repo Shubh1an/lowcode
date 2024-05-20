@@ -8,6 +8,7 @@ const FormInput = ({ field, setActiveField, activePropertiesField }) => {
     id,
     defaultValue,
     rows,
+    propertyValues
   } = field;
   return (
     <div className={`w-full`}>
@@ -15,7 +16,7 @@ const FormInput = ({ field, setActiveField, activePropertiesField }) => {
         className={`block mb-2 mt-4 text-lg font-medium cursor-pointer ${activePropertiesField === id ? 'text-[#227A60] font-bold underline' : 'text-gray-900 font-bold '}`}
         onClick={() => setActiveField(id)}
       >
-        {label}
+        {propertyValues?.display_name || label}
       </label>
       <InputByType
         type={type}
@@ -29,7 +30,7 @@ const FormInput = ({ field, setActiveField, activePropertiesField }) => {
 };
 const InputByType = ({ type, options, id, defaultValue, rows }) => {
   switch (type) {
-    case 'text':
+    case 'Single Line':
       return (
         <input
           type="text"
@@ -85,14 +86,15 @@ const InputByType = ({ type, options, id, defaultValue, rows }) => {
           placeholder={defaultValue}
         />
       );
-    case 'date':
+    case 'Date':
       return (
         <input
           type="date"
           className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
         />
       );
-    case 'time':
+      
+    case 'Time':
       return (
         <input
           type="time"

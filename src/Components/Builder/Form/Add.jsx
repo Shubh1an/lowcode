@@ -6,7 +6,7 @@ import BuildFormNav from '../../BreadcrumNavigation/BuildFormNav';
 import { useDrop } from 'react-dnd';
 import AddPageField from '../../inputs/AddPageField';
 import FormInput from '../../FormInput/FormInput';
-import { getControls, getPageData, getPageDetails, getPages, savePage } from '../../../Requests/form';
+import { getAllControls, getControls, getPageData, getPageDetails, getPages, savePage } from '../../../Requests/form';
 import Icons from '../../Utility/Icons';
 
 function toSnakeCase(input) {
@@ -26,8 +26,7 @@ const Add = ({ newPageData, setActive }) => {
   ])
 
   const getFields = async () => {
-    const basicFieldsData = [
-    ]
+
     if (Object.keys(newPageData).length > 0) {
       let mode = newPageData?.mode
       console.log("newPageData", newPageData)
@@ -37,22 +36,36 @@ const Add = ({ newPageData, setActive }) => {
           console.log("Page Data", page_data)
           page_data.forEach(async (field) => {
             getPageData(field).then(({ data }) => {
-              getControls(data.control_id).then(({ data }) => {
-                console.log("Data", data[0])
-                basicFieldsData.push({
-                  title: data[0]?.name,
-                  inputType: data[0]?.name,
-                  icon: <Icons name={data[0]?.logo} />,
-                  properties: data[0]?.control_properties
-                })
-                setBasicFields(basicFieldsData)
-              })
+              getControls(data.control_id).then(
+                ({ data }) => {
+                  console.log("Data", data)
+                }
+              )
             })
           })
         })
       }
     }
   }
+
+  const fetchAllControls = async () => {
+    const basicFieldsData = [
+    ]
+    getAllControls().then(({ data }) => {
+      data.map((field) => {
+        basicFieldsData.push({
+          title: field.name,
+          inputType: field.name,
+          icon: <Icons name={field.logo} />,
+          properties: field.control_properties
+        })
+      })
+      setBasicFields(basicFieldsData)
+    })
+  }
+  useEffect(() => {
+    fetchAllControls()
+  }, [])
 
   useEffect(() => {
     getFields()
@@ -114,20 +127,7 @@ const Add = ({ newPageData, setActive }) => {
   const isActive = canDrop && isOver;
 
   const handleFormSubmit = async () => {
-    savePage({
-      fields: formFields,
-      name: formName || "Untitled Form",
-      form_id: "a72d8544-df7e-477a-8959-bf9e32cca62b",
-      created_by: {
-        user_id: 1,
-        name: "Akhilesh Gandhi",
-        profile_image: "https://randomuser.me/api/"
-      },
-      module: "CRM",
-      module_id: "23432",
-      entity: "Lead",
-      entity_id: "2343443"
-    })
+    console.log('formFields', formFields);
   }
 
   return (
