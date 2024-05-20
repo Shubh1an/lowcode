@@ -16,29 +16,27 @@ import { useDrop } from 'react-dnd';
 import AddPageField from '../../inputs/AddPageField';
 import FormInput from '../../FormInput/FormInput';
 import { getControls, getPageData, getPageDetails, getPages, savePage } from '../../../Requests/form';
+import Icons from '../../Utility/Icons';
 
 function toSnakeCase(input) {
   // Replace spaces with underscores and convert to lowercase
   return input.replace(/\s+/g, '_').toLowerCase();
 }
-
 const Add = ({ newPageData, setActive }) => {
   const FieldTabs = ['Basic Fields', 'Advanced Fields'];
 
   const PropertiesFields = ['Edit', 'Style'];
+  const [basicFields, setBasicFields] = useState([
+    {
+      title: 'Single Line',
+      inputType: 'text',
+      icon: <BiText />,
+    },
+  ])
 
-  // const basicFields = [
-  //     "Single Line",
-  //     "Multi Line",
-  //     "Number",
-  //     "Date",
-  //     "Time",
-  //     "Email",
-  //     "Phone",
-  //     "Address",
-  // ]
-
-  useEffect(() => {
+  const getFields = async () => {
+    const basicFieldsData = [
+    ]
     if (Object.keys(newPageData).length > 0) {
       let mode = newPageData?.mode
       console.log("newPageData", newPageData)
@@ -49,91 +47,27 @@ const Add = ({ newPageData, setActive }) => {
           page_data.forEach(async (field) => {
             getPageData(field).then(({ data }) => {
               getControls(data.control_id).then(({ data }) => {
-                console.log("Data", data)
+                console.log("Data", data[0])
+                basicFieldsData.push({
+                  title: data[0]?.name,
+                  inputType: data[0]?.name,
+                  icon: <Icons name={data[0]?.logo} />,
+                  properties: data[0]?.control_properties
+                })
+                setBasicFields(basicFieldsData)
               })
             })
           })
         })
       }
     }
-  }, [newPageData])
-  const basicFields = [
-    {
-      title: 'Single Line',
-      inputType: 'text',
-      icon: <BiText />,
-    },
-    {
-      title: 'Multi Line',
-      inputType: 'textarea',
-      icon: <BiText />,
-    },
-    {
-      title: 'Number',
-      inputType: 'number',
-      icon: <RiCheckboxBlankCircleLine />,
-    },
-    {
-      title: 'Date',
-      inputType: 'date',
-      icon: <AiOutlineCalendar />,
-    },
-    {
-      title: 'Time',
-      inputType: 'time',
-      icon: <AiOutlineClockCircle />,
-    },
-    {
-      title: 'Email',
-      inputType: 'email',
-      icon: <HiOutlineMail />,
-    },
-    {
-      title: 'Phone',
-      inputType: 'tel',
-      icon: <AiOutlinePhone />,
-    },
-    {
-      title: 'Address',
-      inputType: 'text',
-      icon: <BsMap />,
-    },
-    {
-      title: 'Gender',
-      inputType: 'radio',
-      icon: <MdPeopleAlt />,
-      options: ['Male', 'Female'],
-    },
-  ];
+  }
 
-  const fieldProperties = [
-    {
-      title: 'Display Name',
-      type: 'text',
-      id: 'displayName',
-    },
-    {
-      title: 'Name',
-      type: 'text',
-      id: 'name',
-    },
-    {
-      title: 'Description',
-      type: 'text',
-      id: 'description',
-    },
-    {
-      title: 'Mandatory',
-      type: 'radio',
-      options: ['Yes', 'No'],
-      id: 'mandatory',
-    },
-    {
-      title: 'Default Value',
-      type: 'text',
-      id: 'defaultValue',
-    },
-  ];
+  useEffect(() => {
+    getFields()
+  }, [newPageData])
+
+  const [fieldProperties, setFieldProperties] = useState([]);
 
   const [formFields, setFormFields] = useState([]);
 

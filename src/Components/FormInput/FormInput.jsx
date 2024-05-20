@@ -37,6 +37,30 @@ const InputByType = ({ type, options, id, defaultValue, rows }) => {
           placeholder={defaultValue}
         />
       );
+    case 'Gender':
+      return (
+        <div>
+          {["Male", "Female"].map((option, index) => {
+            return (
+              <div
+                className="flex flex-row items-center justify-start "
+                key={index}
+              >
+                <input
+                  type="radio"
+                  className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+                  name={id}
+                />
+                <label
+                  className="ml-2 text-lg font-bold cursor-pointer"
+                >
+                  {option}
+                </label>
+              </div>
+            );
+          })}
+        </div>
+      );
     case 'textarea':
       return (
         <textarea
