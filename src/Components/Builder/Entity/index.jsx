@@ -6,7 +6,6 @@ import { IoSearch } from 'react-icons/io5';
 import ShortModal from '../../ShortModal/ShortModal';
 import { ChangeViewBtn } from '../../Buttons/ChangeViewBtn';
 import { getEntities, saveEntity } from '../../../Requests/entity';
-import { getEntities, saveEntity } from '../../../Requests/entity';
 import { formatValue } from '../../../Utility/utility';
 import { Link } from 'react-router-dom';
 
