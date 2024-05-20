@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SubTab from '../../Tab/SubTab';
 import { BiText } from 'react-icons/bi';
-import { RiCheckboxBlankCircleLine } from 'react-icons/ri';
-import {
-  AiOutlineCalendar,
-  AiOutlineClockCircle,
-  AiOutlinePhone,
-} from 'react-icons/ai';
-import { HiOutlineMail } from 'react-icons/hi';
-import { BsMap } from 'react-icons/bs';
-import { MdPeopleAlt } from 'react-icons/md';
 import { FieldButton } from '../../Buttons/FieldButton';
 import BuildFormNav from '../../BreadcrumNavigation/BuildFormNav';
 import { useDrop } from 'react-dnd';
@@ -76,23 +67,32 @@ const Add = ({ newPageData, setActive }) => {
   const [activePropertiesField, setActivePropertiesField] = useState(0);
   const [formName, setFormName] = useState('Untitled Form');
 
+  useEffect(() => {
+    const fields = []
+    formFields?.[activePropertiesField]?.properties.map((field) => {
+      let key = Object.keys(field)[0];
+      let data = {
+        id: key,
+        type: field[key].type,
+        title: field[key].label[0],
+        options: field[key]?.options,
+      }
+      fields.push(data)
+    })
+    console.log("Fields", fields)
+    setFieldProperties(fields)
+  }, [activePropertiesField]);
+
   const handleProperties = (data) => {
     let changeId = activePropertiesField;
     let currentData = formFields;
-
-    if (data.id === 'displayName') {
-      currentData[changeId].title = data.value;
-      currentData[changeId].name = 'crm_' + 'lead_' + toSnakeCase(data.value);
-    } else if (data.id === 'name') {
-      currentData[changeId].name = data.value;
-    } else if (data.id === 'description') {
-      currentData[changeId].description = data.value;
-    } else if (data.id === 'mandatory') {
-      currentData[changeId].mandatory = data.value;
-    } else if (data.id === 'defaultValue') {
-      currentData[changeId].defaultValue = data.value;
+    currentData[changeId] = {
+      ...currentData[changeId],
+      propertyValues: {
+        ...currentData[changeId].propertyValues || {},
+        [data.id]: data.value
+      }
     }
-
     setFormFields([...currentData]);
   };
 

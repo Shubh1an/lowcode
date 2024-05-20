@@ -8,22 +8,7 @@ const AddPageField = ({
   const { title: label, type, options, id } = field;
   const [defaultValue, setDefaultValue] = useState('');
   useEffect(() => {
-    switch (label) {
-      case 'Display Name':
-        setDefaultValue(defaultValueProp?.title);
-        break;
-      case 'Name':
-        setDefaultValue(defaultValueProp?.name);
-        break;
-      case 'Description':
-        setDefaultValue(defaultValueProp?.description);
-        break;
-      case 'Mandatory':
-        setDefaultValue(defaultValueProp?.mandatory);
-        break;
-      case 'Default Value':
-        setDefaultValue(defaultValueProp?.defaultValue);
-    }
+    setDefaultValue(defaultValueProp?.propertyValues?.[field.id] || '');
   }, [field, defaultValueProp]);
 
   return (
@@ -75,7 +60,7 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
                   onChange={(e) => {
                     let payload = {
                       id: id,
-                      value: e.target.value,
+                      value: option,
                     };
                     handleProperties(payload);
                   }}
