@@ -6,40 +6,50 @@ import { IoSearch } from 'react-icons/io5';
 import ShortModal from '../../ShortModal/ShortModal';
 import { ChangeViewBtn } from '../../Buttons/ChangeViewBtn';
 import { getEntities, saveEntity } from '../../../Requests/entity';
+import { getEntities, saveEntity } from '../../../Requests/entity';
 import { formatValue } from '../../../Utility/utility';
 import { Link } from 'react-router-dom';
 
 const Entity = () => {
   const [showModal, setShowModal] = useState(false);
-  const [modalForm, setModalForm] = useState({});
+  const [modalForm, setModalForm] = useState({
+    name: '',
+    description: '',
+    moduleId: '',
+  });
   const [headers, setHeaders] = useState([]);
   const [view, setView] = useState(true);
   const [cells, setCells] = useState([]);
 
   let module_id = location.search.split('=')[1];
 
+  const fetchEntities = async () => {
+    const entity = await getEntities(module_id);
+    let data = entity?.data;
+    let headers_gen = Object.keys(data?.[0] || {});
+    headers_gen.forEach((header, index) => {
+      if (header === '_id' || header === '__v') {
+        headers_gen.splice(index, 1);
+      }
+    });
+    setHeaders(headers_gen);
+    setCells(data);
+  };
   useEffect(() => {
-    const fetchModules = async () => {
-      const entity = await getEntities(module_id);
-      let data = entity?.data;
-      let headers_gen = Object.keys(data?.[0] || {});
-      headers_gen.forEach((header, index) => {
-        if (header === '_id' || header === '__v') {
-          headers_gen.splice(index, 1);
-        }
-      });
-      setHeaders(headers_gen);
-      setCells(data);
-    };
-
-    fetchModules();
+    fetchEntities();
   }, []);
 
-  const handleSubmit = () => {
-    modalForm['moduleId'] = module_id;
-    saveEntity(modalForm);
-  };
   const handleSearch = (value) => {};
+  const handleSubmit = () => {
+    let data = {
+      name: modalForm?.name,
+      description: modalForm?.description,
+      moduleId: module_id,
+    };
+    saveEntity(data).then(() => {
+      fetchEntities();
+    });
+  };
   return (
     <div className="w-full h-full bg-[#E9F2EF] flex justify-center items-center px-6 py-6 ">
       <div className="w-full h-full bg-[#FFF] rounded-2xl">
@@ -78,7 +88,10 @@ const TopBar = ({
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold">Entities</p>
-        <AddNewButton onclick={() => setShowModal(!showModal)} />
+        <AddNewButton
+          onclick={() => setShowModal(!showModal)}
+          isDropDown={false}
+        />
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -159,6 +172,7 @@ const ModalComponent = ({
           className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
           onClick={() => {
             handleSubmit();
+            closeModal();
           }}
         >
           Save

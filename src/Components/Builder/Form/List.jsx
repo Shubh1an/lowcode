@@ -236,6 +236,7 @@ const TopBar = ({
           onclick={(type) => {
             onNewPage(type);
           }}
+          isDropDown={true}
         />
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
