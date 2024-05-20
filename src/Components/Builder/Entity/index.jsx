@@ -36,7 +36,7 @@ const Entity = () => {
   }, []);
 
   const handleSubmit = () => {
-    modalForm['module_id'] = module_id;
+    modalForm['moduleId'] = module_id;
     saveEntity(modalForm);
   };
   const handleSearch = (value) => {};
