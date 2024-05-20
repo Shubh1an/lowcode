@@ -8,7 +8,6 @@ function ViewKanban({
   defaultValue,
   setDefaultValue,
   setDraggedItem,
-  draggedItem,
 }) {
   const [coulmnindex, setcoulmnindex] = useState(null);
   const [newColumn, setnewColumn] = useState([]);
@@ -32,7 +31,6 @@ function ViewKanban({
 
   const updateColumnname = (value, key) => {
     console.log('first', value, key);
-    console.log('--------', newColumn);
     const column = newColumn.filter((elm, index) => index === key);
     console.log('first', column);
   };
@@ -111,16 +109,16 @@ function ViewKanban({
         {newColumn.map((column, j) => (
           <div key={j} className="w-80 flex items-center">
             <input
-              className={`bg-[${column.color}] flex-grow px-4 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-[1px] `}
+              className={`bg-[${column.color}] flex-grow px-2 py-2 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-[1px] `}
               type="text"
               value={column.status}
               onChange={(e) => updateColumnname(e.target.value, j)}
             />
-            <AiFillEdit
+            {/* <AiFillEdit
               onClick={() => {
                 setEditChoice(j);
               }}
-            />
+            /> */}
           </div>
         ))}
       </div>

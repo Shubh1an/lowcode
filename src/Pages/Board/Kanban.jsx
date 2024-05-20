@@ -21,6 +21,7 @@ function Kanban() {
     let { field } = item;
     delete field.icon;
     setDraggedItem([field, ...draggedItem]);
+    // @ts-ignore
     setDefaultValue({ kanbanname: field.title });
   };
 
@@ -48,7 +49,7 @@ function Kanban() {
       optionset: [
         {
           status: 'open',
-          color: '#0080FF',
+          color: 'red',
           id: uuidv4(),
         },
         {
@@ -58,7 +59,7 @@ function Kanban() {
         },
         {
           status: 'inprogress',
-          color: '#ff5722',
+          color: '#FB923C',
           id: uuidv4(),
         },
         {
@@ -73,12 +74,12 @@ function Kanban() {
       optionset: [
         {
           status: 'male',
-          color: 'red',
+          color: 'blue',
           id: uuidv4(),
         },
         {
           status: 'female',
-          color: 'yellow',
+          color: 'pink',
           id: uuidv4(),
         },
       ],
@@ -91,7 +92,7 @@ function Kanban() {
 
   return (
     <div className="w-full h-full flex flex-row px-7 py-5 pb-6 gap-5">
-      <div className="w-1/3 h-full bg-[#fff] rounded-2xl flex flex-col p-4">
+      <div className="w-1/4 h-full bg-[#fff] rounded-2xl flex flex-col p-4">
         <BoardInput
           AdvancecFields={AdvancecFields}
           extraClass="w-full text-[#4D4D4D] hover:text-[#FFFFFF] hover:bg-[#227A60] text-center text-sm border border-[#E9E9E9] rounded-lg py-2"
@@ -113,7 +114,6 @@ function Kanban() {
         defaultValue={defaultValue}
         setDefaultValue={setDefaultValue}
         setDraggedItem={setDraggedItem}
-        draggedItem={draggedItem}
       />
     </div>
   );

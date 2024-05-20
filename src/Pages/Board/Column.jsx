@@ -1,85 +1,30 @@
 import React, { useState } from 'react';
 import Task from './Task';
-import { AiFillEdit } from 'react-icons/ai';
-import CustomInput from '../../Components/inputs/CustomInput';
-const Column = ({
-  columnfeilds,
-  // tasks,
-  // setTasks,
-  color,
-  // setcolumnfeilds,
-  // onChange,
-}) => {
-  const [isEdit, setisEdit] = useState(false);
-  const [title, setTitle] = useState('');
-  const task = col ? col.tasks.find((task, index) => index === taskIndex) : [];
-  const onDragStart = (e, id) => {
-    e.dataTransfer.setData('id', id);
-  };
+import { useDrop } from 'react-dnd';
+const ItemTypes = {
+  TASK: 'task',
+};
+const Column = ({ status, tasks, onDropTask, color }) => {
+  const [, ref] = useDrop({
+    accept: ItemTypes.TASK,
+    drop: (item) => onDropTask(item, status),
+  });
 
-  const onDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  const isEditable = (isEdit) => {
-    setisEdit(!isEdit);
-    // setcolumnfeilds(columnfeilds);
-  };
-
-  // const onDrop = (e, column) => {
-  //   const id = e.dataTransfer.getData('id');
-  //   const task = tasks.find((task) => task.id === parseInt(id));
-  //   if (task) {
-  //     const newTasks = tasks.filter((task) => task.id !== parseInt(id));
-  //     setTasks([...newTasks, { ...task, status: column }]);
-  //   }
-  // };
   return (
-    <div
-      className="flex flex-col p-4"
-      // onDragOver={(e) => onDragOver(e)}
-      // onDrop={(e) => onDrop(e, columnfeilds)}
-    >
-      {/* {isEdit ? (
-        <CustomInput
-          inputs={{
-            title: columnfeilds,
-            type: 'text',
-            id: 'title',
-          }}
-          onChange={onChange}
-        />
-      ) : ( */}
+    <div className="flex flex-col p-4">
       <h2
         className={`bg-[${color}] p-2 text-lg font-semibold mb-4 flex gap-1  items-center justify-center`}
       >
-        {columnfeilds}
-        {/* <AiFillEdit onClick={() => isEditable(isEdit)} />{' '} */}
+        {status}
       </h2>
-      {/* )} */}
-
-      <div className="bg-gray-200 p-4 rounded-md w-80">
-        {/* {tasks
-          .filter((task) => task.status === columnfeilds)
+      <div className="bg-gray-200 p-4 rounded-md w-80" ref={ref}>
+        {tasks
+          .filter((task) => task.status === status)
           .map((task) => (
-            <div
-              key={task.id}
-              draggable
-              onDragStart={(e) => onDragStart(e, task.id)}
-            >
+            <div key={task.id}>
               <Task task={task} />
             </div>
-          ))} */}
-        <div className="flex flex-col space-y-1">
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            id="task-name-input"
-            type="text"
-            className=" bg-transparent  px-4 py-2 outline-none focus:border-0 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#635fc7] outline-1  ring-0  "
-            placeholder="coffee break"
-          />
-        </div>
+          ))}
       </div>
     </div>
   );

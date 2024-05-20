@@ -5,7 +5,6 @@ import GlobalContext from './Context/Context';
 import GlobalProvider from './Context/Provider';
 import Layout from './Layout/Layout';
 import Builder from './Pages/Builder';
-import Board from './Pages/Board/Board';
 import Templates from './Pages/Templates';
 import { Route, Routes } from 'react-router-dom';
 import Kanban from './Pages/Board/Kanban';
@@ -20,7 +19,6 @@ function App() {
           <Routes>
             <Route path="/builder/*" element={<Builder />} />
             <Route path="/template/*" element={<Templates />} />
-            <Route path="/board" element={<Board />} />
             <Route
               path="/kanban"
               element={
