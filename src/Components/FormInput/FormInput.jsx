@@ -93,7 +93,7 @@ const InputByType = ({ type, options, id, defaultValue, rows }) => {
           className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
         />
       );
-      
+
     case 'Time':
       return (
         <input
@@ -128,6 +128,25 @@ const InputByType = ({ type, options, id, defaultValue, rows }) => {
           className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
         />
       );
+
+    case 'DropDown': {
+      return (
+        <select
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+        >
+          {options?.map((option, index) => {
+            return (
+              <option
+                className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+                key={index}
+              >
+                {option}
+              </option>
+            );
+          })}
+        </select>
+      );
+    }
     case 'radio': {
       return (
         <div className="flex flex-row space-x-4">

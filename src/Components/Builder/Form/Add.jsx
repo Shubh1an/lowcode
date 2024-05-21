@@ -53,6 +53,9 @@ const Add = ({ newPageData, setActive }) => {
               let control = [...basicFields]?.find((field) => field.control_id === key.control_id)
               if (control) {
                 control.propertyValues = key.properties
+                if (key?.properties?.options) {
+                  control.options = key?.properties?.options
+                }
                 setFormFields(prev => [...prev, control])
               }
               console.log("key", key)
