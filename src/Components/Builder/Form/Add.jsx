@@ -15,6 +15,7 @@ import {
   savePage,
 } from '../../../Requests/form';
 import Icons from '../../Utility/Icons';
+import { savePageData } from '../../../Requests/pade_data';
 
 function toSnakeCase(input) {
   // Replace spaces with underscores and convert to lowercase
@@ -32,16 +33,18 @@ const Add = ({ newPageData, setActive }) => {
     },
   ]);
 
+  const [page_detail_id, setPage_detail_id] = useState('');
+
   const getFields = async () => {
     if (Object.keys(newPageData).length > 0) {
       let mode = newPageData?.mode;
-      console.log('newPageData', newPageData);
       if (mode === 'edit') {
         getPageDetails(newPageData?.id).then(({ data }) => {
           let page_data = data?.[0]?.page_data || [];
-          console.log('Page Data', page_data);
+          setPage_detail_id(data?.[0]?._id);
           page_data.forEach(async (field) => {
             getPageData(field).then(({ data }) => {
+              if (!data?.control_id) return;
               getControls(data.control_id).then(({ data }) => {
                 console.log('Data', data);
               });
@@ -55,12 +58,14 @@ const Add = ({ newPageData, setActive }) => {
   const fetchAllControls = async () => {
     const basicFieldsData = [];
     getAllControls().then(({ data }) => {
+      console.log('data', data);
       data.map((field) => {
         basicFieldsData.push({
           title: field.name,
           inputType: field.name,
           icon: <Icons name={field.logo} />,
           properties: field.control_properties,
+          control_id: field._id,
         });
       });
       setBasicFields(basicFieldsData);
@@ -130,19 +135,18 @@ const Add = ({ newPageData, setActive }) => {
   const isActive = canDrop && isOver;
 
   const handleFormSubmit = async () => {
-    savePage({
-      fields: formFields,
-      name: formName || 'Untitled Form',
-      form_id: 'a72d8544-df7e-477a-8959-bf9e32cca62b',
-      created_by: {
-        user_id: 1,
-        name: 'Akhilesh Gandhi',
-        profile_image: 'https://randomuser.me/api/',
-      },
-      module: 'CRM',
-      module_id: '23432',
-      entity: 'Lead',
-      entity_id: '2343443',
+    console.log('formFields', formFields);
+    let data = {
+      page_detail_id: page_detail_id,
+      PropertyDetails: {},
+      styles: {},
+    };
+    formFields.map((field) => {
+      data.PropertyDetails[field.control_id] = field.propertyValues;
+      data.styles[field.id] = field.style;
+    });
+    savePageData(data).then(({ data }) => {
+      console.log('data', data);
     });
   };
 
