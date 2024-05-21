@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import SubTab from '../../Tab/SubTab';
 import { BiText } from 'react-icons/bi';
-import { RiCheckboxBlankCircleLine } from 'react-icons/ri';
-import {
-  AiOutlineCalendar,
-  AiOutlineClockCircle,
-  AiOutlinePhone,
-} from 'react-icons/ai';
-import { HiOutlineMail } from 'react-icons/hi';
-import { BsMap } from 'react-icons/bs';
-import { MdPeopleAlt } from 'react-icons/md';
 import { FieldButton } from '../../Buttons/FieldButton';
 import BuildFormNav from '../../BreadcrumNavigation/BuildFormNav';
 import { useDrop } from 'react-dnd';
 import AddPageField from '../../inputs/AddPageField';
 import FormInput from '../../FormInput/FormInput';
 import {
+  getAllControls,
   getControls,
   getPageData,
   getPageDetails,
@@ -41,7 +33,6 @@ const Add = ({ newPageData, setActive }) => {
   ]);
 
   const getFields = async () => {
-    const basicFieldsData = [];
     if (Object.keys(newPageData).length > 0) {
       let mode = newPageData?.mode;
       console.log('newPageData', newPageData);
@@ -52,14 +43,7 @@ const Add = ({ newPageData, setActive }) => {
           page_data.forEach(async (field) => {
             getPageData(field).then(({ data }) => {
               getControls(data.control_id).then(({ data }) => {
-                console.log('Data', data[0]);
-                basicFieldsData.push({
-                  title: data[0]?.name,
-                  inputType: data[0]?.name,
-                  icon: <Icons name={data[0]?.logo} />,
-                  properties: data[0]?.control_properties,
-                });
-                setBasicFields(basicFieldsData);
+                console.log('Data', data);
               });
             });
           });
@@ -67,6 +51,24 @@ const Add = ({ newPageData, setActive }) => {
       }
     }
   };
+
+  const fetchAllControls = async () => {
+    const basicFieldsData = [];
+    getAllControls().then(({ data }) => {
+      data.map((field) => {
+        basicFieldsData.push({
+          title: field.name,
+          inputType: field.name,
+          icon: <Icons name={field.logo} />,
+          properties: field.control_properties,
+        });
+      });
+      setBasicFields(basicFieldsData);
+    });
+  };
+  useEffect(() => {
+    fetchAllControls();
+  }, []);
 
   useEffect(() => {
     getFields();
@@ -81,23 +83,32 @@ const Add = ({ newPageData, setActive }) => {
   const [activePropertiesField, setActivePropertiesField] = useState(0);
   const [formName, setFormName] = useState('Untitled Form');
 
+  useEffect(() => {
+    const fields = [];
+    formFields?.[activePropertiesField]?.properties.map((field) => {
+      let key = Object.keys(field)[0];
+      let data = {
+        id: key,
+        type: field[key].type,
+        title: field[key].label[0],
+        options: field[key]?.options,
+      };
+      fields.push(data);
+    });
+    console.log('Fields', fields);
+    setFieldProperties(fields);
+  }, [activePropertiesField]);
+
   const handleProperties = (data) => {
     let changeId = activePropertiesField;
     let currentData = formFields;
-
-    if (data.id === 'displayName') {
-      currentData[changeId].title = data.value;
-      currentData[changeId].name = 'crm_' + 'lead_' + toSnakeCase(data.value);
-    } else if (data.id === 'name') {
-      currentData[changeId].name = data.value;
-    } else if (data.id === 'description') {
-      currentData[changeId].description = data.value;
-    } else if (data.id === 'mandatory') {
-      currentData[changeId].mandatory = data.value;
-    } else if (data.id === 'defaultValue') {
-      currentData[changeId].defaultValue = data.value;
-    }
-
+    currentData[changeId] = {
+      ...currentData[changeId],
+      propertyValues: {
+        ...(currentData[changeId].propertyValues || {}),
+        [data.id]: data.value,
+      },
+    };
     setFormFields([...currentData]);
   };
 
@@ -119,20 +130,7 @@ const Add = ({ newPageData, setActive }) => {
   const isActive = canDrop && isOver;
 
   const handleFormSubmit = async () => {
-    savePage({
-      fields: formFields,
-      name: formName || 'Untitled Form',
-      form_id: 'a72d8544-df7e-477a-8959-bf9e32cca62b',
-      created_by: {
-        user_id: 1,
-        name: 'Akhilesh Gandhi',
-        profile_image: 'https://randomuser.me/api/',
-      },
-      module: 'CRM',
-      module_id: '23432',
-      entity: 'Lead',
-      entity_id: '2343443',
-    });
+    console.log('formFields', formFields);
   };
 
   return (

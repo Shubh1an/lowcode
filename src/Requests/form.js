@@ -31,3 +31,7 @@ export const getControls = async (id) => {
   let data = await apiInstance.get('/controls?id=' + id);
   return data;
 };
+export const getAllControls = async (id) => {
+  let data = await apiInstance.get('/controls/all');
+  return data;
+};
