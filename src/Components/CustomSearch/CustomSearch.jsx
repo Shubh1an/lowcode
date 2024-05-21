@@ -15,11 +15,10 @@ const CustomSearch = ({
   headers = [],
   handleHeaderSelect = () => {},
 }) => {
-  const [text, setText] = useState('Hello');
+  const [text, setText] = useState('');
   const [value] = useDebounce(text, 300);
 
   const [showModal, setShowModal] = useState(false);
-  // title, handleHeaderSelect, checked
   useEffect(() => {
     handleSearch(value);
   }, [value]);
