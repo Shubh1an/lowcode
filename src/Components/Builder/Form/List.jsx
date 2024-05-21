@@ -66,8 +66,8 @@ const List = ({ setNewPageData, newPageData, setActive }) => {
     'category',
     'description',
   ]);
-  const [people, setPeoples] = useState({})
-  let entity_id = location.search.split('=')[1]
+  const [people, setPeoples] = useState({});
+  let entity_id = location.search.split('=')[1];
   useEffect(() => {
     getPages(entity_id)
       .then((data) => {
@@ -145,18 +145,29 @@ const List = ({ setNewPageData, newPageData, setActive }) => {
 
   const handleAddNewPage = (type) => {
     setNewPageData((prev) => {
-      return { ...prev, type: type, entity_id: entity_id, id: null, mode: "add" };
+      return {
+        ...prev,
+        type: type,
+        entity_id: entity_id,
+        id: null,
+        mode: 'add',
+      };
     });
     setActive(1);
-  }
+  };
 
   const handleEditPage = (id, type) => {
     setNewPageData((prev) => {
-      return { ...prev, id: id, type: type, entity_id: entity_id, mode: "edit"};
+      return {
+        ...prev,
+        id: id,
+        type: type,
+        entity_id: entity_id,
+        mode: 'edit',
+      };
     });
     setActive(1);
-    
-  }
+  };
   useEffect(() => {
     formsToRender.forEach((form, index) => {
       let header = Object.keys(form);
@@ -191,7 +202,11 @@ const List = ({ setNewPageData, newPageData, setActive }) => {
           people={people}
           onNewPage={handleAddNewPage}
         />
-        <Table headers={renderHeaders} data={formsToRender} onNewPage={handleEditPage}/>
+        <Table
+          headers={renderHeaders}
+          data={formsToRender}
+          onNewPage={handleEditPage}
+        />
       </div>
     </div>
   );
@@ -210,16 +225,19 @@ const TopBar = ({
   searchableHeaders,
   handleHeaderSelect,
   people,
-  onNewPage
+  onNewPage,
 }) => {
   const [showSearch, setShowSearch] = useState(false);
   return (
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold	">Pages</p>
-        <AddNewButton onclick={(type) => {
-          onNewPage(type)
-        }} isDropDown={true}/>
+        <AddNewButton
+          onclick={(type) => {
+            onNewPage(type);
+          }}
+          isDropDown={true}
+        />
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -331,7 +349,11 @@ const Table = ({ headers, data, onNewPage }) => {
       {data.length > 0 ? (
         data.map((row, index) => {
           return (
-            <div className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer" key={index + '_cell'} onClick={() => onNewPage(row._id, row.page_type)}>
+            <div
+              className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer"
+              key={index + '_cell'}
+              onClick={() => onNewPage(row._id, row.page_type)}
+            >
               {headers.map((header, index) => {
                 return (
                   <div
@@ -355,7 +377,5 @@ const Table = ({ headers, data, onNewPage }) => {
     </div>
   );
 };
-
-
 
 export default List;

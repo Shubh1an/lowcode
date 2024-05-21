@@ -6,7 +6,14 @@ import BuildFormNav from '../../BreadcrumNavigation/BuildFormNav';
 import { useDrop } from 'react-dnd';
 import AddPageField from '../../inputs/AddPageField';
 import FormInput from '../../FormInput/FormInput';
-import { getAllControls, getControls, getPageData, getPageDetails, getPages, savePage } from '../../../Requests/form';
+import {
+  getAllControls,
+  getControls,
+  getPageData,
+  getPageDetails,
+  getPages,
+  savePage,
+} from '../../../Requests/form';
 import Icons from '../../Utility/Icons';
 import { editPageData, savePageData } from '../../../Requests/pade_data';
 
@@ -24,10 +31,10 @@ const Add = ({ newPageData, setActive }) => {
       inputType: 'text',
       icon: <BiText />,
     },
-  ])
+  ]);
 
-  const [page_detail_id, setPage_detail_id] = useState("");
-  const [page_data_id, setPage_data_id] = useState("");
+  const [page_detail_id, setPage_detail_id] = useState('');
+  const [page_data_id, setPage_data_id] = useState('');
   const [fieldProperties, setFieldProperties] = useState([]);
 
   const [formFields, setFormFields] = useState([]);
@@ -37,69 +44,67 @@ const Add = ({ newPageData, setActive }) => {
   const [activePropertiesField, setActivePropertiesField] = useState(0);
   const [formName, setFormName] = useState('Untitled Form');
 
-
-  let mode = newPageData?.mode
+  let mode = newPageData?.mode;
   const getFields = async () => {
-    setFormFields([])
+    setFormFields([]);
     if (Object.keys(newPageData).length > 0) {
-      if (mode === "edit") {
+      if (mode === 'edit') {
         getPageDetails(newPageData?.id).then(({ data }) => {
-          let page_data = data?.[0]?.page_data || []
-          setPage_detail_id(data?.[0]?._id)
+          let page_data = data?.[0]?.page_data || [];
+          setPage_detail_id(data?.[0]?._id);
           getPageData(data?.[0]?._id).then(({ data }) => {
-            setPage_data_id(data?._id)
-            let propertyDetails = data?.PropertyDetails || []
+            setPage_data_id(data?._id);
+            let propertyDetails = data?.PropertyDetails || [];
             propertyDetails.map((key) => {
-              let control = [...basicFields]?.find((field) => field.control_id === key.control_id)
+              let control = [...basicFields]?.find(
+                (field) => field.control_id === key.control_id,
+              );
               if (control) {
-                control.propertyValues = key.properties
+                control.propertyValues = key.properties;
                 if (key?.properties?.options) {
-                  control.options = key?.properties?.options
+                  control.options = key?.properties?.options;
                 }
-                setFormFields(prev => [...prev, control])
+                setFormFields((prev) => [...prev, control]);
               }
-              console.log("key", key)
-            })
-            console.log("Basic fields", basicFields)
-          })
-        })
+              console.log('key', key);
+            });
+            console.log('Basic fields', basicFields);
+          });
+        });
       }
     }
-  }
+  };
 
   const fetchAllControls = async () => {
-    const basicFieldsData = [
-    ]
+    const basicFieldsData = [];
     getAllControls().then(({ data }) => {
-      console.log("data", data)
+      console.log('data', data);
       data.map((field) => {
         basicFieldsData.push({
           title: field.name,
           inputType: field.name,
           icon: <Icons name={field.logo} />,
           properties: field.control_properties,
-          control_id: field._id
-        })
-      })
-      setBasicFields(basicFieldsData)
-    })
-  }
+          control_id: field._id,
+        });
+      });
+      setBasicFields(basicFieldsData);
+    });
+  };
   useEffect(() => {
-    fetchAllControls()
-  }, [])
+    fetchAllControls();
+  }, []);
 
   useEffect(() => {
-    getFields()
-  }, [newPageData, basicFields])
-
+    getFields();
+  }, [newPageData, basicFields]);
 
   // useEffect(() => {
   //   console.log("Form Fields", formFields)
   // }, [formFields])
 
-
   useEffect(() => {
-    const fields = []
+    const fields = [];
     formFields?.[activePropertiesField]?.properties.map((field) => {
       let key = Object.keys(field)[0];
       let data = {
@@ -107,11 +112,11 @@ const Add = ({ newPageData, setActive }) => {
         type: field[key].type,
         title: field[key].label[0],
         options: field[key]?.options,
-      }
-      fields.push(data)
-    })
-    console.log("Fields", fields)
-    setFieldProperties(fields)
+      };
+      fields.push(data);
+    });
+    console.log('Fields', fields);
+    setFieldProperties(fields);
   }, [activePropertiesField]);
 
   const handleProperties = (data) => {
@@ -120,10 +125,10 @@ const Add = ({ newPageData, setActive }) => {
     currentData[changeId] = {
       ...currentData[changeId],
       propertyValues: {
-        ...currentData[changeId].propertyValues || {},
-        [data.id]: data.value
-      }
-    }
+        ...(currentData[changeId].propertyValues || {}),
+        [data.id]: data.value,
+      },
+    };
     setFormFields([...currentData]);
   };
 
@@ -149,25 +154,24 @@ const Add = ({ newPageData, setActive }) => {
     let data = {
       page_detail_id: page_detail_id,
       PropertyDetails: [],
-      styles: {}
+      styles: {},
     };
     formFields.map((field) => {
       data.PropertyDetails.push({
         properties: field.propertyValues,
-        control_id: field.control_id
-      })
+        control_id: field.control_id,
+      });
     });
-    if (mode === "edit" && page_data_id) {
+    if (mode === 'edit' && page_data_id) {
       editPageData(page_data_id, data).then(({ data }) => {
         console.log('data', data);
-      })
-    }
-    else {
+      });
+    } else {
       savePageData(data).then(({ data }) => {
         console.log('data', data);
       });
     }
-  }
+  };
 
   return (
     <div className="w-full h-full flex flex-row px-6 pb-6">

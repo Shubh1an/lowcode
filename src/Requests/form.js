@@ -20,19 +20,18 @@ export const getPages = async (entity_id) => {
 export const getPageDetails = async (id) => {
   let data = await apiInstance.get('/page_details?page_id=' + id);
   return data;
-}
+};
 
 export const getPageData = async (id) => {
   let data = await apiInstance.get('/page_data?id=' + id);
   return data;
-}
-
+};
 
 export const getControls = async (id) => {
   let data = await apiInstance.get('/controls?id=' + id);
   return data;
-}
+};
 export const getAllControls = async (id) => {
   let data = await apiInstance.get('/controls/all');
   return data;
-}
+};

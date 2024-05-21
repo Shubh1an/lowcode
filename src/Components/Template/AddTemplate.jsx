@@ -1,38 +1,49 @@
-import React from 'react';
-import { CustomInput } from '../inputs/CustomInput';
+import { useState } from 'react';
 import FormInput from '../FormInput/FormInput';
 
 const AddTemplate = ({ onClickSave = () => {}, onClickCancel = () => {} }) => {
+  const [options, setOptions] = useState([
+    { value: 'usa', label: 'USA' },
+    { value: 'uk', label: 'UK' },
+    { value: 'france', label: 'France' },
+    { value: 'germany', label: 'Germany' },
+  ]);
+
   const fields = [
     {
       title: 'Template Name',
-      inputType: 'text',
+      inputType: 'Single Line',
       defaultValue: 'Enter Name',
     },
     {
       title: 'Template Type',
-      inputType: 'text',
+      inputType: 'multiselect',
       defaultValue: '---Select---',
+      options: options,
     },
     {
       title: 'Industry',
-      inputType: 'text',
+      inputType: 'multiselect',
       defaultValue: '---Select---',
+      options: options,
     },
     {
       title: 'Tags',
-      inputType: 'text',
+      inputType: 'multiselect',
       defaultValue: 'Add tags...',
+      options: options,
     },
     {
       title: 'Category',
-      inputType: 'text',
+      inputType: 'multiselect',
       defaultValue: '---Select---',
+      options: options,
     },
     {
       title: 'Sub Category',
-      inputType: 'text',
+      inputType: 'multiselect',
       defaultValue: '---Select---',
+      options: options,
     },
     {
       title: 'Is Recommended',
@@ -41,10 +52,16 @@ const AddTemplate = ({ onClickSave = () => {}, onClickCancel = () => {} }) => {
     },
     {
       title: 'Ratings',
-      inputType: 'text',
+      inputType: 'multiselect',
       defaultValue: '---Select---',
+      options: options,
     },
   ];
+
+  const onupload = (file) => {
+    // Handle file upload logic here
+    console.log('File uploaded:', file);
+  };
 
   return (
     <div>
@@ -77,6 +94,17 @@ const AddTemplate = ({ onClickSave = () => {}, onClickCancel = () => {} }) => {
                     defaultValue: 'Add description...',
                     rows: 5,
                   }}
+                  setActiveField={() => {}}
+                  activePropertiesField={() => {}}
+                />
+              </div>
+              <div>
+                <FormInput
+                  field={{
+                    title: 'Upload FIle',
+                    inputType: 'uploadfile',
+                  }}
+                  onUpload={onupload}
                   setActiveField={() => {}}
                   activePropertiesField={() => {}}
                 />
