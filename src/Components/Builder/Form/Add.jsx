@@ -8,6 +8,7 @@ import AddPageField from '../../inputs/AddPageField';
 import FormInput from '../../FormInput/FormInput';
 import { getAllControls, getControls, getPageData, getPageDetails, getPages, savePage } from '../../../Requests/form';
 import Icons from '../../Utility/Icons';
+import { savePageData } from '../../../Requests/pade_data';
 
 function toSnakeCase(input) {
   // Replace spaces with underscores and convert to lowercase
@@ -25,17 +26,19 @@ const Add = ({ newPageData, setActive }) => {
     },
   ])
 
+  const [page_detail_id, setPage_detail_id] = useState("");
+
   const getFields = async () => {
 
     if (Object.keys(newPageData).length > 0) {
       let mode = newPageData?.mode
-      console.log("newPageData", newPageData)
       if (mode === "edit") {
         getPageDetails(newPageData?.id).then(({ data }) => {
           let page_data = data?.[0]?.page_data || []
-          console.log("Page Data", page_data)
+          setPage_detail_id(data?.[0]?._id)
           page_data.forEach(async (field) => {
             getPageData(field).then(({ data }) => {
+              if(!data?.control_id) return
               getControls(data.control_id).then(
                 ({ data }) => {
                   console.log("Data", data)
@@ -52,12 +55,14 @@ const Add = ({ newPageData, setActive }) => {
     const basicFieldsData = [
     ]
     getAllControls().then(({ data }) => {
+      console.log("data", data)
       data.map((field) => {
         basicFieldsData.push({
           title: field.name,
           inputType: field.name,
           icon: <Icons name={field.logo} />,
-          properties: field.control_properties
+          properties: field.control_properties,
+          control_id: field._id
         })
       })
       setBasicFields(basicFieldsData)
@@ -128,6 +133,18 @@ const Add = ({ newPageData, setActive }) => {
 
   const handleFormSubmit = async () => {
     console.log('formFields', formFields);
+    let data = {
+      page_detail_id: page_detail_id,
+      PropertyDetails: {},
+      styles: {}
+    };
+    formFields.map((field) => {
+      data.PropertyDetails[field.control_id] = field.propertyValues;
+      data.styles[field.id] = field.style;
+    });
+    savePageData(data).then(({ data }) => {
+      console.log('data', data);
+    });
   }
 
   return (
