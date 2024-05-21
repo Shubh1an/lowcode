@@ -8,7 +8,7 @@ import AddPageField from '../../inputs/AddPageField';
 import FormInput from '../../FormInput/FormInput';
 import { getAllControls, getControls, getPageData, getPageDetails, getPages, savePage } from '../../../Requests/form';
 import Icons from '../../Utility/Icons';
-import { savePageData } from '../../../Requests/pade_data';
+import { editPageData, savePageData } from '../../../Requests/pade_data';
 
 function toSnakeCase(input) {
   // Replace spaces with underscores and convert to lowercase
@@ -27,24 +27,37 @@ const Add = ({ newPageData, setActive }) => {
   ])
 
   const [page_detail_id, setPage_detail_id] = useState("");
+  const [page_data_id, setPage_data_id] = useState("");
+  const [fieldProperties, setFieldProperties] = useState([]);
 
+  const [formFields, setFormFields] = useState([]);
+
+  const [activeField, setActiveField] = useState(0);
+  const [activeProperties, setActiveProperties] = useState(0);
+  const [activePropertiesField, setActivePropertiesField] = useState(0);
+  const [formName, setFormName] = useState('Untitled Form');
+
+
+  let mode = newPageData?.mode
   const getFields = async () => {
-
+    setFormFields([])
     if (Object.keys(newPageData).length > 0) {
-      let mode = newPageData?.mode
       if (mode === "edit") {
         getPageDetails(newPageData?.id).then(({ data }) => {
           let page_data = data?.[0]?.page_data || []
           setPage_detail_id(data?.[0]?._id)
-          page_data.forEach(async (field) => {
-            getPageData(field).then(({ data }) => {
-              if(!data?.control_id) return
-              getControls(data.control_id).then(
-                ({ data }) => {
-                  console.log("Data", data)
-                }
-              )
+          getPageData(data?.[0]?._id).then(({ data }) => {
+            setPage_data_id(data?._id)
+            let propertyDetails = data?.PropertyDetails || []
+            propertyDetails.map((key) => {
+              let control = [...basicFields]?.find((field) => field.control_id === key.control_id)
+              if (control) {
+                control.propertyValues = key.properties
+                setFormFields(prev => [...prev, control])
+              }
+              console.log("key", key)
             })
+            console.log("Basic fields", basicFields)
           })
         })
       }
@@ -74,16 +87,13 @@ const Add = ({ newPageData, setActive }) => {
 
   useEffect(() => {
     getFields()
-  }, [newPageData])
+  }, [newPageData, basicFields])
 
-  const [fieldProperties, setFieldProperties] = useState([]);
 
-  const [formFields, setFormFields] = useState([]);
+  // useEffect(() => {
+  //   console.log("Form Fields", formFields)
+  // }, [formFields])
 
-  const [activeField, setActiveField] = useState(0);
-  const [activeProperties, setActiveProperties] = useState(0);
-  const [activePropertiesField, setActivePropertiesField] = useState(0);
-  const [formName, setFormName] = useState('Untitled Form');
 
   useEffect(() => {
     const fields = []
@@ -135,16 +145,25 @@ const Add = ({ newPageData, setActive }) => {
     console.log('formFields', formFields);
     let data = {
       page_detail_id: page_detail_id,
-      PropertyDetails: {},
+      PropertyDetails: [],
       styles: {}
     };
     formFields.map((field) => {
-      data.PropertyDetails[field.control_id] = field.propertyValues;
-      data.styles[field.id] = field.style;
+      data.PropertyDetails.push({
+        properties: field.propertyValues,
+        control_id: field.control_id
+      })
     });
-    savePageData(data).then(({ data }) => {
-      console.log('data', data);
-    });
+    if (mode === "edit" && page_data_id) {
+      editPageData(page_data_id, data).then(({ data }) => {
+        console.log('data', data);
+      })
+    }
+    else {
+      savePageData(data).then(({ data }) => {
+        console.log('data', data);
+      });
+    }
   }
 
   return (
