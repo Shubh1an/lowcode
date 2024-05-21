@@ -126,7 +126,7 @@ const InputByType = ({ type, options, id, defaultValue, rows }) => {
           className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
         />
       );
-    case 'radio': {
+    case 'radio':
       return (
         <div className="flex flex-row space-x-4">
           {options.map((option, index) => {
@@ -146,7 +146,23 @@ const InputByType = ({ type, options, id, defaultValue, rows }) => {
           })}
         </div>
       );
-    }
+    case 'select':
+      return (
+        <div className="flex flex-row space-x-4">
+          <div className="flex flex-row items-center justify-start ">
+            <select
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              {options.map((option, index) => {
+                <option value={option} key={index}>
+                  {option}
+                </option>;
+              })}
+            </select>
+          </div>
+        </div>
+      );
 
     default:
       return <input type="text" />;

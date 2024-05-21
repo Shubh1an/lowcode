@@ -130,7 +130,20 @@ const Add = ({ newPageData, setActive }) => {
   const isActive = canDrop && isOver;
 
   const handleFormSubmit = async () => {
-    console.log('formFields', formFields);
+    savePage({
+      fields: formFields,
+      name: formName || 'Untitled Form',
+      form_id: 'a72d8544-df7e-477a-8959-bf9e32cca62b',
+      created_by: {
+        user_id: 1,
+        name: 'Akhilesh Gandhi',
+        profile_image: 'https://randomuser.me/api/',
+      },
+      module: 'CRM',
+      module_id: '23432',
+      entity: 'Lead',
+      entity_id: '2343443',
+    });
   };
 
   return (
