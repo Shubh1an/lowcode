@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDrag } from 'react-dnd';
 
 const FormInput = ({
   field,
   setActiveField,
   activePropertiesField,
+  deleteProp = <></>,
   onUpload = (file) => {},
 }) => {
   const {
@@ -16,8 +18,8 @@ const FormInput = ({
     propertyValues,
     extrClass = '',
     labelClass = '',
+    index,
   } = field;
-
   const [file, setFile] = useState(null);
   const [tempOptions, setTempOptions] = useState(options);
   const [isOpen, setIsOpen] = useState(false);
@@ -79,12 +81,17 @@ const FormInput = ({
   };
   return (
     <div className={`w-full`}>
-      <label
-        className={`block mb-2 mt-4 text-lg font-medium cursor-pointer ${activePropertiesField === id ? 'text-[#227A60] font-bold underline' : 'text-gray-900 font-bold '}`}
-        onClick={() => setActiveField(id)}
-      >
-        {propertyValues?.display_name || label}
-      </label>
+      <div className={`w-full flex flex-row items-center`}>
+        <label
+          className={`block mb-2 mt-4 text-lg font-medium cursor-pointer ${activePropertiesField === id ? 'text-[#227A60] font-bold underline' : 'text-gray-900 font-bold '}`}
+          onClick={() => setActiveField(id)}
+        >
+          {propertyValues?.display_name || label}
+        </label>
+        <div className="ml-auto cursor-pointer justify-self-end">
+          {deleteProp}
+        </div>
+      </div>
       <InputByType
         type={type}
         options={options}

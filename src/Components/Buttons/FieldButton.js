@@ -10,7 +10,7 @@ export const FieldButton = ({
 }) => {
   const [, drag] = useDrag({
     type: 'FIELD',
-    item: { index, field },
+    item: { index, field, type: 'add' },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
