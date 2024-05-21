@@ -38,7 +38,7 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
       console.log('id', id);
       setSelectOptions(defaultValue);
     }
-  }, [defaultValue])
+  }, [defaultValue]);
   switch (type) {
     case 'text':
       return (
@@ -89,13 +89,11 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
       // This is for adding new options
       return (
         <>
-          <ol 
-            className="list-decimal list-inside"
-          >
-            {
-              selectOptions && selectOptions?.map((option, index) => {
+          <ol className="list-decimal list-inside">
+            {selectOptions &&
+              selectOptions?.map((option, index) => {
                 return (
-                  <li className="ml-2 mb-1" key={index}> 
+                  <li className="ml-2 mb-1" key={index}>
                     {option}
                     <button
                       onClick={() => {
@@ -106,14 +104,12 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
                         handleProperties(payload);
                       }}
                     >
-                      <MdDelete color='red'/>
+                      <MdDelete color="red" />
                     </button>
                   </li>
                 );
-              }
-              )
-            }
-          </ol >
+              })}
+          </ol>
 
           <input
             type="text"
@@ -136,7 +132,6 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
           >
             Add
           </button>
-
         </>
       );
     }

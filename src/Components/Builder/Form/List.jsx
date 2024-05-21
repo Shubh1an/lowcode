@@ -6,7 +6,11 @@ import { CiFilter } from 'react-icons/ci';
 import { MdOutlineSwapVert } from 'react-icons/md';
 import { BiHide } from 'react-icons/bi';
 import ListHeaderButton from '../../inputs/ListHeaderButton.jsx';
-import { createPage, createPageDetail, getPages } from '../../../Requests/form.js';
+import {
+  createPage,
+  createPageDetail,
+  getPages,
+} from '../../../Requests/form.js';
 import moment from 'moment';
 import ShortModal from '../../ShortModal/ShortModal.jsx';
 import HideModal from '../../Modals/Hide.jsx';
@@ -66,9 +70,9 @@ const List = ({ setNewPageData, setSelectedPage, setActive }) => {
     'category',
     'description',
   ]);
-  const [people, setPeoples] = useState({})
+  const [people, setPeoples] = useState({});
 
-  let entity_id = location.search.split('=')[1]
+  let entity_id = location.search.split('=')[1];
   useEffect(() => {
     getPages(entity_id)
       .then((data) => {
@@ -108,7 +112,7 @@ const List = ({ setNewPageData, setSelectedPage, setActive }) => {
     // Add unhidden columns
   }, [hideColumns, forms]);
 
-  useEffect(() => { }, [renderHeaders]);
+  useEffect(() => {}, [renderHeaders]);
 
   const handleHide = (column, checked) => {
     setHideColumns((prev) => {
@@ -146,17 +150,29 @@ const List = ({ setNewPageData, setSelectedPage, setActive }) => {
 
   const handleAddNewPage = (id, type) => {
     setNewPageData((prev) => {
-      return { ...prev, type: type, entity_id: entity_id, id: id, mode: "edit" };
+      return {
+        ...prev,
+        type: type,
+        entity_id: entity_id,
+        id: id,
+        mode: 'edit',
+      };
     });
     setActive(1);
-  }
+  };
 
   const handleEditPage = (id, type) => {
     setNewPageData((prev) => {
-      return { ...prev, id: id, type: type, entity_id: entity_id, mode: "edit" };
+      return {
+        ...prev,
+        id: id,
+        type: type,
+        entity_id: entity_id,
+        mode: 'edit',
+      };
     });
     setActive(1);
-  }
+  };
   useEffect(() => {
     formsToRender.forEach((form, index) => {
       let header = Object.keys(form);
@@ -192,7 +208,12 @@ const List = ({ setNewPageData, setSelectedPage, setActive }) => {
           onNewPage={handleAddNewPage}
           entity_id={entity_id}
         />
-        <Table headers={renderHeaders} data={formsToRender} onNewPage={handleEditPage} setSelectedPage={setSelectedPage} />
+        <Table
+          headers={renderHeaders}
+          data={formsToRender}
+          onNewPage={handleEditPage}
+          setSelectedPage={setSelectedPage}
+        />
       </div>
     </div>
   );
@@ -212,38 +233,40 @@ const TopBar = ({
   handleHeaderSelect,
   people,
   onNewPage,
-  entity_id
+  entity_id,
 }) => {
   const [showSearch, setShowSearch] = useState(false);
   return (
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold	">Pages</p>
-        <AddNewButton onclick={(type) => {
-          createPage({
-            thumbnail: "Thumbnail",
-            title: "Untitled",
-            created_by: {
-              name: "Gopala",
-              profile_image: ""
-            },
-            entity_id: entity_id,
-            page_type: type,
-          }).then((res) => {
-            // onNewPage(res?.data?.data?.id, type)
-            console.log("create PAge ", res?.data?.data)
-            let page_id = res?.data?.data?._id
-            createPageDetail({
-              page_id: page_id,
-              page_data: [],
-              type: type
+        <AddNewButton
+          onclick={(type) => {
+            createPage({
+              thumbnail: 'Thumbnail',
+              title: 'Untitled',
+              created_by: {
+                name: 'Gopala',
+                profile_image: '',
+              },
+              entity_id: entity_id,
+              page_type: type,
             }).then((res) => {
-              console.log(res)
-              onNewPage(page_id, type)
-            })
-          })
-
-        }} isDropDown={true} />
+              // onNewPage(res?.data?.data?.id, type)
+              console.log('create PAge ', res?.data?.data);
+              let page_id = res?.data?.data?._id;
+              createPageDetail({
+                page_id: page_id,
+                page_data: [],
+                type: type,
+              }).then((res) => {
+                console.log(res);
+                onNewPage(page_id, type);
+              });
+            });
+          }}
+          isDropDown={true}
+        />
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -355,11 +378,14 @@ const Table = ({ headers, data, onNewPage, setSelectedPage }) => {
       {data.length > 0 ? (
         data.map((row, index) => {
           return (
-            <div className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer" key={index + '_cell'} onClick={() => {
-              setSelectedPage(row)
-              onNewPage(row._id, row.page_type)
-            }
-            }>
+            <div
+              className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer"
+              key={index + '_cell'}
+              onClick={() => {
+                setSelectedPage(row);
+                onNewPage(row._id, row.page_type);
+              }}
+            >
               {headers.map((header, index) => {
                 return (
                   <div
@@ -383,7 +409,5 @@ const Table = ({ headers, data, onNewPage, setSelectedPage }) => {
     </div>
   );
 };
-
-
 
 export default List;

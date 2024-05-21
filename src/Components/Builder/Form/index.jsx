@@ -10,7 +10,7 @@ const Form = () => {
   const tabs = [{ title: 'All List' }, { title: 'Add New' }, { title: 'View' }];
   const [active, setActive] = useState(0);
   const [newPageData, setNewPageData] = useState({});
-  const [selectedPage, setSelectedPage] = useState(null)
+  const [selectedPage, setSelectedPage] = useState(null);
 
   useEffect(() => {
     if (active === 1) {
@@ -21,12 +21,16 @@ const Form = () => {
     if (active === 0) {
       setNewPageData({});
     }
-  }, [active])
+  }, [active]);
   return (
     <div className="w-full h-full bg-[#E9F2EF] flex flex-col">
       <MainTab tabs={tabs} active={active} setActive={setActive} />
       {active === 0 ? (
-        <List setNewPageData={setNewPageData} setActive={setActive} setSelectedPage={setSelectedPage} />
+        <List
+          setNewPageData={setNewPageData}
+          setActive={setActive}
+          setSelectedPage={setSelectedPage}
+        />
       ) : active === 1 ? (
         <DndProvider backend={HTML5Backend}>
           <Add newPageData={newPageData} selectedPage={selectedPage} />
@@ -36,6 +40,6 @@ const Form = () => {
       )}
     </div>
   );
-}
+};
 
-export default Form
+export default Form;

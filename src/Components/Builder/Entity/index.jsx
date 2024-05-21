@@ -15,40 +15,39 @@ const Entity = () => {
     name: '',
     description: '',
     moduleId: '',
-  })
-  const [headers, setHeaders] = useState([])
-  const [view, setView] = useState(true)
-  const [cells, setCells] = useState([])
+  });
+  const [headers, setHeaders] = useState([]);
+  const [view, setView] = useState(true);
+  const [cells, setCells] = useState([]);
 
-  let module_id = location.search.split('=')[1]
+  let module_id = location.search.split('=')[1];
 
   const fetchEntities = async () => {
     const entity = await getEntities(module_id);
-    let data = entity?.data
+    let data = entity?.data;
     let headers_gen = Object.keys(data?.[0] || {});
     headers_gen.forEach((header, index) => {
-      if (header === "_id" || header === "__v") {
-        headers_gen.splice(index, 1)
+      if (header === '_id' || header === '__v') {
+        headers_gen.splice(index, 1);
       }
-    })
-    setHeaders(headers_gen)
-    setCells(data)
-  }
+    });
+    setHeaders(headers_gen);
+    setCells(data);
+  };
   useEffect(() => {
+    fetchEntities();
+  }, []);
 
-    fetchEntities()
-  }, [])
-
-  const handleSearch = (value) => { };
+  const handleSearch = (value) => {};
   const handleSubmit = () => {
     let data = {
       name: modalForm?.name,
       description: modalForm?.description,
-      moduleId: module_id
-    }
+      moduleId: module_id,
+    };
     saveEntity(data).then(() => {
-      fetchEntities()
-    })
+      fetchEntities();
+    });
   };
   return (
     <div className="w-full h-full bg-[#E9F2EF] flex justify-center items-center px-6 py-6 ">
@@ -68,8 +67,8 @@ const Entity = () => {
         <TableView data={{ headers, cells }} />
       </div>
     </div>
-  )
-}
+  );
+};
 
 const TopBar = ({
   showModal,
@@ -81,14 +80,17 @@ const TopBar = ({
   searchableHeaders,
   setView,
   view,
-  handleSubmit
+  handleSubmit,
 }) => {
   const [showSearch, setShowSearch] = useState(false);
   return (
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold">Entities</p>
-        <AddNewButton onclick={() => setShowModal(!showModal)} isDropDown={false}/>
+        <AddNewButton
+          onclick={() => setShowModal(!showModal)}
+          isDropDown={false}
+        />
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -118,14 +120,26 @@ const TopBar = ({
             onClose={() => {
               setShowModal(false);
             }}
-            children={<ModalComponent closeModal={() => setShowModal(false)} handleSubmit={handleSubmit} modalForm={modalForm} setModalForm={setModalForm} />}
+            children={
+              <ModalComponent
+                closeModal={() => setShowModal(false)}
+                handleSubmit={handleSubmit}
+                modalForm={modalForm}
+                setModalForm={setModalForm}
+              />
+            }
           />
         </div>
       </div>
     </div>
   );
 };
-const ModalComponent = ({ closeModal, handleSubmit, modalForm, setModalForm }) => {
+const ModalComponent = ({
+  closeModal,
+  handleSubmit,
+  modalForm,
+  setModalForm,
+}) => {
   return (
     <div className="w-[400px]">
       <div className="text-2xl font-bold text-[#227A60]">Add Entities</div>
@@ -147,7 +161,9 @@ const ModalComponent = ({ closeModal, handleSubmit, modalForm, setModalForm }) =
           placeholder="Enter Description"
           rows={3}
           value={modalForm.description}
-          onChange={(e) => setModalForm({ ...modalForm, description: e.target.value })}
+          onChange={(e) =>
+            setModalForm({ ...modalForm, description: e.target.value })
+          }
         />
       </div>
       <div className="flex justify-start items-center mt-5">
@@ -172,7 +188,7 @@ const ModalComponent = ({ closeModal, handleSubmit, modalForm, setModalForm }) =
 };
 
 const TableView = ({ data }) => {
-  const { headers, cells } = data
+  const { headers, cells } = data;
   return (
     <div className="w-full h-full flex flex-col overflow-auto px-4">
       <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]">
@@ -206,7 +222,7 @@ const TableView = ({ data }) => {
         );
       })}
     </div>
-  )
-}
+  );
+};
 
-export default Entity
+export default Entity;
