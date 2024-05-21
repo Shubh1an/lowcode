@@ -6,7 +6,7 @@ import { CiFilter } from 'react-icons/ci';
 import { MdOutlineSwapVert } from 'react-icons/md';
 import { BiHide } from 'react-icons/bi';
 import ListHeaderButton from '../../inputs/ListHeaderButton.jsx';
-import { getPages } from '../../../Requests/form.js';
+import { createPage, createPageDetail, getPages } from '../../../Requests/form.js';
 import moment from 'moment';
 import ShortModal from '../../ShortModal/ShortModal.jsx';
 import HideModal from '../../Modals/Hide.jsx';
@@ -53,7 +53,7 @@ function search(searchValue, searchableHeaders, hashTable) {
   return results;
 }
 
-const List = ({ setNewPageData, newPageData, setActive }) => {
+const List = ({ setNewPageData, setSelectedPage, setActive }) => {
   const [forms, setForms] = useState([]);
   const [formsToRender, setFormsToRender] = useState([]);
   const [headers, setHeaders] = useState([]);
@@ -67,6 +67,7 @@ const List = ({ setNewPageData, newPageData, setActive }) => {
     'description',
   ]);
   const [people, setPeoples] = useState({})
+
   let entity_id = location.search.split('=')[1]
   useEffect(() => {
     getPages(entity_id)
@@ -107,7 +108,7 @@ const List = ({ setNewPageData, newPageData, setActive }) => {
     // Add unhidden columns
   }, [hideColumns, forms]);
 
-  useEffect(() => {}, [renderHeaders]);
+  useEffect(() => { }, [renderHeaders]);
 
   const handleHide = (column, checked) => {
     setHideColumns((prev) => {
@@ -143,19 +144,18 @@ const List = ({ setNewPageData, newPageData, setActive }) => {
     }
   };
 
-  const handleAddNewPage = (type) => {
+  const handleAddNewPage = (id, type) => {
     setNewPageData((prev) => {
-      return { ...prev, type: type, entity_id: entity_id, id: null, mode: "add" };
+      return { ...prev, type: type, entity_id: entity_id, id: id, mode: "edit" };
     });
     setActive(1);
   }
 
   const handleEditPage = (id, type) => {
     setNewPageData((prev) => {
-      return { ...prev, id: id, type: type, entity_id: entity_id, mode: "edit"};
+      return { ...prev, id: id, type: type, entity_id: entity_id, mode: "edit" };
     });
     setActive(1);
-    
   }
   useEffect(() => {
     formsToRender.forEach((form, index) => {
@@ -190,8 +190,9 @@ const List = ({ setNewPageData, newPageData, setActive }) => {
           handleHeaderSelect={handleHeaderSelect}
           people={people}
           onNewPage={handleAddNewPage}
+          entity_id={entity_id}
         />
-        <Table headers={renderHeaders} data={formsToRender} onNewPage={handleEditPage}/>
+        <Table headers={renderHeaders} data={formsToRender} onNewPage={handleEditPage} setSelectedPage={setSelectedPage} />
       </div>
     </div>
   );
@@ -210,7 +211,8 @@ const TopBar = ({
   searchableHeaders,
   handleHeaderSelect,
   people,
-  onNewPage
+  onNewPage,
+  entity_id
 }) => {
   const [showSearch, setShowSearch] = useState(false);
   return (
@@ -218,8 +220,30 @@ const TopBar = ({
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold	">Pages</p>
         <AddNewButton onclick={(type) => {
-          onNewPage(type)
-        }} isDropDown={true}/>
+          createPage({
+            thumbnail: "Thumbnail",
+            title: "Untitled",
+            created_by: {
+              name: "Gopala",
+              profile_image: ""
+            },
+            entity_id: entity_id,
+            page_type: type,
+          }).then((res) => {
+            // onNewPage(res?.data?.data?.id, type)
+            console.log("create PAge ", res?.data?.data)
+            let page_id = res?.data?.data?._id
+            createPageDetail({
+              page_id: page_id,
+              page_data: [],
+              type: type
+            }).then((res) => {
+              console.log(res)
+              onNewPage(page_id, type)
+            })
+          })
+
+        }} isDropDown={true} />
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -313,7 +337,7 @@ const modalComponents = (
   };
 };
 
-const Table = ({ headers, data, onNewPage }) => {
+const Table = ({ headers, data, onNewPage, setSelectedPage }) => {
   return (
     <div className="w-full h-full flex flex-col overflow-auto px-4">
       <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]">
@@ -331,7 +355,11 @@ const Table = ({ headers, data, onNewPage }) => {
       {data.length > 0 ? (
         data.map((row, index) => {
           return (
-            <div className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer" key={index + '_cell'} onClick={() => onNewPage(row._id, row.page_type)}>
+            <div className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer" key={index + '_cell'} onClick={() => {
+              setSelectedPage(row)
+              onNewPage(row._id, row.page_type)
+            }
+            }>
               {headers.map((header, index) => {
                 return (
                   <div

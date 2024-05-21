@@ -6,15 +6,16 @@ import BuildFormNav from '../../BreadcrumNavigation/BuildFormNav';
 import { useDrop } from 'react-dnd';
 import AddPageField from '../../inputs/AddPageField';
 import FormInput from '../../FormInput/FormInput';
-import { getAllControls, getControls, getPageData, getPageDetails, getPages, savePage } from '../../../Requests/form';
+import { editPages, getAllControls, getControls, getPageData, getPageDetails, savePage } from '../../../Requests/form';
 import Icons from '../../Utility/Icons';
 import { editPageData, savePageData } from '../../../Requests/pade_data';
+import { useDebounce } from 'use-debounce';
 
 function toSnakeCase(input) {
   // Replace spaces with underscores and convert to lowercase
   return input.replace(/\s+/g, '_').toLowerCase();
 }
-const Add = ({ newPageData, setActive }) => {
+const Add = ({ newPageData, selectedPage }) => {
   const FieldTabs = ['Basic Fields', 'Advanced Fields'];
 
   const PropertiesFields = ['Edit', 'Style'];
@@ -35,19 +36,31 @@ const Add = ({ newPageData, setActive }) => {
   const [activeField, setActiveField] = useState(0);
   const [activeProperties, setActiveProperties] = useState(0);
   const [activePropertiesField, setActivePropertiesField] = useState(0);
-  const [formName, setFormName] = useState('Untitled Form');
+  const [pageName, setPageName] = useState(selectedPage?.title || 'Unique Page Name');
+  const [pageState, setPageState] = useState('');
 
+  const [pageNameDebounced] = useDebounce(pageName, 500);
+
+  useEffect(() => {
+    if (!selectedPage?._id) return
+    editPages(selectedPage?._id, { title: pageNameDebounced }).then(({ data }) => {
+      console.log("Edit Pages", data);
+    })
+  }, [pageNameDebounced])
 
   let mode = newPageData?.mode
   const getFields = async () => {
     setFormFields([])
     if (Object.keys(newPageData).length > 0) {
       if (mode === "edit") {
+        console.log("Edit Mode", newPageData?.id);
         getPageDetails(newPageData?.id).then(({ data }) => {
-          let page_data = data?.[0]?.page_data || []
+          console.log("get Page details ID", data?.[0]?._id);
           setPage_detail_id(data?.[0]?._id)
+          console.log("Page detail", data);
           getPageData(data?.[0]?._id).then(({ data }) => {
             setPage_data_id(data?._id)
+            console.log("Page data", data);
             let propertyDetails = data?.PropertyDetails || []
             propertyDetails.map((key) => {
               let control = [...basicFields]?.find((field) => field.control_id === key.control_id)
@@ -58,9 +71,7 @@ const Add = ({ newPageData, setActive }) => {
                 }
                 setFormFields(prev => [...prev, control])
               }
-              console.log("key", key)
             })
-            console.log("Basic fields", basicFields)
           })
         })
       }
@@ -71,7 +82,6 @@ const Add = ({ newPageData, setActive }) => {
     const basicFieldsData = [
     ]
     getAllControls().then(({ data }) => {
-      console.log("data", data)
       data.map((field) => {
         basicFieldsData.push({
           title: field.name,
@@ -93,11 +103,6 @@ const Add = ({ newPageData, setActive }) => {
   }, [newPageData, basicFields])
 
 
-  // useEffect(() => {
-  //   console.log("Form Fields", formFields)
-  // }, [formFields])
-
-
   useEffect(() => {
     const fields = []
     formFields?.[activePropertiesField]?.properties.map((field) => {
@@ -110,7 +115,6 @@ const Add = ({ newPageData, setActive }) => {
       }
       fields.push(data)
     })
-    console.log("Fields", fields)
     setFieldProperties(fields)
   }, [activePropertiesField]);
 
@@ -145,7 +149,7 @@ const Add = ({ newPageData, setActive }) => {
   const isActive = canDrop && isOver;
 
   const handleFormSubmit = async () => {
-    console.log('formFields', formFields);
+    if (!page_detail_id) return
     let data = {
       page_detail_id: page_detail_id,
       PropertyDetails: [],
@@ -159,12 +163,10 @@ const Add = ({ newPageData, setActive }) => {
     });
     if (mode === "edit" && page_data_id) {
       editPageData(page_data_id, data).then(({ data }) => {
-        console.log('data', data);
       })
     }
     else {
       savePageData(data).then(({ data }) => {
-        console.log('data', data);
       });
     }
   }
@@ -200,7 +202,7 @@ const Add = ({ newPageData, setActive }) => {
         className="flex flex-col w-2/4 h-full bg-[#fff] rounded-2xl mx-6 flex overflow-auto"
         ref={drop}
       >
-        <BuildFormNav setFormName={setFormName} formName={formName} />
+        <BuildFormNav setFormName={setPageName} formName={pageName} />
         <div
           className={`w-full h-[80%] border-2 ${isActive ? ' border-[#227A60]' : 'border-transparent'} p-4 overflow-scroll`}
         >

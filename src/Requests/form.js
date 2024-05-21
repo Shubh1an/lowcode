@@ -17,9 +17,24 @@ export const getPages = async (entity_id) => {
   return data;
 };
 
+export const editPages = async (id, data) => {
+  let response = await apiInstance.put('/pages?id=' + id, data);
+  return response;
+}
+
+export const createPage = async (data) => {
+  let response = await apiInstance.post('/pages', data);
+  return response;
+}
+
 export const getPageDetails = async (id) => {
   let data = await apiInstance.get('/page_details?page_id=' + id);
   return data;
+}
+
+export const createPageDetail = async (data) => {
+  let response = await apiInstance.post('/page_details', data);
+  return response;
 }
 
 export const getPageData = async (id) => {
