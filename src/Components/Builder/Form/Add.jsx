@@ -43,7 +43,7 @@ const Add = ({ newPageData, selectedPage }) => {
 
   const [activeField, setActiveField] = useState(0);
   const [activeProperties, setActiveProperties] = useState(0);
-  const [activePropertiesField, setActivePropertiesField] = useState(0);
+  const [activePropertiesField, setActivePropertiesField] = useState(-1);
   const [pageName, setPageName] = useState(
     selectedPage?.title || 'Unique Page Name',
   );
@@ -75,15 +75,19 @@ const Add = ({ newPageData, selectedPage }) => {
             console.log('Page data', data);
             let propertyDetails = data?.PropertyDetails || [];
             propertyDetails.map((key) => {
+              console.log([...basicFields]);
               let control = [...basicFields]?.find(
                 (field) => field.control_id === key.control_id,
               );
               if (control) {
-                control.propertyValues = key.properties;
-                if (key?.properties?.options) {
-                  control.options = key?.properties?.options;
-                }
-                setFormFields((prev) => [...prev, control]);
+                // control.propertyValues = key.properties;
+                // if (key?.properties?.options) {
+                //   control.options = key?.properties?.options;
+                // }
+                setFormFields((prev) => [
+                  ...prev,
+                  { ...control, propertyValues: key.properties },
+                ]);
               }
             });
           });
@@ -104,10 +108,7 @@ const Add = ({ newPageData, selectedPage }) => {
           control_id: field._id,
         });
       });
-      console.log(
-        'bb>>>>>>>>>>>>>>',
-        basicFieldsData.map((f) => f.icon),
-      );
+      console.log('bb>>>>>>>>>>>>>>', basicFieldsData);
       setBasicFields(basicFieldsData);
     });
   };
@@ -153,8 +154,7 @@ const Add = ({ newPageData, selectedPage }) => {
     if (type === 'add') {
       field = { ...field };
       delete field.icon;
-      console.log('Field without icon', field);
-      setFormFields([...formFields, { ...field }]);
+      setFormFields([...formFields, field]);
       setActivePropertiesField(formFields.length);
     }
   };

@@ -19,7 +19,7 @@ const GlobalProvider = ({ children }) => {
         return config;
       },
       function (error) {
-        return Promise.reject(error);
+        setIsLoading(false);
       },
     );
 
@@ -29,7 +29,7 @@ const GlobalProvider = ({ children }) => {
         return response;
       },
       function (error) {
-        return Promise.reject(error);
+        setIsLoading(false);
       },
     );
 
