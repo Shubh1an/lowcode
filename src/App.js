@@ -10,11 +10,13 @@ import { Route, Routes } from 'react-router-dom';
 import Kanban from './Pages/Board/Kanban';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import CustomTopLoader from './Components/Loader/CustomTopLoader';
 
 function App() {
   return (
     <div className="App">
       <GlobalProvider>
+        <CustomTopLoader />
         <Layout>
           <Routes>
             <Route path="/builder/*" element={<Builder />} />

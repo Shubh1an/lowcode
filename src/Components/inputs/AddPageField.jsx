@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { MdDelete } from 'react-icons/md';
 
 const AddPageField = ({
   field,
@@ -28,6 +29,16 @@ const AddPageField = ({
 };
 
 const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
+  const [selectOptions, setSelectOptions] = useState([]);
+  const [addOptionValue, setAddOptionValue] = useState('');
+  useEffect(() => {
+    if (type === 'add_option') {
+      console.log('addOptionValue', addOptionValue);
+      console.log('defaultValue', defaultValue);
+      console.log('id', id);
+      setSelectOptions(defaultValue);
+    }
+  }, [defaultValue]);
   switch (type) {
     case 'text':
       return (
@@ -71,6 +82,57 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
             );
           })}
         </div>
+      );
+    }
+
+    case 'add_option': {
+      // This is for adding new options
+      return (
+        <>
+          <ol className="list-decimal list-inside">
+            {selectOptions &&
+              selectOptions?.map((option, index) => {
+                return (
+                  <li className="ml-2 mb-1" key={index}>
+                    {option}
+                    <button
+                      onClick={() => {
+                        let payload = {
+                          id: id,
+                          value: selectOptions.filter((elm) => elm !== option),
+                        };
+                        handleProperties(payload);
+                      }}
+                    >
+                      <MdDelete color="red" />
+                    </button>
+                  </li>
+                );
+              })}
+          </ol>
+
+          <input
+            type="text"
+            className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+            onChange={(e) => {
+              setAddOptionValue(e.target.value);
+            }}
+            value={addOptionValue}
+          />
+          <button
+            className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold mt-2"
+            onClick={() => {
+              let payload = {
+                id: id,
+                value: [...selectOptions, addOptionValue],
+              };
+              handleProperties(payload);
+              setAddOptionValue('');
+            }}
+          >
+            Add
+          </button>
+        </>
       );
     }
 

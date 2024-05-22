@@ -46,7 +46,7 @@ export const formatValue = (value, header) => {
   } else if (header === 'page_type') {
     return <TypePill type={value} />;
   } else {
-    if (value.length > 20) {
+    if (value?.length > 20) {
       return value.slice(0, 10) + '...' + value.slice(-5);
     } else {
       return value;

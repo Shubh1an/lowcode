@@ -3,25 +3,27 @@ import SubTab from '../../Tab/SubTab';
 import { BiText } from 'react-icons/bi';
 import { FieldButton } from '../../Buttons/FieldButton';
 import BuildFormNav from '../../BreadcrumNavigation/BuildFormNav';
-import { useDrop } from 'react-dnd';
+import { useDrop, useDrag } from 'react-dnd';
 import AddPageField from '../../inputs/AddPageField';
 import FormInput from '../../FormInput/FormInput';
 import {
+  editPages,
   getAllControls,
   getControls,
   getPageData,
   getPageDetails,
-  getPages,
   savePage,
 } from '../../../Requests/form';
 import Icons from '../../Utility/Icons';
-import { savePageData } from '../../../Requests/pade_data';
+import { editPageData, savePageData } from '../../../Requests/pade_data';
+import { useDebounce } from 'use-debounce';
+import { FaTrash } from 'react-icons/fa';
 
 function toSnakeCase(input) {
   // Replace spaces with underscores and convert to lowercase
   return input.replace(/\s+/g, '_').toLowerCase();
 }
-const Add = ({ newPageData, setActive }) => {
+const Add = ({ newPageData, selectedPage }) => {
   const FieldTabs = ['Basic Fields', 'Advanced Fields'];
 
   const PropertiesFields = ['Edit', 'Style'];
@@ -34,20 +36,55 @@ const Add = ({ newPageData, setActive }) => {
   ]);
 
   const [page_detail_id, setPage_detail_id] = useState('');
+  const [page_data_id, setPage_data_id] = useState('');
+  const [fieldProperties, setFieldProperties] = useState([]);
 
+  const [formFields, setFormFields] = useState([]);
+
+  const [activeField, setActiveField] = useState(0);
+  const [activeProperties, setActiveProperties] = useState(0);
+  const [activePropertiesField, setActivePropertiesField] = useState(0);
+  const [pageName, setPageName] = useState(
+    selectedPage?.title || 'Unique Page Name',
+  );
+  const [pageState, setPageState] = useState('');
+
+  const [pageNameDebounced] = useDebounce(pageName, 500);
+
+  useEffect(() => {
+    if (!selectedPage?._id) return;
+    editPages(selectedPage?._id, { title: pageNameDebounced }).then(
+      ({ data }) => {
+        console.log('Edit Pages', data);
+      },
+    );
+  }, [pageNameDebounced]);
+
+  let mode = newPageData?.mode;
   const getFields = async () => {
+    setFormFields([]);
     if (Object.keys(newPageData).length > 0) {
-      let mode = newPageData?.mode;
       if (mode === 'edit') {
+        console.log('Edit Mode', newPageData?.id);
         getPageDetails(newPageData?.id).then(({ data }) => {
-          let page_data = data?.[0]?.page_data || [];
+          console.log('get Page details ID', data?.[0]?._id);
           setPage_detail_id(data?.[0]?._id);
-          page_data.forEach(async (field) => {
-            getPageData(field).then(({ data }) => {
-              if (!data?.control_id) return;
-              getControls(data.control_id).then(({ data }) => {
-                console.log('Data', data);
-              });
+          console.log('Page detail', data);
+          getPageData(data?.[0]?._id).then(({ data }) => {
+            setPage_data_id(data?._id);
+            console.log('Page data', data);
+            let propertyDetails = data?.PropertyDetails || [];
+            propertyDetails.map((key) => {
+              let control = [...basicFields]?.find(
+                (field) => field.control_id === key.control_id,
+              );
+              if (control) {
+                control.propertyValues = key.properties;
+                if (key?.properties?.options) {
+                  control.options = key?.properties?.options;
+                }
+                setFormFields((prev) => [...prev, control]);
+              }
             });
           });
         });
@@ -58,7 +95,6 @@ const Add = ({ newPageData, setActive }) => {
   const fetchAllControls = async () => {
     const basicFieldsData = [];
     getAllControls().then(({ data }) => {
-      console.log('data', data);
       data.map((field) => {
         basicFieldsData.push({
           title: field.name,
@@ -68,6 +104,10 @@ const Add = ({ newPageData, setActive }) => {
           control_id: field._id,
         });
       });
+      console.log(
+        'bb>>>>>>>>>>>>>>',
+        basicFieldsData.map((f) => f.icon),
+      );
       setBasicFields(basicFieldsData);
     });
   };
@@ -77,16 +117,7 @@ const Add = ({ newPageData, setActive }) => {
 
   useEffect(() => {
     getFields();
-  }, [newPageData]);
-
-  const [fieldProperties, setFieldProperties] = useState([]);
-
-  const [formFields, setFormFields] = useState([]);
-
-  const [activeField, setActiveField] = useState(0);
-  const [activeProperties, setActiveProperties] = useState(0);
-  const [activePropertiesField, setActivePropertiesField] = useState(0);
-  const [formName, setFormName] = useState('Untitled Form');
+  }, [newPageData, basicFields]);
 
   useEffect(() => {
     const fields = [];
@@ -100,7 +131,6 @@ const Add = ({ newPageData, setActive }) => {
       };
       fields.push(data);
     });
-    console.log('Fields', fields);
     setFieldProperties(fields);
   }, [activePropertiesField]);
 
@@ -118,10 +148,15 @@ const Add = ({ newPageData, setActive }) => {
   };
 
   const handleDrop = (item) => {
-    let { field } = item;
-    delete field.icon;
-    setFormFields([...formFields, field]);
-    setActivePropertiesField(formFields.length);
+    let { field, type } = item;
+
+    if (type === 'add') {
+      field = { ...field };
+      delete field.icon;
+      console.log('Field without icon', field);
+      setFormFields([...formFields, { ...field }]);
+      setActivePropertiesField(formFields.length);
+    }
   };
 
   const [{ canDrop, isOver }, drop] = useDrop({
@@ -135,19 +170,23 @@ const Add = ({ newPageData, setActive }) => {
   const isActive = canDrop && isOver;
 
   const handleFormSubmit = async () => {
-    console.log('formFields', formFields);
+    if (!page_detail_id) return;
     let data = {
       page_detail_id: page_detail_id,
-      PropertyDetails: {},
+      PropertyDetails: [],
       styles: {},
     };
     formFields.map((field) => {
-      data.PropertyDetails[field.control_id] = field.propertyValues;
-      data.styles[field.id] = field.style;
+      data.PropertyDetails.push({
+        properties: field.propertyValues,
+        control_id: field.control_id,
+      });
     });
-    savePageData(data).then(({ data }) => {
-      console.log('data', data);
-    });
+    if (mode === 'edit' && page_data_id) {
+      editPageData(page_data_id, data).then(({ data }) => {});
+    } else {
+      savePageData(data).then(({ data }) => {});
+    }
   };
 
   return (
@@ -178,19 +217,30 @@ const Add = ({ newPageData, setActive }) => {
         </div>
       </div>
       <div
-        className="flex flex-col w-2/4 h-full bg-[#fff] rounded-2xl mx-6 flex overflow-auto"
+        className="flex-col w-2/4 h-full bg-[#fff] rounded-2xl mx-6 flex overflow-auto"
         ref={drop}
       >
-        <BuildFormNav setFormName={setFormName} formName={formName} />
+        <BuildFormNav setFormName={setPageName} formName={pageName} />
         <div
           className={`w-full h-[80%] border-2 ${isActive ? ' border-[#227A60]' : 'border-transparent'} p-4 overflow-scroll`}
         >
           {formFields.map((field, index) => (
-            <div key={index}>
+            <div key={index} className="flex">
               <FormInput
                 field={{ ...field, id: index }}
                 setActiveField={setActivePropertiesField}
                 activePropertiesField={activePropertiesField}
+                deleteProp={
+                  <div
+                    onClick={() => {
+                      setFormFields((prevstate) =>
+                        prevstate.filter((_, i) => i !== index),
+                      );
+                    }}
+                  >
+                    <FaTrash className="text-[#227A60] cursor-pointer" />
+                  </div>
+                }
               />
             </div>
           ))}

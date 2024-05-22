@@ -10,6 +10,7 @@ const Form = () => {
   const tabs = [{ title: 'All List' }, { title: 'Add New' }, { title: 'View' }];
   const [active, setActive] = useState(0);
   const [newPageData, setNewPageData] = useState({});
+  const [selectedPage, setSelectedPage] = useState(null);
 
   useEffect(() => {
     if (active === 1) {
@@ -27,12 +28,12 @@ const Form = () => {
       {active === 0 ? (
         <List
           setNewPageData={setNewPageData}
-          newPageData={newPageData}
           setActive={setActive}
+          setSelectedPage={setSelectedPage}
         />
       ) : active === 1 ? (
         <DndProvider backend={HTML5Backend}>
-          <Add newPageData={newPageData} setActive={setActive} />
+          <Add newPageData={newPageData} selectedPage={selectedPage} />
         </DndProvider>
       ) : (
         <View />
