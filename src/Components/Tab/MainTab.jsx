@@ -17,7 +17,7 @@ const MainTab = ({ tabs, active, setActive }) => {
       ))}
 
       <div className="flex-grow">
-        <Icons name={"Mobile"} />
+        <Icons name={'Mobile'} />
       </div>
     </div>
   );
@@ -35,7 +35,9 @@ const Tab = ({ title, active, index, setActive }) => {
 };
 
 const Icons = ({ name }) => {
-  return <div className="text-2xl bg-[#E9E9E9] rounded-full">{getIcon(name)}</div>;
+  return (
+    <div className="text-2xl bg-[#E9E9E9] rounded-full">{getIcon(name)}</div>
+  );
 };
 
 const getIcon = (name) => {
@@ -47,6 +49,6 @@ const getIcon = (name) => {
     case 'AiOutlinePhone':
       return <CiMonitor />;
   }
-}
+};
 
 export default MainTab;

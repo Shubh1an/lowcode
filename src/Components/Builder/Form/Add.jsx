@@ -79,11 +79,12 @@ const Add = ({ newPageData, selectedPage }) => {
               let control = [...basicFields]?.find(
                 (field) => field.control_id === key.control_id,
               );
+              console.log('key>>>>>>>>>>>>>>>>>>>', key);
               if (control) {
                 // control.propertyValues = key.properties;
-                // if (key?.properties?.options) {
-                //   control.options = key?.properties?.options;
-                // }
+                if (key?.properties?.options) {
+                  control.options = key?.properties?.options;
+                }
                 setFormFields((prev) => [
                   ...prev,
                   { ...control, propertyValues: key.properties },
@@ -155,9 +156,12 @@ const Add = ({ newPageData, selectedPage }) => {
       field = { ...field };
       delete field.icon;
       setFormFields([...formFields, field]);
-      setActivePropertiesField(formFields.length);
     }
   };
+
+  useEffect(() => {
+    setActivePropertiesField(formFields.length - 1);
+  }, [formFields.length]);
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'FIELD',
