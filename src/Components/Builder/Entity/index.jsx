@@ -25,14 +25,16 @@ const Entity = () => {
   const fetchEntities = async () => {
     const entity = await getEntities(module_id);
     let data = entity?.data;
-    let headers_gen = Object.keys(data?.[0] || {});
-    headers_gen.forEach((header, index) => {
-      if (header === '_id' || header === '__v') {
-        headers_gen.splice(index, 1);
-      }
-    });
-    setHeaders(headers_gen);
-    setCells(data);
+    if (data) {
+      let headers_gen = Object.keys(data?.[0] || {});
+      headers_gen.forEach((header, index) => {
+        if (header === '_id' || header === '__v') {
+          headers_gen.splice(index, 1);
+        }
+      });
+      setHeaders(headers_gen);
+      setCells(data);
+    }
   };
   useEffect(() => {
     fetchEntities();

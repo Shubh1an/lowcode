@@ -24,14 +24,16 @@ const Module = () => {
   const fetchModules = async () => {
     const modules = await getModules();
     let data = modules?.data;
-    let headers_gen = Object.keys(data[0]);
-    headers_gen.forEach((header, index) => {
-      if (header === '_id' || header === '__v') {
-        headers_gen.splice(index, 1);
-      }
-    });
-    setHeaders(headers_gen);
-    setCells(data);
+    if (data) {
+      let headers_gen = Object.keys(data[0]);
+      headers_gen.forEach((header, index) => {
+        if (header === '_id' || header === '__v') {
+          headers_gen.splice(index, 1);
+        }
+      });
+      setHeaders(headers_gen);
+      setCells(data);
+    }
   };
   useEffect(() => {
     fetchModules();
