@@ -129,6 +129,17 @@ const InputByType = ({
   handleFileChange,
   handleUpload,
 }) => {
+  const [value, setValue] = useState('');
+
+  // const testLetterRegex=(value) => {
+  //   const regex = /^[a-zA-Z]+$/.test(value);
+  //   return regex;
+  // }
+  // const handleOnChange=(event) =>{
+  //   const { value } = event.target;
+  //   if (testLetterRegex(value)) setValue(value);
+  // }
+
   switch (type) {
     case 'Single Line':
       return (
@@ -196,6 +207,13 @@ const InputByType = ({
       return (
         <input
           type="time"
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+        />
+      );
+    case 'Date-Time':
+      return (
+        <input
+          type="datetime-local"
           className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
         />
       );

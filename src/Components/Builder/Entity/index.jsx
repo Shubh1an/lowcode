@@ -126,7 +126,6 @@ const Entity = () => {
   useEffect(() => {}, [renderHeaders]);
 
   const handleSearch = (value) => {
-    debugger;
     if (value) {
       const results = search(value, searchableHeaders, hashTable);
       setFormsToRender(results);
@@ -152,7 +151,6 @@ const Entity = () => {
   }, [formsToRender]);
 
   const handleHeaderSelect = (value, checked) => {
-    debugger;
     if (checked) {
       setSearchableHeaders((prev) => [...prev, value]);
     } else {

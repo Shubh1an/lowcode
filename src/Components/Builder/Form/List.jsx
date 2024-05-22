@@ -132,7 +132,6 @@ const List = ({ setNewPageData, setSelectedPage, setActive }) => {
   }, [forms, searchableHeaders]);
 
   const handleSearch = (value) => {
-    debugger;
     if (value) {
       const results = search(value, searchableHeaders, hashTable);
       setFormsToRender(results);
@@ -142,7 +141,6 @@ const List = ({ setNewPageData, setSelectedPage, setActive }) => {
   };
 
   const handleHeaderSelect = (value, checked) => {
-    debugger;
     if (checked) {
       setSearchableHeaders((prev) => [...prev, value]);
     } else {

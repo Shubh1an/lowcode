@@ -68,6 +68,10 @@ const Module = () => {
   // const [cells, setCells] = useState([]);
 
   useEffect(() => {
+    fetchModules();
+  }, []);
+
+  const fetchModules = () => {
     getModules()
       .then((data) => {
         // let data = modules?.data;
@@ -80,10 +84,9 @@ const Module = () => {
         });
         setRenderHeaders([...headers_gen]);
         setHeaders([...headers_gen]);
-        //setCells(data.data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  };
 
   useEffect(() => {
     setFormsToRender(forms);
@@ -115,7 +118,6 @@ const Module = () => {
   useEffect(() => {}, [renderHeaders]);
 
   const handleSearch = (value) => {
-    debugger;
     if (value) {
       const results = search(value, searchableHeaders, hashTable);
       setFormsToRender(results);
@@ -141,7 +143,6 @@ const Module = () => {
   }, [formsToRender]);
 
   const handleHeaderSelect = (value, checked) => {
-    debugger;
     if (checked) {
       setSearchableHeaders((prev) => [...prev, value]);
     } else {
@@ -151,7 +152,7 @@ const Module = () => {
 
   const handleSubmit = () => {
     saveModule(modalForm).then(() => {
-      // fetchModules();
+      fetchModules();
     });
   };
 
