@@ -43,7 +43,7 @@ const Add = ({ newPageData, selectedPage }) => {
 
   const [activeField, setActiveField] = useState(0);
   const [activeProperties, setActiveProperties] = useState(0);
-  const [activePropertiesField, setActivePropertiesField] = useState(0);
+  const [activePropertiesField, setActivePropertiesField] = useState(-1);
   const [pageName, setPageName] = useState(
     selectedPage?.title || 'Unique Page Name',
   );
@@ -153,7 +153,6 @@ const Add = ({ newPageData, selectedPage }) => {
     if (type === 'add') {
       field = { ...field };
       delete field.icon;
-      console.log('Field without icon', field);
       setFormFields([...formFields, { ...field }]);
       setActivePropertiesField(formFields.length);
     }
