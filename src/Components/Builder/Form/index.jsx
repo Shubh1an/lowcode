@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import MainTab from '../../Tab/MainTab';
-import List from './List';
+import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import MainTab from '../../Tab/MainTab';
 import Add from './Add';
-import View from './View';
+import List from './List';
+import View from '../view/page';
 
 const Form = () => {
   const tabs = [{ title: 'All List' }, { title: 'Add New' }, { title: 'View' }];
