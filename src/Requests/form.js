@@ -1,15 +1,12 @@
 import apiInstance from './instance';
 
 export const savePage = async (data) => {
-  console.log(data);
   apiInstance
     .post('/form', data)
     .then((res) => {
       return res;
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => {});
 };
 
 export const getPages = async (entity_id) => {

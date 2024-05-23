@@ -12,7 +12,6 @@ export const checkValidDate = (date) => {
 };
 
 export const UserPill = ({ user }) => {
-  console.log('User', user);
   let profile = user?.profile_image;
   return (
     <div className="flex items-center gap-2 rounded-full bg-[#66CCFF] p-2 text-[#fff]">

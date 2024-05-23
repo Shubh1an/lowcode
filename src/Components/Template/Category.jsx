@@ -1,9 +1,11 @@
 import React, { useContext, useState } from 'react';
+// @ts-ignore
 import Accordion from '../Accordion/CustomAccordion';
 import { IoMdAddCircle } from 'react-icons/io';
 import GlobalContext from '../../Context/Context';
 import ShortModal from '../ShortModal/ShortModal';
 export const Category = () => {
+  // @ts-ignore
   const { category, setCategory } = useContext(GlobalContext);
   const [selectedCategory, setSelectedCategory] = useState([category[0]]);
   const [isopen, setIsOpen] = useState(false);
@@ -52,14 +54,19 @@ export const Category = () => {
               </span>
             </div>
             <div className="w-1/2">
-              {selectedCategory?.map((cat, key) =>
-                cat?.subCategory.map((subcat, key) => (
-                  <div className="" key={key}>
-                    <div className="flex font-semibold justify-between items-center px-4 pb-2 cursor-pointer">
-                      {subcat}
+              {selectedCategory?.map(
+                (
+                  cat,
+                  // @ts-ignore
+                  key,
+                ) =>
+                  cat?.subCategory.map((subcat, key) => (
+                    <div className="" key={key}>
+                      <div className="flex font-semibold justify-between items-center px-4 pb-2 cursor-pointer">
+                        {subcat}
+                      </div>
                     </div>
-                  </div>
-                )),
+                  )),
               )}
             </div>
           </div>

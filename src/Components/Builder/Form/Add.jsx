@@ -54,9 +54,7 @@ const Add = ({ newPageData, selectedPage }) => {
   useEffect(() => {
     if (!selectedPage?._id) return;
     editPages(selectedPage?._id, { title: pageNameDebounced }).then(
-      ({ data }) => {
-        console.log('Edit Pages', data);
-      },
+      ({ data }) => {},
     );
   }, [pageNameDebounced]);
 
@@ -65,21 +63,17 @@ const Add = ({ newPageData, selectedPage }) => {
     setFormFields([]);
     if (Object.keys(newPageData).length > 0) {
       if (mode === 'edit') {
-        console.log('Edit Mode', newPageData?.id);
         getPageDetails(newPageData?.id).then(({ data }) => {
-          console.log('get Page details ID', data?.[0]?._id);
           setPage_detail_id(data?.[0]?._id);
-          console.log('Page detail', data);
+
           getPageData(data?.[0]?._id).then(({ data }) => {
             setPage_data_id(data?._id);
-            console.log('Page data', data);
+
             let propertyDetails = data?.PropertyDetails || [];
             propertyDetails.map((key) => {
-              console.log([...basicFields]);
               let control = [...basicFields]?.find(
                 (field) => field.control_id === key.control_id,
               );
-              console.log('key>>>>>>>>>>>>>>>>>>>', key);
               if (control) {
                 // control.propertyValues = key.properties;
                 if (key?.properties?.options) {
@@ -109,7 +103,6 @@ const Add = ({ newPageData, selectedPage }) => {
           control_id: field._id,
         });
       });
-      console.log('bb>>>>>>>>>>>>>>', basicFieldsData);
       setBasicFields(basicFieldsData);
     });
   };

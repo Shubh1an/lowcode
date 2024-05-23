@@ -4,9 +4,7 @@ import GlobalContext from '../../Context/Context';
 const CustomTopLoader = () => {
   const { isLoading } = useContext(GlobalContext);
 
-  useEffect(() => {
-    console.log(isLoading);
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div className="">
