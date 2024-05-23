@@ -16,6 +16,9 @@ module.exports = {
       animation: {
         'refine-slide': 'refine 2s infinite',
       },
+      backgroundImage: {
+        'setup-pattern': "url('./assets/setup-pattern.svg')",
+      }
     },
   },
   plugins: [],
