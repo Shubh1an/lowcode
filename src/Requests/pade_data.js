@@ -15,3 +15,13 @@ export const editPageData = async (id, data) => {
   let response = await apiInstance.put(`/page_data?id=${id}`, data);
   return response;
 };
+
+export const fillPage = async (data) => {
+  let response = await apiInstance.post('/fill-page', data);
+  return response
+}
+
+export const getFillPage = async (id) => {
+  let response = await apiInstance.get('/fill-page?id=' + id);
+  return response
+}
