@@ -11,35 +11,49 @@ import Kanban from './Pages/Board/Kanban';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import CustomTopLoader from './Components/Loader/CustomTopLoader';
+import SetupLayout from './Components/SetupWizard/SetupLayout';
+import Login from './Components/SetupWizard/Login';
 
 function App() {
   return (
     <div className="App">
       <GlobalProvider>
         <CustomTopLoader />
-        <Layout>
-          <Routes>
-            <Route path="/builder/*" element={<Builder />} />
-            <Route path="/template/*" element={<Templates />} />
-            <Route
-              path="/kanban"
-              element={
+
+        <Routes>
+          <Route path="/builder/*" element={
+            <LayoutChild>
+              <Builder />
+            </LayoutChild>
+          } />
+          <Route path="/template/*" element={
+            <LayoutChild>
+              <Templates />
+            </LayoutChild>
+          } />
+          <Route
+            path="/kanban"
+            element={
+              <LayoutChild>
                 <DndProvider backend={HTML5Backend}>
                   <Kanban />
                 </DndProvider>
-              }
-            />
-          </Routes>
-        </Layout>
+              </LayoutChild>
+            }
+          />
+          <Route path="/setup/*" element={<SetupLayout > {
+            <Login />
+          } </SetupLayout>} />
+        </Routes>
       </GlobalProvider>
-    </div>
+    </div >
   );
 }
 
-const Home = () => {
-  // @ts-ignore
-  const { selectedMenu } = useContext(GlobalContext);
-  return selectedMenu?.title === 'Template' ? <Templates /> : <Builder />;
+const LayoutChild = ({ children }) => {
+  return <Layout>
+    {children}
+  </Layout>
 };
 
 export default App;
