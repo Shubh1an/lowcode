@@ -36,12 +36,11 @@ const FormInput = ({
     setFile(selectedFile);
   };
 
-  const toggleMultiSelect = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleMultiSelect = () => setIsOpen((prev) => !prev);
 
   const handleUpload = () => {
     onUpload(file);
+    setFile(null);
   };
 
   const handleOptionToggle = (optionValue) => {
