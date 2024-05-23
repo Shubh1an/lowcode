@@ -38,6 +38,7 @@ const Add = ({ newPageData, selectedPage }) => {
   const [page_detail_id, setPage_detail_id] = useState('');
   const [page_data_id, setPage_data_id] = useState('');
   const [fieldProperties, setFieldProperties] = useState([]);
+  const [fieldStyles, setFieldStyles] = useState([]);
 
   const [formFields, setFormFields] = useState([]);
 
@@ -62,6 +63,7 @@ const Add = ({ newPageData, selectedPage }) => {
 
   let mode = newPageData?.mode;
   const getFields = async () => {
+    console.log('newPageData????????????????', newPageData);
     setFormFields([]);
     if (Object.keys(newPageData).length > 0) {
       if (mode === 'edit') {
@@ -107,6 +109,7 @@ const Add = ({ newPageData, selectedPage }) => {
           icon: <Icons name={field.logo} />,
           properties: field.control_properties,
           control_id: field._id,
+          styles: field.styles,
         });
       });
       console.log('bb>>>>>>>>>>>>>>', basicFieldsData);
@@ -123,6 +126,8 @@ const Add = ({ newPageData, selectedPage }) => {
 
   useEffect(() => {
     const fields = [];
+    const styleFields = [];
+
     formFields?.[activePropertiesField]?.properties.map((field) => {
       let key = Object.keys(field)[0];
       let data = {
@@ -133,6 +138,19 @@ const Add = ({ newPageData, selectedPage }) => {
       };
       fields.push(data);
     });
+
+    formFields?.[activePropertiesField]?.styles.map((field) => {
+      let key = Object.keys(field)[0];
+      let data = {
+        id: key,
+        type: field[key].type,
+        title: field[key].label[0],
+        options: field[key]?.options,
+      };
+      styleFields.push(data);
+    });
+
+    setFieldStyles(styleFields);
     setFieldProperties(fields);
   }, [activePropertiesField]);
 
@@ -146,6 +164,20 @@ const Add = ({ newPageData, selectedPage }) => {
         [data.id]: data.value,
       },
     };
+    setFormFields([...currentData]);
+  };
+
+  const handleStyles = (data) => {
+    let changeId = activePropertiesField;
+    let currentData = formFields;
+    currentData[changeId] = {
+      ...currentData[changeId],
+      propertyValues: {
+        ...(currentData[changeId].propertyValues || {}),
+        [data.id]: data.value,
+      },
+    };
+    console.log('currentData>>>>>>>>>>>>>>>>>>>>>', currentData);
     setFormFields([...currentData]);
   };
 
@@ -226,10 +258,13 @@ const Add = ({ newPageData, selectedPage }) => {
       >
         <BuildFormNav setFormName={setPageName} formName={pageName} />
         <div
-          className={`w-full h-[80%] border-2 ${isActive ? ' border-[#227A60]' : 'border-transparent'} p-4 overflow-scroll`}
+          className={`h-[65vh] border-2 ${isActive ? ' border-[#227A60]' : 'border-transparent'} p-4 flex flex-wrap overflow-auto justify-around`}
         >
           {formFields.map((field, index) => (
-            <div key={index} className="flex">
+            <div
+              key={index}
+              className={`w-${field.propertyValues?.width === '1' ? 'full' : field.propertyValues?.width === '1/2' ? '[48%]' : field.propertyValues?.width === '1/3' ? '[33%]' : 'full'}`}
+            >
               <FormInput
                 field={{ ...field, id: index }}
                 setActiveField={setActivePropertiesField}
@@ -269,7 +304,20 @@ const Add = ({ newPageData, selectedPage }) => {
                 />
               ))}
             </div>
-          ) : null}
+          ) : (
+            <>
+              <div className="grid grid-cols-1 w-full  p-4">
+                {fieldStyles.map((field, index) => (
+                  <AddPageField
+                    key={index}
+                    field={field}
+                    handleProperties={handleStyles}
+                    defaultValue={formFields[activePropertiesField]}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
