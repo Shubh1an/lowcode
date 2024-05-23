@@ -13,6 +13,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import CustomTopLoader from './Components/Loader/CustomTopLoader';
 import SetupLayout from './Components/SetupWizard/SetupLayout';
 import Login from './Components/SetupWizard/Login';
+import SignUp from './Components/SetupWizard/SignUp';
+import PersonalInfo from './Components/SetupWizard/PersonalInfo';
+import Industry from './Components/SetupWizard/Industry';
 
 function App() {
   return (
@@ -21,16 +24,22 @@ function App() {
         <CustomTopLoader />
 
         <Routes>
-          <Route path="/builder/*" element={
-            <LayoutChild>
-              <Builder />
-            </LayoutChild>
-          } />
-          <Route path="/template/*" element={
-            <LayoutChild>
-              <Templates />
-            </LayoutChild>
-          } />
+          <Route
+            path="/builder/*"
+            element={
+              <LayoutChild>
+                <Builder />
+              </LayoutChild>
+            }
+          />
+          <Route
+            path="/template/*"
+            element={
+              <LayoutChild>
+                <Templates />
+              </LayoutChild>
+            }
+          />
           <Route
             path="/kanban"
             element={
@@ -41,19 +50,30 @@ function App() {
               </LayoutChild>
             }
           />
-          <Route path="/setup/*" element={<SetupLayout > {
-            <Login />
-          } </SetupLayout>} />
+          <Route
+            path="/setup/*"
+            element={
+              <SetupLayout>
+                {' '}
+                {
+                  <Routes>
+                    <Route path="signup" element={<SignUp />} />
+                    <Route path="signin" element={<Login />} />
+                    <Route path="account" element={<PersonalInfo />} />
+                    <Route path="industry" element={<Industry />} />
+                  </Routes>
+                }{' '}
+              </SetupLayout>
+            }
+          />
         </Routes>
       </GlobalProvider>
-    </div >
+    </div>
   );
 }
 
 const LayoutChild = ({ children }) => {
-  return <Layout>
-    {children}
-  </Layout>
+  return <Layout>{children}</Layout>;
 };
 
 export default App;
