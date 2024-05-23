@@ -13,7 +13,7 @@ const CustomTopLoader = () => {
       {isLoading && (
         <div
           id="progress"
-          className="fixed top-0 left-0 animate-refine-slide h-1 bg-black"
+          className="fixed top-0 left-0 animate-refine-slide h-1 z-50 bg-black"
         >
           <div className="bg-yellow-400 w-full h-full "></div>
         </div>

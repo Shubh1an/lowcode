@@ -1,4 +1,7 @@
 import React from 'react';
+import { BiMobile } from 'react-icons/bi';
+import { BsTablet } from 'react-icons/bs';
+import { CiMonitor } from 'react-icons/ci';
 
 const MainTab = ({ tabs, active, setActive }) => {
   return (
@@ -12,6 +15,10 @@ const MainTab = ({ tabs, active, setActive }) => {
           setActive={setActive}
         />
       ))}
+
+      <div className="flex-grow">
+        <Icons name={'Mobile'} />
+      </div>
     </div>
   );
 };
@@ -25,6 +32,23 @@ const Tab = ({ title, active, index, setActive }) => {
       {title}
     </div>
   );
+};
+
+const Icons = ({ name }) => {
+  return (
+    <div className="text-2xl bg-[#E9E9E9] rounded-full">{getIcon(name)}</div>
+  );
+};
+
+const getIcon = (name) => {
+  switch (name) {
+    case 'Mobile':
+      return <BiMobile />;
+    case 'AiOutlineClockCircle':
+      return <BsTablet />;
+    case 'AiOutlinePhone':
+      return <CiMonitor />;
+  }
 };
 
 export default MainTab;
