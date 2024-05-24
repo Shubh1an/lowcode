@@ -18,7 +18,7 @@ module.exports = {
       },
       backgroundImage: {
         'setup-pattern': "url('./assets/setup-pattern.svg')",
-      }
+      },
     },
   },
   plugins: [],

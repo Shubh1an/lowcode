@@ -21,16 +21,22 @@ function App() {
         <CustomTopLoader />
 
         <Routes>
-          <Route path="/builder/*" element={
-            <LayoutChild>
-              <Builder />
-            </LayoutChild>
-          } />
-          <Route path="/template/*" element={
-            <LayoutChild>
-              <Templates />
-            </LayoutChild>
-          } />
+          <Route
+            path="/builder/*"
+            element={
+              <LayoutChild>
+                <Builder />
+              </LayoutChild>
+            }
+          />
+          <Route
+            path="/template/*"
+            element={
+              <LayoutChild>
+                <Templates />
+              </LayoutChild>
+            }
+          />
           <Route
             path="/kanban"
             element={
@@ -41,19 +47,18 @@ function App() {
               </LayoutChild>
             }
           />
-          <Route path="/setup/*" element={<SetupLayout > {
-            <Login />
-          } </SetupLayout>} />
+          <Route
+            path="/setup/*"
+            element={<SetupLayout> {<Login />} </SetupLayout>}
+          />
         </Routes>
       </GlobalProvider>
-    </div >
+    </div>
   );
 }
 
 const LayoutChild = ({ children }) => {
-  return <Layout>
-    {children}
-  </Layout>
+  return <Layout>{children}</Layout>;
 };
 
 export default App;

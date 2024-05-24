@@ -18,10 +18,10 @@ export const editPageData = async (id, data) => {
 
 export const fillPage = async (data) => {
   let response = await apiInstance.post('/fill-page', data);
-  return response
-}
+  return response;
+};
 
 export const getFillPage = async (id) => {
   let response = await apiInstance.get('/fill-page?id=' + id);
-  return response
-}
+  return response;
+};
