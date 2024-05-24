@@ -6,6 +6,7 @@ const FormInput = ({
   setActiveField,
   activePropertiesField,
   deleteProp = <></>,
+  onchange = () => {},
   onUpload = (file) => {},
 }) => {
   const {
@@ -79,7 +80,7 @@ const FormInput = ({
     setIsOpen(!isOpen);
   };
   return (
-    <div className={`w-full`}>
+    <div>
       <div className={`w-full flex flex-row items-center`}>
         <label
           className={`block mb-2 mt-4 text-lg font-medium cursor-pointer ${activePropertiesField === id ? 'text-[#227A60] font-bold underline' : 'text-gray-900 font-bold '}`}
@@ -92,6 +93,7 @@ const FormInput = ({
         </div>
       </div>
       <InputByType
+        onchange={onchange}
         type={type}
         options={options}
         id={id}
@@ -125,6 +127,7 @@ const InputByType = ({
   dropdownRef,
   extrClass,
   file,
+  onchange,
   handleFileChange,
   handleUpload,
 }) => {
@@ -145,6 +148,7 @@ const InputByType = ({
         <input
           type="text"
           className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          onChange={onchange}
           placeholder={defaultValue}
         />
       );
@@ -191,6 +195,7 @@ const InputByType = ({
         <input
           type="number"
           className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          defaultValue={defaultValue}
           placeholder={defaultValue}
         />
       );

@@ -6,7 +6,7 @@ const AddPageField = ({
   handleProperties,
   defaultValue: defaultValueProp,
 }) => {
-  const { title: label, type, options, id } = field;
+  const { title: label, type, options, id, styles } = field;
   const [defaultValue, setDefaultValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [tempOptions, setTempOptions] = useState(options);
@@ -39,7 +39,7 @@ const AddPageField = ({
 
   return (
     <div className="w-full">
-      <label className="block mb-2 mt-4 text-lg font-medium text-gray-900 font-bold">
+      <label className="block mb-2 mt-4 text-lg font-medium text-gray-900">
         {label}
       </label>
       <InputByType
