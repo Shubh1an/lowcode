@@ -80,7 +80,7 @@ const FormInput = ({
     setIsOpen(!isOpen);
   };
   return (
-    <div>
+    <div className="w-full">
       <div className={`w-full flex flex-row items-center`}>
         <label
           className={`block mb-2 mt-4 text-lg font-medium cursor-pointer ${activePropertiesField === id ? 'text-[#227A60] font-bold underline' : 'text-gray-900 font-bold '}`}

@@ -59,12 +59,7 @@ function search(searchValue, searchableHeaders, hashTable) {
   return results;
 }
 
-const ListData = ({
-  newPageData,
-  setNewPageData,
-  setSelectedPage,
-  setActive,
-}) => {
+const ListData = ({ newPageData }) => {
   const [forms, setForms] = useState([]);
   const [formsToRender, setFormsToRender] = useState([]);
   const [renderHeaders, setRenderHeaders] = useState([]);
@@ -89,7 +84,7 @@ const ListData = ({
       .then((res) => {
         if (!res.data) return;
         let { data } = res;
-        setHeaders(Object.keys(data[0]));
+        setHeaders(Object.keys(data[data.length - 1 || 0]));
         setRenderHeaders(Object.keys(data[0]));
         setData(data);
         setForms(data);
@@ -99,9 +94,7 @@ const ListData = ({
         console.log('Error', err);
       });
   }, [page_detail_id]);
-  console.log('New Page Data', newPageData);
   getPageDetails(newPageData?.id).then(({ data }) => {
-    console.log('get Page details ID', data);
     setPage_detail_id(data?.[0]?._id);
   });
 
@@ -181,31 +174,32 @@ const ListData = ({
     }
   };
 
-  const handleAddNewPage = (id, type) => {
-    setNewPageData((prev) => {
-      return {
-        ...prev,
-        type: type,
-        entity_id: entity_id,
-        id: id,
-        mode: 'edit',
-      };
-    });
-    setActive(1);
-  };
+  //   const handleAddNewPage = (id, type) => {
+  //     setNewPageData((prev) => {
+  //       return {
+  //         ...prev,
+  //         type: type,
+  //         entity_id: entity_id,
+  //         id: id,
+  //         mode: 'edit',
+  //       };
+  //     });
+  //     setActive(1);
+  //   };
 
-  const handleEditPage = (id, type) => {
-    setNewPageData((prev) => {
-      return {
-        ...prev,
-        id: id,
-        type: type,
-        entity_id: entity_id,
-        mode: 'edit',
-      };
-    });
-    setActive(1);
-  };
+  //   const handleEditPage = (id, type) => {
+  //     setNewPageData((prev) => {
+  //       return {
+  //         ...prev,
+  //         id: id,
+  //         type: type,
+  //         entity_id: entity_id,
+  //         mode: 'edit',
+  //       };
+  //     });
+  //     setActive(1);
+  //   };
+
   useEffect(() => {
     formsToRender.forEach((form, index) => {
       let header = Object.keys(form);
@@ -238,7 +232,7 @@ const ListData = ({
           searchableHeaders={searchableHeaders}
           handleHeaderSelect={handleHeaderSelect}
           people={people}
-          onNewPage={handleAddNewPage}
+          //   onNewPage={handleAddNewPage}
           entity_id={entity_id}
         />
         <Table headers={renderHeaders} data={formsToRender} />
@@ -260,7 +254,6 @@ const TopBar = ({
   searchableHeaders,
   handleHeaderSelect,
   people,
-  onNewPage,
   entity_id,
 }) => {
   const [showSearch, setShowSearch] = useState(false);
@@ -390,8 +383,8 @@ const modalComponents = (
 
 const Table = ({ headers, data }) => {
   return (
-    <div className="w-full h-full flex flex-col overflow-auto px-4">
-      <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]">
+    <div className="w-full h-full flex flex-col max-h-[75vh] px-4 overflow-scroll">
+      <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff] ">
         {headers.map((header, index) => {
           return (
             <div

@@ -26,7 +26,7 @@ function toSnakeCase(input) {
 const Add = ({ newPageData, selectedPage }) => {
   const FieldTabs = ['Basic Fields', 'Advanced Fields'];
 
-  const PropertiesFields = ['Edit', 'Style'];
+  const PropertiesFields = ['Edit', 'Style', 'Arrange'];
   const [basicFields, setBasicFields] = useState([
     {
       title: 'Single Line',
@@ -85,12 +85,20 @@ const Add = ({ newPageData, selectedPage }) => {
               if (control) {
                 // control.propertyValues = key.properties;
                 if (key?.properties?.options) {
-                  control.options = key?.properties?.options;
+                  setFormFields((prev) => [
+                    ...prev,
+                    {
+                      ...control,
+                      propertyValues: key.properties,
+                      options: key?.properties?.options,
+                    },
+                  ]);
+                } else {
+                  setFormFields((prev) => [
+                    ...prev,
+                    { ...control, propertyValues: key.properties },
+                  ]);
                 }
-                setFormFields((prev) => [
-                  ...prev,
-                  { ...control, propertyValues: key.properties },
-                ]);
               }
             });
           });
@@ -155,6 +163,7 @@ const Add = ({ newPageData, selectedPage }) => {
   }, [activePropertiesField]);
 
   const handleProperties = (data) => {
+    console.log('data>>>>>>>>>>>>>>>>>', data);
     let changeId = activePropertiesField;
     let currentData = formFields;
     currentData[changeId] = {
@@ -258,31 +267,34 @@ const Add = ({ newPageData, selectedPage }) => {
       >
         <BuildFormNav setFormName={setPageName} formName={pageName} />
         <div
-          className={`h-[65vh] border-2 ${isActive ? ' border-[#227A60]' : 'border-transparent'} p-4 flex flex-wrap overflow-auto justify-around`}
+          className={`max-h-[65vh] border-2 ${isActive ? ' border-[#227A60]' : 'border-transparent'} p-4 flex flex-wrap overflow-auto justify-around`}
         >
-          {formFields.map((field, index) => (
-            <div
-              key={index}
-              className={`w-${field.propertyValues?.width === '1' ? 'full' : field.propertyValues?.width === '1/2' ? '[48%]' : field.propertyValues?.width === '1/3' ? '[33%]' : 'full'}`}
-            >
-              <FormInput
-                field={{ ...field, id: index }}
-                setActiveField={setActivePropertiesField}
-                activePropertiesField={activePropertiesField}
-                deleteProp={
-                  <div
-                    onClick={() => {
-                      setFormFields((prevstate) =>
-                        prevstate.filter((_, i) => i !== index),
-                      );
-                    }}
-                  >
-                    <FaTrash className="text-[#227A60] cursor-pointer" />
-                  </div>
-                }
-              />
-            </div>
-          ))}
+          {formFields.map((field, index) => {
+            console.log('field', field);
+            return (
+              <div
+                key={index}
+                className={`${field.propertyValues?.width === 'full' ? 'w-full' : field.propertyValues?.width === '1/2' ? 'w-[48%]' : field.propertyValues?.width === '1/3' ? 'w-[33.33%]' : 'w-full'}`}
+              >
+                <FormInput
+                  field={{ ...field, id: index }}
+                  setActiveField={setActivePropertiesField}
+                  activePropertiesField={activePropertiesField}
+                  deleteProp={
+                    <div
+                      onClick={() => {
+                        setFormFields((prevstate) =>
+                          prevstate.filter((_, i) => i !== index),
+                        );
+                      }}
+                    >
+                      <FaTrash className="text-[#227A60] cursor-pointer" />
+                    </div>
+                  }
+                />
+              </div>
+            );
+          })}
         </div>
         <Footer handleFormSubmit={handleFormSubmit} />
       </div>
@@ -304,7 +316,7 @@ const Add = ({ newPageData, selectedPage }) => {
                 />
               ))}
             </div>
-          ) : (
+          ) : activeProperties === 1 ? (
             <>
               <div className="grid grid-cols-1 w-full  p-4">
                 {fieldStyles.map((field, index) => (
@@ -317,7 +329,7 @@ const Add = ({ newPageData, selectedPage }) => {
                 ))}
               </div>
             </>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
@@ -326,7 +338,7 @@ const Add = ({ newPageData, selectedPage }) => {
 
 const Footer = ({ handleFormSubmit }) => {
   return (
-    <div className="w-full h-[60px] border-t-[1px] border-[#E9E9E9]">
+    <div className="w-full h-[60px] border-t-[1px] border-[#E9E9E9] mt-auto">
       <div className="flex justify-start items-center h-full py-4">
         <button
           className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mx-4 font-bold"
