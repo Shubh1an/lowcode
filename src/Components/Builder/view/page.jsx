@@ -15,16 +15,16 @@ const View = () => {
   const [page_detail_id, setPage_detail_id] = useState('');
   const [page_data_id, setPage_data_id] = useState('');
   const [basicFields, setBasicFields] = useState([]);
-  const [fieldValue, setFieldValue] = useState({ page_data_id: "", data: {} });
+  const [fieldValue, setFieldValue] = useState({ page_data_id: '', data: {} });
 
   useEffect(() => {
-    setFieldValue(prev => {
+    setFieldValue((prev) => {
       return {
         ...prev,
-        page_data_id: page_data_id
-      }
-    })
-  }, [page_data_id])
+        page_data_id: page_data_id,
+      };
+    });
+  }, [page_data_id]);
 
   const newPageData = {
     id: '664edf5a0c7ebf60fb0bcd79',
@@ -119,7 +119,7 @@ const View = () => {
                         value: e.target.value,
                         type: field.inputType,
                       },
-                    }
+                    },
                   };
                 });
               }}
@@ -135,19 +135,23 @@ const View = () => {
             />
           </div>
         ))}
-        <Footer handleFormSubmit={() => {
-          fillPage(fieldValue).then((data) => {
-            console.log("Res", data)
-          }).catch(err => {
-            console.log("Error", err)
-          })
-        }} />
+        <Footer
+          handleFormSubmit={() => {
+            fillPage(fieldValue)
+              .then((data) => {
+                console.log('Res', data);
+              })
+              .catch((err) => {
+                console.log('Error', err);
+              });
+          }}
+        />
       </div>
     </div>
   );
 };
 
-const Footer = ({ handleFormSubmit = () => { } }) => {
+const Footer = ({ handleFormSubmit = () => {} }) => {
   return (
     <div className="w-full h-[60px] border-t-[1px] border-[#E9E9E9] mt-4">
       <div className="flex justify-center items-center h-full py-4">

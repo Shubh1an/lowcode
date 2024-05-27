@@ -8,7 +8,12 @@ import View from '../view/page';
 import ListData from './ListData';
 
 const Form = () => {
-  const tabs = [{ title: 'All List' }, { title: 'Add New' }, { title: 'View' }, { title: "List Data" }];
+  const tabs = [
+    { title: 'All List' },
+    { title: 'Add New' },
+    { title: 'View' },
+    { title: 'List Data' },
+  ];
   const [active, setActive] = useState(0);
   const [newPageData, setNewPageData] = useState({});
   const [selectedPage, setSelectedPage] = useState(null);
@@ -38,8 +43,9 @@ const Form = () => {
         </DndProvider>
       ) : active === 2 ? (
         <View />
-
-      ) : <ListData newPageData={newPageData} />}
+      ) : (
+        <ListData newPageData={newPageData} />
+      )}
     </div>
   );
 };
