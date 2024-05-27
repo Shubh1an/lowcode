@@ -1,7 +1,5 @@
-import { useContext } from 'react';
 import React from 'react';
 import './App.css';
-import GlobalContext from './Context/Context';
 import GlobalProvider from './Context/Provider';
 import Layout from './Layout/Layout';
 import Builder from './Pages/Builder';
@@ -16,6 +14,7 @@ import Login from './Components/SetupWizard/Login';
 import SignUp from './Components/SetupWizard/SignUp';
 import PersonalInfo from './Components/SetupWizard/PersonalInfo';
 import Industry from './Components/SetupWizard/Industry';
+import Role from './Components/SetupWizard/Role';
 
 function App() {
   return (
@@ -57,10 +56,11 @@ function App() {
                 {' '}
                 {
                   <Routes>
-                    <Route path="signup" element={<SignUp />} />
+                    <Route path="/" element={<SignUp />} />
                     <Route path="signin" element={<Login />} />
                     <Route path="account" element={<PersonalInfo />} />
                     <Route path="industry" element={<Industry />} />
+                    <Route path="role" element={<Role />} />
                   </Routes>
                 }{' '}
               </SetupLayout>

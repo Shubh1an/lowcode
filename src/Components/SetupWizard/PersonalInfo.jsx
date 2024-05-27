@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const PersonalInfo = () => {
   return (
@@ -38,10 +39,12 @@ const PersonalInfo = () => {
           />
         </div>
 
-        <div className="w-full flex justify-center items-center mt-6">
-          <button className="w-full h-[50px] bg-[#323232] text-white text-xl rounded-md ">
-            Continue
-          </button>
+        <div className="w-full mt-6">
+          <Link to={`/setup/industry`}>
+            <button className="w-full h-[50px] bg-[#323232] text-white text-xl rounded-md spacing-y-2">
+              Continue
+            </button>
+          </Link>
         </div>
       </div>
     </div>

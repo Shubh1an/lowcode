@@ -21,9 +21,11 @@ const SignUp = () => {
         </div>
 
         <div className="w-full mt-6">
-          <button className="w-full h-[50px] bg-[#323232] text-white text-xl rounded-md spacing-y-2">
-            Continue
-          </button>
+          <Link to={`/setup/account`}>
+            <button className="w-full h-[50px] bg-[#323232] text-white text-xl rounded-md spacing-y-2">
+              Continue
+            </button>
+          </Link>
         </div>
 
         <div className="w-full mt-6 flex justify-center items-center">
