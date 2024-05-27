@@ -10,7 +10,7 @@ import { BiText } from 'react-icons/bi';
 import Icons from '../../Utility/Icons';
 import { fillPage } from '../../../Requests/pade_data';
 
-const View = () => {
+const View = ({ newPageData }) => {
   const [formFields, setFormFields] = useState([]);
   const [page_detail_id, setPage_detail_id] = useState('');
   const [page_data_id, setPage_data_id] = useState('');
@@ -26,12 +26,6 @@ const View = () => {
     });
   }, [page_data_id]);
 
-  const newPageData = {
-    id: '664edf5a0c7ebf60fb0bcd79',
-    type: 'Form',
-    entity_id: '6646f939f9c9f1d1717142ee',
-    mode: 'edit',
-  };
   const fetchAllControls = async () => {
     const basicFieldsData = [];
     getAllControls().then(({ data }) => {
@@ -45,7 +39,7 @@ const View = () => {
           styles: field.styles,
         });
       });
-      console.log('bb>>>>>>>>>>>>>>', basicFieldsData);
+
       setBasicFields(basicFieldsData);
     });
   };
@@ -77,12 +71,20 @@ const View = () => {
               if (control) {
                 // control.propertyValues = key.properties;
                 if (key?.properties?.options) {
-                  control.options = key?.properties?.options;
+                  setFormFields((prev) => [
+                    ...prev,
+                    {
+                      ...control,
+                      propertyValues: key.properties,
+                      options: key?.properties?.options,
+                    },
+                  ]);
+                } else {
+                  setFormFields((prev) => [
+                    ...prev,
+                    { ...control, propertyValues: key.properties },
+                  ]);
                 }
-                setFormFields((prev) => [
-                  ...prev,
-                  { ...control, propertyValues: key.properties },
-                ]);
               }
             });
           });
@@ -103,7 +105,7 @@ const View = () => {
         {formFields.map((field, index) => (
           <div
             key={index}
-            className={`max-w-[100%] w-${field.propertyValues?.width === '1' ? 'full' : field.propertyValues?.width === '1/2' ? '[48%]' : '[98%]'}`}
+            className={`${field.propertyValues?.width === '1' ? 'w-full' : field.propertyValues?.width === '1/2' ? 'w-[48%]' : 'w-[98%]'}`}
           >
             <FormInput
               field={{ ...field, id: index }}

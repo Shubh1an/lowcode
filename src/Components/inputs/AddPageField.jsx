@@ -9,6 +9,7 @@ const AddPageField = ({
   const { title: label, type, options, id, styles } = field;
   const [defaultValue, setDefaultValue] = useState('');
   useEffect(() => {
+    setDefaultValue('');
     setDefaultValue(defaultValueProp?.propertyValues?.[field.id] || '');
   }, [field, defaultValueProp]);
 
@@ -54,7 +55,7 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
             };
             handleProperties(payload);
           }}
-          value={defaultValue}
+          defaultValue={defaultValue}
         />
       );
     case 'radio': {
