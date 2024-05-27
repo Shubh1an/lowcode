@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { BackgroundsetupImg1 } from '../../svg';
 
-const Industry = () => {
+const Industry = ({ setUpImg }) => {
   const [checked, setchecked] = useState(false);
 
   const [selectedValue, setSelectedValue] = useState('');
@@ -11,6 +12,10 @@ const Industry = () => {
     B2B: false,
     B2C: false,
   });
+
+  useEffect(() => {
+    setUpImg(<BackgroundsetupImg1 />);
+  }, []);
 
   const handleRadioChange = (e) => {
     setSelectedValue(e.target.value);

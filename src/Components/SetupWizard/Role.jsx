@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { BackgroundsetupImg2 } from '../../svg';
 
-const Role = () => {
+const Role = ({ setUpImg }) => {
   const [checked, setchecked] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
+
+  useEffect(() => {
+    setUpImg(<BackgroundsetupImg2 />);
+  }, []);
   const handleRadioChange = (e) => {
     setSelectedValue(e.target.value);
   };

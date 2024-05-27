@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+// @ts-ignore
 import GoogleIcon from '../../assets/google.svg';
+// @ts-ignore
 import FacebookIcon from '../../assets/facebook.svg';
+// @ts-ignore
 import MicrosoftIcon from '../../assets/microsoft.svg';
+// @ts-ignore
 import LinkedinIcon from '../../assets/linkedIn.svg';
+import { BackgroundsetupImg } from '../../svg';
 
-const Login = () => {
+const Login = ({ setUpImg }) => {
+  useEffect(() => {
+    setUpImg(<BackgroundsetupImg />);
+  }, []);
+
   return (
     <div className="bg-[#ffffff] flex flex-col w-[60%] rounded p-4">
       <div className="text-2xl font-bold flex w-full justify-center pt-4">

@@ -1,24 +1,32 @@
 import React from 'react';
-import Logo from '../../assets/Logo.svg';
-import SetupHead from '../../assets/setup-head.svg';
-import SetupBottom from '../../assets/setup-bottom.svg';
+import { BackgroundsetupImg } from '../../svg';
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
 
-const SetupLayout = ({ children }) => {
+const SetupLayout = ({ children, stepUpImg }) => {
+  // Validation schema using Yup
+  const validationSchema = Yup.object({
+    firstName: Yup.string().required('Required'),
+    lastName: Yup.string().required('Required'),
+  });
   return (
     <div className="w-full h-[100vh] bg-[#FCF9EE] flex flex-row">
-      <div className="w-1/2 h-full bg-setup-pattern bg-white flex flex-col">
-        <div className="w-full mt-[25%]">
-          <img src={Logo} className="w-1/3 mx-auto" />
-        </div>
-        <div className="w-full mt-[10%]">
-          <img src={SetupHead} className="w-[90%] mx-auto" />
-        </div>
-        <div className="w-full mt-auto ">
-          <img src={SetupBottom} className="w-[90%] mx-auto" />
+      <div className="flex">
+        <div className="w-[100%] flex justify-center items-center">
+          {stepUpImg}
         </div>
       </div>
       <div className="w-1/2 h-full flex justify-center items-center">
-        {children}
+        <Formik
+          initialValues={{ firstName: '', lastName: '' }}
+          validationSchema={validationSchema}
+          onSubmit={(values, actions) => {
+            console.log(values);
+            actions.setSubmitting(false);
+          }}
+        >
+          {(formikProps) => <Form>{children}</Form>}
+        </Formik>
       </div>
     </div>
   );

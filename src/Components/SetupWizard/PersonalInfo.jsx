@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { BackgroundsetupImg } from '../../svg';
 
-const PersonalInfo = () => {
+const PersonalInfo = ({ setUpImg }) => {
+  useEffect(() => {
+    setUpImg(<BackgroundsetupImg />);
+  }, []);
   return (
     <div className="bg-[#ffffff] flex flex-col w-[60%] rounded p-4">
       <div className="text-2xl font-bold flex w-full justify-center pt-4">
