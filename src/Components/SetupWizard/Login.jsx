@@ -15,7 +15,7 @@ const Login = ({ setUpImg }) => {
   }, []);
 
   return (
-    <div className="bg-[#ffffff] flex flex-col w-[60%] rounded p-4">
+    <div className="bg-[#ffffff] flex flex-col w-[564px] rounded p-4">
       <div className="text-2xl font-bold flex w-full justify-center pt-4">
         Sign In
       </div>

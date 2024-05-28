@@ -1,34 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import './App.css';
-import GlobalProvider from './Context/Provider';
-import Layout from './Layout/Layout';
-import Builder from './Pages/Builder';
-import Templates from './Pages/Templates';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import Kanban from './Pages/Board/Kanban';
+import { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Route, Routes } from 'react-router-dom';
+import './App.css';
 import CustomTopLoader from './Components/Loader/CustomTopLoader';
+import Baselayout from './Components/SetupWizard/Baselayout';
 import SetupLayout from './Components/SetupWizard/SetupLayout';
-import Login from './Components/SetupWizard/Login';
-import SignUp from './Components/SetupWizard/SignUp';
-import PersonalInfo from './Components/SetupWizard/PersonalInfo';
-import Industry from './Components/SetupWizard/Industry';
-import Role from './Components/SetupWizard/Role';
+import GlobalProvider from './Context/Provider';
+import Layout from './Layout/Layout';
+import Kanban from './Pages/Board/Kanban';
+import Builder from './Pages/Builder';
+import Templates from './Pages/Templates';
 
 function App() {
   const [stepUpImg, setUpImg] = useState([]);
-
-  useEffect(() => {
-    console.log('object', stepUpImg);
-  }, [stepUpImg]);
-
   return (
     <div className="App">
       <GlobalProvider>
         <CustomTopLoader />
 
         <Routes>
+          {/* <Route path="/"  /> */}
           <Route
             path="/builder/*"
             element={
@@ -72,29 +64,10 @@ function App() {
             }
           />
           <Route
-            path="/setup/*"
+            path="/*"
             element={
               <SetupLayout stepUpImg={stepUpImg}>
-                {' '}
-                {
-                  <Routes>
-                    <Route path="/" element={<SignUp setUpImg={setUpImg} />} />
-                    <Route
-                      path="signin"
-                      element={<Login setUpImg={setUpImg} />}
-                    />
-                    <Route
-                      path="account"
-                      element={<PersonalInfo setUpImg={setUpImg} />}
-                    />
-                    <Route
-                      path="industry"
-                      element={<Industry setUpImg={setUpImg} />}
-                    />
-                    <Route path="role" element={<Role setUpImg={setUpImg} />} />
-                    <Route path="*" element={<Navigate to="/" />} />
-                  </Routes>
-                }{' '}
+                <Baselayout setUpImg={setUpImg} />
               </SetupLayout>
             }
           />
@@ -105,7 +78,6 @@ function App() {
 }
 
 const LayoutChild = ({ children }) => {
-  return <Layout>{children}</Layout>;
   return <Layout>{children}</Layout>;
 };
 

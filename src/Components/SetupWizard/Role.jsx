@@ -13,7 +13,7 @@ const Role = ({ setUpImg }) => {
     setSelectedValue(e.target.value);
   };
   return (
-    <div className="bg-[#ffffff] flex flex-col w-[60%] rounded p-4">
+    <div className="bg-[#ffffff] flex flex-col w-[564px] rounded p-4">
       <div className="text-2xl font-bold flex w-full justify-start pt-4">
         Select your industry
       </div>
