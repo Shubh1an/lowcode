@@ -25,7 +25,7 @@ const Module = () => {
     const modules = await getModules();
     let data = modules?.data;
     if (data) {
-      let headers_gen = Object.keys(data[0]);
+      let headers_gen = Object.keys(data?.[0] || {});
       headers_gen.forEach((header, index) => {
         if (header === '_id' || header === '__v') {
           headers_gen.splice(index, 1);
