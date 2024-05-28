@@ -12,6 +12,7 @@ const AddPageField = ({
   const [tempOptions, setTempOptions] = useState(options);
 
   useEffect(() => {
+    setDefaultValue('');
     setDefaultValue(defaultValueProp?.propertyValues?.[field.id] || '');
   }, [field, defaultValueProp]);
 
@@ -90,7 +91,7 @@ const InputByType = ({
             };
             handleProperties(payload);
           }}
-          value={defaultValue}
+          defaultValue={defaultValue}
         />
       );
     case 'radio': {

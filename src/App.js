@@ -46,6 +46,22 @@ function App() {
             }
           />
           <Route
+            path="/builder/*"
+            element={
+              <LayoutChild>
+                <Builder />
+              </LayoutChild>
+            }
+          />
+          <Route
+            path="/template/*"
+            element={
+              <LayoutChild>
+                <Templates />
+              </LayoutChild>
+            }
+          />
+          <Route
             path="/kanban"
             element={
               <LayoutChild>
@@ -89,6 +105,7 @@ function App() {
 }
 
 const LayoutChild = ({ children }) => {
+  return <Layout>{children}</Layout>;
   return <Layout>{children}</Layout>;
 };
 

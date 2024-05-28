@@ -28,7 +28,7 @@ export const UserPill = ({ user }) => {
 export const TypePill = ({ type }) => {
   return (
     <div className="flex items-center gap-2 rounded-full bg-[#00C875] p-2 text-[#fff]">
-      {type.toLowerCase() === 'form' ? <BsTable /> : <BsViewList />}
+      {type?.toLowerCase() === 'form' ? <BsTable /> : <BsViewList />}
       <span className="text-14">{type}</span>
     </div>
   );

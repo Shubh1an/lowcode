@@ -42,7 +42,7 @@ const Form = () => {
           <Add newPageData={newPageData} selectedPage={selectedPage} />
         </DndProvider>
       ) : active === 2 ? (
-        <View />
+        <View newPageData={newPageData} />
       ) : (
         <ListData newPageData={newPageData} />
       )}
