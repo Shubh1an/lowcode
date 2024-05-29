@@ -29,7 +29,6 @@ const FormInput = ({
     labelClass = '',
     index,
   } = field;
-  if(!propertyValues?.display_name) return null;
   console.log('field', field);
   const [file, setFile] = useState(null);
   const [tempOptions, setTempOptions] = useState(options);
