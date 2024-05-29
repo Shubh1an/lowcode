@@ -6,6 +6,7 @@ import Add from './Add';
 import List from './List';
 import View from '../view/page';
 import ListData from './ListData';
+import AddView from './AddView';
 
 const Form = () => {
   const tabs = [
@@ -18,6 +19,7 @@ const Form = () => {
   const [newPageData, setNewPageData] = useState({});
   const [selectedPage, setSelectedPage] = useState(null);
 
+  console.log('newPageData', newPageData);
   useEffect(() => {
     if (active === 1) {
       if (Object.keys(newPageData).length === 0) {
@@ -39,7 +41,7 @@ const Form = () => {
         />
       ) : active === 1 ? (
         <DndProvider backend={HTML5Backend}>
-          <Add newPageData={newPageData} selectedPage={selectedPage} />
+          {newPageData?.type === "Form" ? <Add newPageData={newPageData} selectedPage={selectedPage} /> : <AddView newPageData={newPageData} selectedPage={selectedPage} />}
         </DndProvider>
       ) : active === 2 ? (
         <View newPageData={newPageData} />
