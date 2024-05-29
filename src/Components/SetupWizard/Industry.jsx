@@ -17,14 +17,14 @@ const Industry = ({ setUpImg, formikProps }) => {
 
   useEffect(() => {
     setUpImg(<BackgroundsetupImg1 />);
-    getIndustryData();
+    // getIndustryData();
   }, []);
 
-  const getIndustryData = () => {
-    getIndustry().then((data) => {
-      console.log('industry----', data);
-    });
-  };
+  // const getIndustryData = () => {
+  //   getIndustry().then((data) => {
+  //     console.log('industry----', data);
+  //   });
+  // };
 
   const handleRadioChange = (e) => {
     setSelectedValue(e.target.value);
