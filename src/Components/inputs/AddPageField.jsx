@@ -33,7 +33,7 @@ const AddPageField = ({
 
 const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
   const [selectOptions, setSelectOptions] = useState([]);
-  const [addOptionValue, setAddOptionValue] = useState('');
+  const [addOptionValue, setAddOptionValue] = useState({});
   useEffect(() => {
     if (type === 'add_option') {
       console.log('addOptionValue', addOptionValue);
@@ -97,7 +97,7 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
               selectOptions?.map((option, index) => {
                 return (
                   <li className="ml-2 mb-1" key={index}>
-                    {option}
+                    {option.label}
                     <button
                       onClick={() => {
                         let payload = {
@@ -118,9 +118,9 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
             type="text"
             className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
             onChange={(e) => {
-              setAddOptionValue(e.target.value);
+              setAddOptionValue({ label: e.target.value, value: e.target.value });
             }}
-            value={addOptionValue}
+            value={addOptionValue?.label || ''}
           />
           <button
             className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold mt-2"
