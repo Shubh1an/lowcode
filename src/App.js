@@ -18,7 +18,6 @@ function App() {
     <div className="App">
       <GlobalProvider>
         <CustomTopLoader />
-
         <Routes>
           <Route
             path="/builder/*"

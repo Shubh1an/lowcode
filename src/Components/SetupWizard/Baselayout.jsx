@@ -15,9 +15,17 @@ import Login from './Login';
 import PersonalInfo from './PersonalInfo';
 import Industry from './Industry';
 import Role from './Role';
+import { useDispatch, useSelector } from 'react-redux';
+import { setuserOrg, userdetail } from '../../redux/userslice';
 
 export default function Baselayout({ setUpImg }) {
+  const userdata = useSelector((state) => state['user']);
+  const orgdata = useSelector((state) => state['user']['orgdetail']);
+
+  console.log('orgdata', orgdata);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   return (
     <div>
       <Routes>
@@ -29,7 +37,7 @@ export default function Baselayout({ setUpImg }) {
               initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={(values) => {
-                console.log('signup', values);
+                dispatch(userdetail(values.email));
                 navigate(`/account`);
               }}
             >
@@ -48,6 +56,7 @@ export default function Baselayout({ setUpImg }) {
               validationSchema={validationSchema1}
               onSubmit={(values) => {
                 console.log('account ', values);
+                dispatch(setuserOrg(values));
                 navigate(`/industry`);
               }}
             >

@@ -8,7 +8,7 @@ export const validationSchema = Yup.object({
 
 export const initialValues1 = {
   fullname: '',
-  passwod: '',
+  password: '',
   companyname: '',
 };
 

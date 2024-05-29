@@ -3,11 +3,15 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import userstore from './redux/userstore';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
-    <App />
+    <Provider store={userstore}>
+      <App />
+    </Provider>
   </BrowserRouter>,
 );
 
