@@ -12,7 +12,11 @@ const FormInput = ({
   const {
     title: label,
     inputType: type,
-    options,
+    options = [
+      { value: 'opt', label: 'Option 1' },
+      { value: 'opt', label: 'Option 2' },
+      { value: 'opt', label: 'Option 3' },
+    ],
     id,
     defaultValue,
     rows,
@@ -26,6 +30,7 @@ const FormInput = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [name, seteName] = useState();
 
   const clearSelection = () => {
     setTempOptions([...tempOptions, ...selectedOptions]);
@@ -35,6 +40,10 @@ const FormInput = ({
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
+  };
+
+  const handleChange = (e) => {
+    seteName(e.target.value);
   };
 
   const toggleMultiSelect = () => setIsOpen((prev) => !prev);
@@ -132,7 +141,7 @@ const InputByType = ({
   handleUpload,
 }) => {
   switch (type) {
-    case 'Single Line':
+    case 'Single Line1':
       return (
         <input
           type="text"
@@ -141,10 +150,116 @@ const InputByType = ({
           placeholder={defaultValue}
         />
       );
-    case 'Gender':
+    case 'Multi Line':
       return (
-        <div>
-          {['Male', 'Female'].map((option, index) => {
+        <textarea
+          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          id={id}
+          rows={rows}
+          placeholder={defaultValue}
+        />
+      );
+    case 'Description':
+      return (
+        <textarea
+          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          id={id}
+          rows={rows}
+          placeholder={defaultValue}
+        />
+      );
+    case 'Number':
+      return (
+        <input
+          type="number"
+          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          onChange={onchange}
+          placeholder={defaultValue}
+        />
+      );
+    case 'Name':
+      return (
+        <input
+          type="text"
+          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          placeholder={defaultValue}
+        />
+      );
+    case 'Email':
+      return (
+        <input
+          type="email"
+          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          onChange={onchange}
+          placeholder={defaultValue}
+        />
+      );
+    case 'Address':
+      return (
+        <textarea
+          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          id={id}
+          rows={rows}
+          placeholder={defaultValue}
+        />
+      );
+    case 'Phone': {
+      return (
+        <input
+          type="tel"
+          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+        />
+      );
+    }
+    case 'Unique ID':
+      return (
+        <input
+          type="text"
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          onChange={onchange}
+        />
+      );
+    case 'Date':
+      return (
+        <input
+          type="date"
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          defaultValue={defaultValue}
+        />
+      );
+    case 'Time':
+      return (
+        <input
+          type="time"
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          id={id}
+          value={defaultValue}
+        />
+      );
+    case 'Date-Time':
+      return (
+        <input
+          type="datetime-local"
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          id={id}
+        />
+      );
+    case 'Dropdown':
+      return (
+        <select
+          value={options.value}
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+        >
+          {options.map((option) => (
+            <option value={option.value}>{options.label}</option>
+          ))}
+        </select>
+      );
+
+    case 'Radio':
+      return (
+        <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
+          {options.map((option, index) => {
             return (
               <div
                 className="flex flex-row items-center justify-start "
@@ -155,57 +270,15 @@ const InputByType = ({
                   className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
                   name={id}
                 />
-                <label className="ml-2 text-lg font-bold cursor-pointer">
-                  {option}
-                </label>
+                <span className="ml-2">{option.label}</span>
               </div>
             );
           })}
         </div>
       );
-    case 'textarea':
+    case 'CheckBox':
       return (
-        <textarea
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
-          placeholder={defaultValue}
-          rows={rows}
-        />
-      );
-    case 'email':
-      return (
-        <input
-          type="email"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
-          placeholder={defaultValue}
-        />
-      );
-    case 'number':
-      return (
-        <input
-          type="number"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
-          defaultValue={defaultValue}
-          placeholder={defaultValue}
-        />
-      );
-    case 'Date':
-      return (
-        <input
-          type="date"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
-        />
-      );
-
-    case 'Time':
-      return (
-        <input
-          type="time"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
-        />
-      );
-    case 'checkbox':
-      return (
-        <div className="flex flex-row items-center justify-start ">
+        <div className="flex flex-row items-center justify-start border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4 ">
           {options.map((option, index) => {
             return (
               <div
@@ -217,64 +290,46 @@ const InputByType = ({
                   className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
                   name={id}
                 />
-                <span className="ml-2">{option}</span>
+                <span className="ml-2 me-2">{option.value}</span>
               </div>
             );
           })}
         </div>
       );
-    case 'tel':
+    case 'File Upload': {
+      return (
+        <div>
+          <input
+            type="file"
+            className="block w-full border border-gray-400 rounded py-2 px-3 mb-3 leading-tight focus:outline-none focus:border-blue-500"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileChange}
+          />
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={handleUpload}
+            disabled={!file}
+          >
+            Upload
+          </button>
+        </div>
+      );
+    }
+    case 'Image Upload': {
       return (
         <input
-          type="tel"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          type="file"
+          className=" border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          accept="image/png, image/jpeg"
         />
       );
-
-    case 'DropDown': {
-      return (
-        <select className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
-          {options?.map((option, index) => {
-            return (
-              <option
-                className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
-                key={index}
-              >
-                {option}
-              </option>
-            );
-          })}
-        </select>
-      );
     }
-    case 'radio': {
-      return (
-        <div className="flex flex-row space-x-4">
-          {options.map((option, index) => {
-            return (
-              <div
-                className="flex flex-row items-center justify-start "
-                key={index}
-              >
-                <input
-                  type="radio"
-                  className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
-                  name={id}
-                />
-                <span className="ml-2">{option}</span>
-              </div>
-            );
-          })}
-        </div>
-      );
-    }
-
-    case 'multiselect': {
+    case 'Single Line': {
       return (
         <div ref={dropdownRef} className="relative">
           <div
             className={`block w-full content-center py-2 px-4 ${selectedOptions.length === 0 ? 'text-[#A6A6A6]' : 'bg-[#E9F2EF]'} border border-gray-300 rounded-lg text-left relative ${
-              isOpen ? 'bg-gray-100' : ''
+              isOpen ? ' bg-gray-100' : ''
             }`}
             onClick={() => toggleOpen()}
           >
@@ -335,26 +390,37 @@ const InputByType = ({
         </div>
       );
     }
-    case 'uploadfile': {
+    case 'Dropdown':
       return (
-        <div>
-          <input
-            type="file"
-            className="block w-full border border-gray-400 rounded py-2 px-3 mb-3 leading-tight focus:outline-none focus:border-blue-500"
-            accept=".pdf,.doc,.docx"
-            onChange={handleFileChange}
-          />
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleUpload}
-            disabled={!file}
-          >
-            Upload
-          </button>
+        <select
+          value={options.value}
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+        >
+          {options.map((options) => (
+            <option value={options.value}>{options.label}</option>
+          ))}
+        </select>
+      );
+    case 'Radio':
+      return (
+        <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
+          {options.map((option, index) => {
+            return (
+              <div
+                className="flex flex-row items-center justify-start "
+                key={index}
+              >
+                <input
+                  type="radio"
+                  className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+                  name={id}
+                />
+                <span className="ml-2">{option.label}</span>
+              </div>
+            );
+          })}
         </div>
       );
-    }
-
     default:
       return <input type="text" />;
   }
