@@ -47,10 +47,7 @@ function App() {
               </LayoutChild>
             }
           />
-          <Route
-            path="/setup/*"
-            element={<SetupLayout> {<Login />} </SetupLayout>}
-          />
+          <Route path="/*" element={<SetupLayout> {<Login />} </SetupLayout>} />
         </Routes>
       </GlobalProvider>
     </div>
