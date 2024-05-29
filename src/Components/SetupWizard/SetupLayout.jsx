@@ -1,6 +1,5 @@
 import React from 'react';
 const SetupLayout = ({ children, stepUpImg }) => {
-  // Validation schema using Yup
   return (
     <div className="w-full h-[100vh] bg-[#FCF9EE] flex flex-row">
       <div className="flex">

@@ -20,7 +20,6 @@ function App() {
         <CustomTopLoader />
 
         <Routes>
-          {/* <Route path="/"  /> */}
           <Route
             path="/builder/*"
             element={

@@ -1,6 +1,7 @@
-import { Formik } from 'formik';
 import React from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+
+import { Formik } from 'formik';
 import {
   initialValues,
   initialValues1,
@@ -20,6 +21,7 @@ export default function Baselayout({ setUpImg }) {
   return (
     <div>
       <Routes>
+        <Route path="signin" element={<Login setUpImg={setUpImg} />} />
         <Route
           path="/"
           element={
@@ -28,7 +30,7 @@ export default function Baselayout({ setUpImg }) {
               validationSchema={validationSchema}
               onSubmit={(values) => {
                 console.log('signup', values);
-                navigate(`/setup/account`);
+                navigate(`/account`);
               }}
             >
               {(formikProps) => (
@@ -37,7 +39,7 @@ export default function Baselayout({ setUpImg }) {
             </Formik>
           }
         />
-        <Route path="signin" element={<Login setUpImg={setUpImg} />} />
+
         <Route
           path="account"
           element={
@@ -46,7 +48,7 @@ export default function Baselayout({ setUpImg }) {
               validationSchema={validationSchema1}
               onSubmit={(values) => {
                 console.log('account ', values);
-                navigate(`/setup/industry`);
+                navigate(`/industry`);
               }}
             >
               {(formikProps) => (
@@ -63,7 +65,7 @@ export default function Baselayout({ setUpImg }) {
               validationSchema={validationSchema2}
               onSubmit={(values) => {
                 console.log('account ', values);
-                navigate(`/setup/industry`);
+                navigate(`/industry`);
               }}
             >
               {(formikProps) => (

@@ -54,13 +54,6 @@ const Login = ({ setUpImg }) => {
           </div>
           <div className="w-2/5 h-[1px] bg-[#ADADAD]"></div>
         </div>
-        <div className="w-full mt-6 flex justify-center items-center">
-          <div className="w-2/5 h-[1px] bg-[#ADADAD]"></div>
-          <div className="w-1/5 text-center text-sm font-medium text-[#ADADAD]">
-            or
-          </div>
-          <div className="w-2/5 h-[1px] bg-[#ADADAD]"></div>
-        </div>
 
         <div className="w-full mt-6 flex justify-center items-center">
           <img src={MicrosoftIcon} className="w-8 h-8 mx-5" />

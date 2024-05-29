@@ -44,7 +44,6 @@ const SignUp = ({ setUpImg, formikProps }) => {
           <div className="w-full mt-6">
             {/* <Link to={`/setup/account`}> */}
             <button
-              onClick={() => console.log('working')}
               className="w-full h-[50px] bg-[#323232] text-white text-xl rounded-md spacing-y-2"
               type="submit"
             >
@@ -69,7 +68,7 @@ const SignUp = ({ setUpImg, formikProps }) => {
           </div>
 
           <div className="w-full flex justify-center items-center mt-6">
-            <Link to={`/setup/signin`}>
+            <Link to={`/signin`}>
               <div className="text-base font-medium ">
                 Already have an account?
                 <span className="text-sm mx-2 font-medium text-[#F29900]">
