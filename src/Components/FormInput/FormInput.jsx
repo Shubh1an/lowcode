@@ -2,7 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import { FaStar } from 'react-icons/fa';
 import { IoMdStar, IoMdStarOutline } from 'react-icons/io';
-
+import Switch from 'react-switch';
+import { RxCross2 } from 'react-icons/rx';
+import { CgProfile } from 'react-icons/cg';
+import { IoIosArrowDown } from 'react-icons/io';
+import { IoIosArrowForward } from 'react-icons/io';
 const FormInput = ({
   field,
   setActiveField,
@@ -92,6 +96,7 @@ const FormInput = ({
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <div className="w-full">
       <div className={`w-full flex flex-row items-center`}>
@@ -130,6 +135,7 @@ const FormInput = ({
     </div>
   );
 };
+
 const InputByType = ({
   type,
   options,
@@ -148,10 +154,60 @@ const InputByType = ({
   handleFileChange,
   handleUpload,
 }) => {
+  const [url, setUrl] = useState('');
+  const links = ['Link 1', 'Link 2', 'Link 3'];
+  const [isOpendropdown, setIsOpen] = useState(false);
+  const [isToggled, setIsToggled] = useState(false);
+  const [isLinkVisible, setIsLinkVisible] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('');
+
+  const buttons = [
+    {
+      label: 'Solid',
+      style: 'bg-blue-500 text-white',
+      activeStyle: 'bg-blue-700',
+    },
+    {
+      label: 'Outline',
+      style: 'border border-gray-500 text-gray-500',
+      activeStyle: 'bg-gray-200',
+    },
+    {
+      label: 'Danger',
+      style: 'bg-red-500 text-white',
+      activeStyle: 'bg-red-700',
+    },
+    {
+      label: 'Transparent',
+      style: 'bg-transparent text-gray-500',
+      activeStyle: 'bg-gray-100',
+    },
+  ];
+
+  const handleOptionSelect = (value) => {
+    setSelectedOption(value);
+    setIsOpen(false); // Close the dropdown after selecting an option
+  };
+
+  const handleChange = (event) => {
+    setUrl(event.target.value);
+  };
+
+  const toggleLinkVisibility = () => {
+    setIsLinkVisible(!isLinkVisible);
+  };
+
+  const handleToggle = (checked) => {
+    setIsToggled(checked);
+  };
+  const handleToggleButton = () => {
+    setIsToggled(!isToggled);
+  };
+
   console.log('type', type);
   console.log('Values', defaultValue);
   switch (type) {
-    case 'Single Line':
+    case 'Single Line1':
       return (
         <input
           type="text"
@@ -429,6 +485,7 @@ const InputByType = ({
       return (
         <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
           {options.map((option, index) => {
+            console.log('Rendering radio option:', option.label);
             return (
               <div
                 className="flex flex-row items-center justify-start "
@@ -468,6 +525,159 @@ const InputByType = ({
               </label>
             );
           })}
+        </div>
+      );
+    case 'Button':
+      return (
+        <div className="">
+          <button className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-[79px] py-2 px-4">
+            Button
+          </button>
+        </div>
+      );
+
+    case 'Toggle':
+      return (
+        <div className="">
+          <Switch
+            onChange={handleToggle}
+            checked={isToggled}
+            onColor="#757575"
+            offColor="#bdbdbd"
+            handleDiameter={24}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+            height={16}
+            width={40}
+          />
+        </div>
+      );
+
+    case 'URL':
+      return (
+        <div className="mt-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            URL:
+          </label>
+          <div className="relative">
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-600">
+              https://
+            </span>
+            <input
+              className="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pl-18"
+              style={{ paddingLeft: '65px' }}
+              type="text"
+              placeholder=""
+              value={url}
+              onChange={handleChange}
+              pattern="https?://.+"
+              required
+            />
+          </div>
+        </div>
+      );
+
+    case 'Button close':
+      return (
+        <button className="bg-gray-200 hover:bg-gray-300 rounded-full p-2 focus:outline-none">
+          <RxCross2 className="w-6 h-6 text-gray-600" />
+        </button>
+      );
+
+    case 'Button Dropdown':
+      return (
+        <div className="flex flex-col">
+          <button
+            onClick={() => setIsOpen(!isOpendropdown)}
+            className="border border-gray-300 rounded-lg bg-gray-100 w-32 py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {selectedOption || 'Option'}
+          </button>
+          {isOpendropdown && (
+            <div className="mt-1 w-32 bg-white shadow-lg rounded-md">
+              {options.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => handleOptionSelect(option.label)}
+                  className="block w-full py-2 px-4 text-left hover:bg-gray-100 focus:outline-none"
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    case 'Toggle Button':
+      return (
+        <div className="">
+          <button
+            className={`border rounded-lg w-20 py-2 px-4 focus:outline-none transition-colors duration-300 ${
+              isToggled
+                ? 'bg-green-500 border-green-500'
+                : 'bg-gray-300 border-gray-300'
+            }`}
+            onClick={handleToggleButton}
+          >
+            {isToggled ? 'ON' : 'OFF'}
+          </button>
+        </div>
+      );
+
+    case 'Link':
+      return <button className="text-blue-500 hover:underline">Link</button>;
+
+    case 'Link List':
+      return (
+        <button className="">
+          {links.map((link, index) => (
+            <div key={index} className="flex items-center">
+              <CgProfile className="mr-2" /> {/* Icon */}
+              <span className="hover:underline">{link}</span> {/* Link */}
+            </div>
+          ))}
+        </button>
+      );
+
+    case 'Toggle Link':
+      return (
+        <div>
+          <button
+            className="text-blue-500 hover:underline focus:outline-none flex items-center"
+            onClick={toggleLinkVisibility}
+          >
+            {isLinkVisible ? (
+              <>
+                <IoIosArrowDown className="mr-1" /> Hide Link
+              </>
+            ) : (
+              <>
+                <IoIosArrowForward className="mr-1" /> Show Link
+              </>
+            )}
+          </button>
+          {/* {isLinkVisible && (
+        <a href="#" className="text-blue-500 underline">
+          Your Link
+        </a>
+      )} */}
+        </div>
+      );
+
+    case 'Button Groups':
+      return (
+        <div className="flex space-x-2">
+          {buttons.map((button, index) => (
+            <button
+              key={index}
+              className={`px-4 py-2 rounded focus:outline-none transform transition-transform duration-100 ${button.style} active:${button.activeStyle} active:scale-95`}
+              onClick={button.onClick}
+            >
+              {button.label}
+            </button>
+          ))}
         </div>
       );
 
