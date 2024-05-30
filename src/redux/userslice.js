@@ -5,8 +5,10 @@ const userSlice = createSlice({
   initialState: {
     email: '',
     orgdetail: {},
-    industry: '',
+    industry: {},
     role: '',
+    companyBusisness: {},
+    appDetail: {},
   },
   reducers: {
     userdetail: (state, action) => {
@@ -15,14 +17,27 @@ const userSlice = createSlice({
     setuserOrg: (state, action) => {
       state.orgdetail = action.payload;
     },
-    setIndustry: (state, action) => {
+    setIndustryDetail: (state, action) => {
       state.industry = action.payload;
     },
-    setRole: (state, action) => {
+    setCompanyBusiness: (state, action) => {
+      state.companyBusisness = action.payload;
+    },
+    setRoleRedux: (state, action) => {
       state.role = action.payload;
+    },
+    setApp: (state, action) => {
+      state.appDetail = action.payload;
     },
   },
 });
 
-export const { userdetail, setuserOrg } = userSlice.actions;
+export const {
+  userdetail,
+  setuserOrg,
+  setIndustryDetail,
+  setRoleRedux,
+  setCompanyBusiness,
+  setApp,
+} = userSlice.actions;
 export default userSlice.reducer;

@@ -1,31 +1,27 @@
 import React from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 
-import { Formik } from 'formik';
-import {
-  initialValues,
-  initialValues1,
-  initialValues2,
-  validationSchema,
-  validationSchema1,
-  validationSchema2,
-} from './formvalue';
 import SignUp from './SignUp';
 import Login from './Login';
 import PersonalInfo from './PersonalInfo';
 import Industry from './Industry';
-import Businessmodel from './Businessmodel';
 import Role from './Role';
-import { useDispatch, useSelector } from 'react-redux';
+import { Formik } from 'formik';
+import {
+  initialValues,
+  initialValues1,
+  validationSchema,
+  validationSchema1,
+} from './formvalue';
+import { useDispatch } from 'react-redux';
 import { setuserOrg, userdetail } from '../../redux/userslice';
+import Business from './Business';
+import Appmodel from './Appmodel';
+import Invite from './Invite';
 
 export default function Baselayout({ setUpImg }) {
-  const userdata = useSelector((state) => state['user']);
-  const orgdata = useSelector((state) => state['user']['orgdetail']);
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   return (
     <div>
       <Routes>
@@ -47,7 +43,6 @@ export default function Baselayout({ setUpImg }) {
             </Formik>
           }
         />
-
         <Route
           path="account"
           element={
@@ -55,7 +50,6 @@ export default function Baselayout({ setUpImg }) {
               initialValues={initialValues1}
               validationSchema={validationSchema1}
               onSubmit={(values) => {
-                console.log('account ', values);
                 dispatch(setuserOrg(values));
                 navigate(`/industry`);
               }}
@@ -66,25 +60,14 @@ export default function Baselayout({ setUpImg }) {
             </Formik>
           }
         />
-        <Route
-          path="industry"
-          element={
-            // <Formik
-            //   initialValues={initialValues2}
-            //   validationSchema={validationSchema2}
-            //   onSubmit={(values) => {
-            //     console.log('account ', values);
-            //     navigate(`/businessmodel`);
-            //   }}
-            // >
-            //   {(formikProps) => (
-            <Industry setUpImg={setUpImg} />
-            // )}
-            // </Formik>
-          }
-        />
-
+        <Route path="industry" element={<Industry setUpImg={setUpImg} />} />
         <Route path="role" element={<Role setUpImg={setUpImg} />} />
+        <Route
+          path="companymember"
+          element={<Business setUpImg={setUpImg} />}
+        />
+        <Route path="apps" element={<Appmodel setUpImg={setUpImg} />} />
+        <Route path="invitemember" element={<Invite setUpImg={setUpImg} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>

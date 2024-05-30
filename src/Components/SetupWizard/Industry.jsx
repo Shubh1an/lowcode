@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { BackgroundsetupImg1 } from '../../svg';
-import { getIndustry } from '../../Requests/user';
+import Businessmodel from './Businessmodel';
+import { useDispatch } from 'react-redux';
+import { setIndustryDetail } from '../../redux/userslice';
 
 const Industry = ({ setUpImg }) => {
-  // const { handleSubmit, values, touched, errors, handleChange } = formikProps;
+  const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
   const [industry, setIndustry] = useState([
     { name: 'IT Industry', checkselect: false },
     { name: 'IT Consulting', checkselect: false },
@@ -28,9 +30,12 @@ const Industry = ({ setUpImg }) => {
     setIndustry((prev) => (prev, [...newstate]));
   };
 
-  const showbusinessModel = () => {};
+  const showbusinessModel = () => {
+    const industrydata = industry.find((elm) => elm.checkselect === true)?.name;
+    dispatch(setIndustryDetail({ industry: industrydata }));
+    setShow(!show);
+  };
   return (
-    // <form onSubmit={handleSubmit}>
     <div className="bg-[#ffffff] flex flex-col w-[564px] rounded p-4">
       <div className="text-2xl font-bold flex w-full justify-start pt-4">
         Select your industry
@@ -59,18 +64,20 @@ const Industry = ({ setUpImg }) => {
           );
         })}
       </div>
-      <div className="w-full flex justify-content-end">
-        {/* <Link to={`/businessmodel`}> */}
-        <button
-          className="w-[130px] h-[50px] bg-[#323232] text-white text-xl rounded-md "
-          onClick={showbusinessModel}
-        >
-          Next
-        </button>
-        {/* </Link> */}
-      </div>
+
+      {show ? (
+        <Businessmodel setShow={setShow} show={show} />
+      ) : (
+        <div className="w-full flex justify-end">
+          <button
+            className="w-[130px] h-[50px] bg-[#323232] text-white text-xl rounded-md "
+            onClick={showbusinessModel}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
-    // </form>
   );
 };
 export default Industry;
