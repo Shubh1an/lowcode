@@ -118,7 +118,10 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
             type="text"
             className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
             onChange={(e) => {
-              setAddOptionValue({ label: e.target.value, value: e.target.value });
+              setAddOptionValue({
+                label: e.target.value,
+                value: e.target.value,
+              });
             }}
             value={addOptionValue?.label || ''}
           />

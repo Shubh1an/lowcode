@@ -113,7 +113,10 @@ const View = ({ newPageData }) => {
               activePropertiesField={''}
               fieldValue={fieldValue}
               onchange={(e) => {
-                console.log(field?.propertyValues?.display_name, e.target.value);
+                console.log(
+                  field?.propertyValues?.display_name,
+                  e.target.value,
+                );
                 setFieldValue((prev) => {
                   return {
                     ...prev,
@@ -155,7 +158,7 @@ const View = ({ newPageData }) => {
   );
 };
 
-const Footer = ({ handleFormSubmit = () => { } }) => {
+const Footer = ({ handleFormSubmit = () => {} }) => {
   return (
     <div className="w-full h-[60px] border-t-[1px] border-[#E9E9E9] mt-4">
       <div className="flex justify-center items-center h-full py-4">

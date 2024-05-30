@@ -41,7 +41,11 @@ const Form = () => {
         />
       ) : active === 1 ? (
         <DndProvider backend={HTML5Backend}>
-          {newPageData?.type === "Form" ? <Add newPageData={newPageData} selectedPage={selectedPage} /> : <AddView newPageData={newPageData} selectedPage={selectedPage} />}
+          {newPageData?.type === 'Form' ? (
+            <Add newPageData={newPageData} selectedPage={selectedPage} />
+          ) : (
+            <AddView newPageData={newPageData} selectedPage={selectedPage} />
+          )}
         </DndProvider>
       ) : active === 2 ? (
         <View newPageData={newPageData} />
