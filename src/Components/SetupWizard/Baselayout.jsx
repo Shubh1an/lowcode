@@ -14,6 +14,7 @@ import SignUp from './SignUp';
 import Login from './Login';
 import PersonalInfo from './PersonalInfo';
 import Industry from './Industry';
+import Businessmodel from './Businessmodel';
 import Role from './Role';
 import { useDispatch, useSelector } from 'react-redux';
 import { setuserOrg, userdetail } from '../../redux/userslice';
@@ -74,11 +75,28 @@ export default function Baselayout({ setUpImg }) {
               validationSchema={validationSchema2}
               onSubmit={(values) => {
                 console.log('account ', values);
-                navigate(`/industry`);
+                navigate(`/businessmodel`);
               }}
             >
               {(formikProps) => (
                 <Industry setUpImg={setUpImg} formikProps={formikProps} />
+              )}
+            </Formik>
+          }
+        />
+        <Route
+          path="businessmodel"
+          element={
+            <Formik
+              initialValues={initialValues2}
+              validationSchema={validationSchema2}
+              onSubmit={(values) => {
+                console.log('account ', values);
+                navigate(`/role`);
+              }}
+            >
+              {(formikProps) => (
+                <Businessmodel setUpImg={setUpImg} formikProps={formikProps} />
               )}
             </Formik>
           }
