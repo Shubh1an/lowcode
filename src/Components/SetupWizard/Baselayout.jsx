@@ -23,7 +23,6 @@ export default function Baselayout({ setUpImg }) {
   const userdata = useSelector((state) => state['user']);
   const orgdata = useSelector((state) => state['user']['orgdetail']);
 
-  console.log('orgdata', orgdata);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -70,37 +69,21 @@ export default function Baselayout({ setUpImg }) {
         <Route
           path="industry"
           element={
-            <Formik
-              initialValues={initialValues2}
-              validationSchema={validationSchema2}
-              onSubmit={(values) => {
-                console.log('account ', values);
-                navigate(`/businessmodel`);
-              }}
-            >
-              {(formikProps) => (
-                <Industry setUpImg={setUpImg} formikProps={formikProps} />
-              )}
-            </Formik>
+            // <Formik
+            //   initialValues={initialValues2}
+            //   validationSchema={validationSchema2}
+            //   onSubmit={(values) => {
+            //     console.log('account ', values);
+            //     navigate(`/businessmodel`);
+            //   }}
+            // >
+            //   {(formikProps) => (
+            <Industry setUpImg={setUpImg} />
+            // )}
+            // </Formik>
           }
         />
-        <Route
-          path="businessmodel"
-          element={
-            <Formik
-              initialValues={initialValues2}
-              validationSchema={validationSchema2}
-              onSubmit={(values) => {
-                console.log('account ', values);
-                navigate(`/role`);
-              }}
-            >
-              {(formikProps) => (
-                <Businessmodel setUpImg={setUpImg} formikProps={formikProps} />
-              )}
-            </Formik>
-          }
-        />
+
         <Route path="role" element={<Role setUpImg={setUpImg} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
