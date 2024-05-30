@@ -253,14 +253,12 @@ const TopBar = ({
               page_type: type,
             }).then((res) => {
               // onNewPage(res?.data?.data?.id, type)
-              console.log('create PAge ', res?.data?.data);
               let page_id = res?.data?.data?._id;
               createPageDetail({
                 page_id: page_id,
                 page_data: [],
                 type: type,
               }).then((res) => {
-                console.log(res);
                 onNewPage(page_id, type);
               });
             });

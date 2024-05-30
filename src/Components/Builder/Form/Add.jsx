@@ -156,7 +156,6 @@ const Add = ({ newPageData, selectedPage }) => {
   }, [activePropertiesField]);
 
   const handleProperties = (data) => {
-    console.log('data>>>>>>>>>>>>>>>>>', data);
     let changeId = activePropertiesField;
     let currentData = formFields;
     currentData[changeId] = {
@@ -179,7 +178,7 @@ const Add = ({ newPageData, selectedPage }) => {
         [data.id]: data.value,
       },
     };
-    console.log('currentData>>>>>>>>>>>>>>>>>>>>>', currentData);
+
     setFormFields([...currentData]);
   };
 
@@ -263,7 +262,6 @@ const Add = ({ newPageData, selectedPage }) => {
           className={`max-h-[65vh] border-2 ${isActive ? ' border-[#227A60]' : 'border-transparent'} p-4 flex flex-wrap overflow-auto justify-around`}
         >
           {formFields.map((field, index) => {
-            console.log('field', field);
             return (
               <div
                 key={index}

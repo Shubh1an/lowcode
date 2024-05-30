@@ -56,18 +56,16 @@ const View = ({ newPageData }) => {
       if (mode === 'edit') {
         getPageDetails(newPageData?.id).then(({ data }) => {
           setPage_detail_id(data?.[0]?._id);
-          console.log('Page detail', data);
+
           getPageData(data?.[0]?._id).then(({ data }) => {
             setPage_data_id(data?._id);
-            console.log('Page data', data);
+
             let propertyDetails = data?.PropertyDetails || [];
             propertyDetails.map((key) => {
-              console.log([...basicFields]);
-              console.log(key);
               let control = [...basicFields]?.find(
                 (field) => field.control_id === key.control_id,
               );
-              console.log(control);
+
               if (control) {
                 // control.propertyValues = key.properties;
                 if (key?.properties?.options) {
@@ -140,9 +138,7 @@ const View = ({ newPageData }) => {
         <Footer
           handleFormSubmit={() => {
             fillPage(fieldValue)
-              .then((data) => {
-                console.log('Res', data);
-              })
+              .then((data) => {})
               .catch((err) => {
                 console.log('Error', err);
               });

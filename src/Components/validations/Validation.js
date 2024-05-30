@@ -3,7 +3,6 @@ const Validation = ({ regex, defaultValue }) => {
   const [regexpermision, setregexpermiossion] = useState({});
 
   const testLetterRegex = (value) => {
-    console.log('regexpermision', regexpermision);
     return (
       <></>
       // <div>{regexerr}</div>
