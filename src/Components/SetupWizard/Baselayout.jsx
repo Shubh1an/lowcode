@@ -37,11 +37,18 @@ export default function Baselayout({ setUpImg }) {
               onSubmit={(values) => {
                 userLogin({ values }).then((res) => {
                   if (res.status) {
-                    alert(res.data.message);
-                    localStorage.setItem('token', res.data.data);
-                    navigate('../auth/home');
+                    debugger;
+                    if (res.data.data != false) {
+                      localStorage.setItem('token', res.data.data);
+                      alert(res.data.message);
+                      navigate('../auth/home');
+                    } else {
+                      alert(res.data.message);
+                      navigate('/signin');
+                    }
                   } else {
-                    navigate('/');
+                    alert(res.data.message);
+                    navigate('/signin');
                   }
                 });
               }}
