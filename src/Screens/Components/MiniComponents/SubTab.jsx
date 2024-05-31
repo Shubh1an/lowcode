@@ -12,6 +12,8 @@ const SubTab = ({ tabs, active, setActive }) => {
           setActive={setActive}
         />
       ))}
+      {/* Search */}
+
     </div>
   );
 };
@@ -19,7 +21,7 @@ const SubTab = ({ tabs, active, setActive }) => {
 const Tab = ({ title, active, index, setActive }) => {
   return (
     <div
-      className={`w-full px-4 py-2 ${active && 'text-[#000] border-b-[3px] border-[#000]'} ${!active && 'border-b-[1px] border-[#E9E9E9]'} cursor-pointer hover:text-[#000] text-xl text-center h-[45px] items-center text-base`}
+      className={`w-full px-4 py-2 ${active && 'text-[#000] border-b-[3px] border-[#000]'} ${!active && 'border-b-[1px] border-[#E9E9E9]'} cursor-pointer hover:text-[#000] text-xl text-left h-[45px] items-center text-base`}
       onClick={() => setActive(index)}
     >
       {title}

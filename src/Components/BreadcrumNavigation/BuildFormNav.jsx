@@ -17,7 +17,7 @@ const BuildFormNav = ({ setFormName, formName }) => {
             onChange={(e) => setFormName(e.target.value)}
           />
         </div>
-        <button className="bg-[#E9F2EF] text-[#212121] px-4 py-2 rounded-md mx-4">
+        <button className="bg-[#FCF9EE] text-[#212121] px-4 py-2 rounded-md mx-4">
           Add
         </button>
       </div>
@@ -32,7 +32,7 @@ const BreadCrumNav = ({ pathArray }) => {
       {pathArray.map((path, index) => {
         return (
           <div className="flex flex-row items-center" key={index}>
-            <span className="text-base text-[#227A60] hover:underline cursor-pointer">
+            <span className="text-base text-[#000] hover:underline cursor-pointer">
               {path}
             </span>
             {index !== pathArray.length - 1 && (

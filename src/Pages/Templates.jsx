@@ -34,7 +34,7 @@ const Templates = () => {
   }, [pathname]);
 
   return (
-    <div className="w-full h-full bg-[#E9F2EF] flex flex-col">
+    <div className="w-full h-full bg-[#FCF9EE] flex flex-col">
       <div className="flex justify-between">
         <MainTab tabs={tabs} active={active} setActive={setActive} />
         <div className="content-center min-w-fit">

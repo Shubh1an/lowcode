@@ -96,7 +96,7 @@ const FormInput = ({
     <div className="w-full">
       <div className={`w-full flex flex-row items-center`}>
         <label
-          className={`block mb-2 mt-4 text-lg font-medium cursor-pointer ${activePropertiesField === id ? 'text-[#227A60] font-bold underline' : 'text-gray-900 font-bold '}`}
+          className={`block mb-2 mt-4 text-lg font-medium cursor-pointer ${activePropertiesField === id ? 'text-[#000] font-bold underline' : 'text-gray-900 font-bold '}`}
           onClick={() => setActiveField(id)}
         >
           {propertyValues?.display_name || label}
@@ -155,7 +155,7 @@ const InputByType = ({
       return (
         <input
           type="text"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
           onChange={onchange}
           placeholder={defaultValue}
         />
@@ -163,7 +163,7 @@ const InputByType = ({
     case 'Multi Line':
       return (
         <textarea
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-full py-2 px-4"
           id={id}
           rows={rows}
           placeholder={defaultValue}
@@ -173,7 +173,7 @@ const InputByType = ({
     case 'Description':
       return (
         <textarea
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-full py-2 px-4"
           id={id}
           rows={rows}
           placeholder={defaultValue}
@@ -184,7 +184,7 @@ const InputByType = ({
       return (
         <input
           type="number"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-full py-2 px-4"
           onChange={onchange}
           placeholder={defaultValue}
         />
@@ -193,7 +193,7 @@ const InputByType = ({
       return (
         <input
           type="text"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-full py-2 px-4"
           placeholder={defaultValue}
           onChange={onchange}
         />
@@ -202,7 +202,7 @@ const InputByType = ({
       return (
         <input
           type="email"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-full py-2 px-4"
           onChange={onchange}
           placeholder={defaultValue}
         />
@@ -210,7 +210,7 @@ const InputByType = ({
     case 'Address':
       return (
         <textarea
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-full py-2 px-4"
           id={id}
           rows={rows}
           placeholder={defaultValue}
@@ -221,7 +221,7 @@ const InputByType = ({
       return (
         <input
           type="tel"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-full py-2 px-4"
           onChange={onchange}
           placeholder={defaultValue}
           id={id}
@@ -232,7 +232,7 @@ const InputByType = ({
       return (
         <input
           type="text"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
           onChange={onchange}
           placeholder={defaultValue}
           id={id}
@@ -242,7 +242,7 @@ const InputByType = ({
       return (
         <input
           type="date"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
           defaultValue={defaultValue}
           id={id}
           onChange={onchange}
@@ -252,7 +252,7 @@ const InputByType = ({
       return (
         <input
           type="time"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
           id={id}
           value={defaultValue}
           onChange={onchange}
@@ -262,7 +262,7 @@ const InputByType = ({
       return (
         <input
           type="datetime-local"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
           id={id}
           value={defaultValue}
           onChange={onchange}
@@ -272,7 +272,7 @@ const InputByType = ({
       return (
         <select
           value={options.value}
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
         >
           {options.map((option) => (
             <option value={option.value}>{options.label}</option>
@@ -282,7 +282,7 @@ const InputByType = ({
 
     case 'Radio':
       return (
-        <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
+        <div className="flex flex-row space-x-4 border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4">
           {options.map((option, index) => {
             return (
               <div
@@ -291,7 +291,7 @@ const InputByType = ({
               >
                 <input
                   type="radio"
-                  className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+                  className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-4 h-4"
                   name={id}
                 />
                 <span className="ml-2">{option.label}</span>
@@ -302,7 +302,7 @@ const InputByType = ({
       );
     case 'CheckBox':
       return (
-        <div className="flex flex-row items-center justify-start border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4 ">
+        <div className="flex flex-row items-center justify-start border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4 ">
           {options.map((option, index) => {
             return (
               <div
@@ -311,7 +311,7 @@ const InputByType = ({
               >
                 <input
                   type="checkbox"
-                  className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+                  className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-4 h-4"
                   name={id}
                 />
                 <span className="ml-2 me-2">{option.value}</span>
@@ -343,7 +343,7 @@ const InputByType = ({
       return (
         <input
           type="file"
-          className=" border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className=" border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
           accept="image/png, image/jpeg"
         />
       );
@@ -352,7 +352,7 @@ const InputByType = ({
       return (
         <div ref={dropdownRef} className="relative">
           <div
-            className={`block w-full content-center py-2 px-4 ${selectedOptions.length === 0 ? 'text-[#A6A6A6]' : 'bg-[#E9F2EF]'} border border-gray-300 rounded-lg text-left relative ${
+            className={`block w-full content-center py-2 px-4 ${selectedOptions.length === 0 ? 'text-[#A6A6A6]' : 'bg-[#FCF9EE]'} border border-gray-300 rounded-lg text-left relative ${
               isOpen ? ' bg-gray-100' : ''
             }`}
             onClick={() => toggleOpen()}
@@ -418,7 +418,7 @@ const InputByType = ({
       return (
         <select
           value={options.value}
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
         >
           {options.map((options) => (
             <option value={options.value}>{options.label}</option>
@@ -427,7 +427,7 @@ const InputByType = ({
       );
     case 'Radio':
       return (
-        <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
+        <div className="flex flex-row space-x-4 border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4">
           {options.map((option, index) => {
             return (
               <div
@@ -436,7 +436,7 @@ const InputByType = ({
               >
                 <input
                   type="radio"
-                  className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+                  className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-4 h-4"
                   name={id}
                 />
                 <span className="ml-2">{option.label}</span>
@@ -448,7 +448,7 @@ const InputByType = ({
     case 'Star Rating':
       let max = 5;
       return (
-        <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
+        <div className="flex flex-row space-x-4 border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4">
           {[...Array(max)].map((star, i) => {
             return (
               <label key={i}>
