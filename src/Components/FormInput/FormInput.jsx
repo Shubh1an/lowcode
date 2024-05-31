@@ -7,6 +7,18 @@ import { RxCross2 } from 'react-icons/rx';
 import { CgProfile } from 'react-icons/cg';
 import { IoIosArrowDown } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
+import { LuFolderSearch } from 'react-icons/lu';
+import SignatureCanvas from 'react-signature-canvas';
+import { MdFileDownload, MdDelete } from 'react-icons/md';
+import {
+  FaMicrophone,
+  FaStop,
+  FaPlay,
+  FaTrash,
+  FaVolumeUp,
+  FaPause,
+} from 'react-icons/fa';
+
 const FormInput = ({
   field,
   setActiveField,
@@ -160,6 +172,13 @@ const InputByType = ({
   const [isToggled, setIsToggled] = useState(false);
   const [isLinkVisible, setIsLinkVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
+  const [color, setColor] = useState('#ff0000'); // Default color: red
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const label = 'Select File';
+  const placeholder = 'Choose File';
+  const fileType = '.pdf,.doc,.docx';
+  const prefixText = 'Browser ';
+  const selectionType = 'single'; // or "multiple" or "directory"
 
   const buttons = [
     {
@@ -184,6 +203,35 @@ const InputByType = ({
     },
   ];
 
+  const handleFileChangeDrop = (e) => {
+    const files = Array.from(e.target.files);
+    setSelectedFiles(files);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    setSelectedFiles(files);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleIconClick = () => {
+    document.getElementById('fileInput').click();
+  };
+
+  const handleColorChange = (e) => {
+    const newColor = e.target.value;
+    setColor(newColor);
+  };
+
+  const handleTextChange = (e) => {
+    const textColor = e.target.value;
+    setColor(textColor);
+  };
+
   const handleOptionSelect = (value) => {
     setSelectedOption(value);
     setIsOpen(false); // Close the dropdown after selecting an option
@@ -204,10 +252,154 @@ const InputByType = ({
     setIsToggled(!isToggled);
   };
 
+  // For microphone
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [isRecorded, setIsRecorded] = useState(false);
+  const timerRef = useRef(null);
+
+  const handleRecordClick = () => {
+    setIsRecording(true);
+    setIsRecorded(false);
+    setRecordingTime(0);
+    // Start recording logic here...
+    startTimer();
+  };
+
+  const handleStopClick = () => {
+    setIsRecording(false);
+    setIsRecorded(true);
+    // Stop recording logic here...
+    stopTimer();
+  };
+
+  const handleClearClick = () => {
+    setIsRecorded(false);
+    setRecordingTime(0);
+    // Clear recording logic here...
+  };
+
+  const startTimer = () => {
+    // Start a timer to count recording time
+    timerRef.current = setInterval(() => {
+      setRecordingTime((prevTime) => prevTime + 1);
+    }, 1000);
+  };
+
+  const stopTimer = () => {
+    clearInterval(timerRef.current);
+  };
+
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+
+  const handleOpenScanner = () => {
+    setIsScannerOpen(true);
+  };
+
+  const handleCloseScanner = () => {
+    setIsScannerOpen(false);
+  };
+
+  //microphone------------>
+
+  //Signature pad--------------------->
+
+  const sigCanvas = useRef(null);
+
+  const clear = () => {
+    sigCanvas.current.clear();
+  };
+
+  const save = () => {
+    const dataURL = sigCanvas.current.getTrimmedCanvas().toDataURL('image/png');
+    console.log(dataURL);
+  };
+
+  //Signature pad--------------------->
+
+  const [time, setTime] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+  });
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    let interval = null;
+
+    if (isActive) {
+      interval = setInterval(() => {
+        setTime((prevTime) => {
+          let { hours, minutes, seconds, milliseconds } = prevTime;
+          milliseconds += 10;
+          if (milliseconds >= 1000) {
+            milliseconds = 0;
+            seconds++;
+            if (seconds === 60) {
+              seconds = 0;
+              minutes++;
+              if (minutes === 60) {
+                minutes = 0;
+                hours++;
+              }
+            }
+          }
+          return { hours, minutes, seconds, milliseconds };
+        });
+      }, 10);
+    } else if (!isActive && time !== 0) {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [isActive, time]);
+
+  const formatTime = (unit) => (unit < 10 ? `0${unit}` : unit);
+  const formatMilliseconds = (unit) => (unit < 100 ? `0${unit}` : unit);
+
+  const reset = () => {
+    setIsActive(false);
+    setTime({ hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
+  };
+  // Timer--------------------------->
+
+  // Chat------------->
+  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState('');
+
+  const handleSendMessage = () => {
+    if (inputText.trim() !== '') {
+      setMessages([
+        ...messages,
+        { id: Date.now(), text: inputText, sender: 'user' },
+      ]);
+      setInputText('');
+      // Simulate a reply from a bot or another user
+      setTimeout(() => {
+        setMessages([
+          ...messages,
+          { id: Date.now(), text: 'This is a dummy reply.', sender: 'bot' },
+        ]);
+      }, 500);
+    }
+  };
+
+  const handleDeleteMessage = (id) => {
+    setMessages(messages.filter((message) => message.id !== id));
+  };
+
+  const handleChangeForChat = (e) => {
+    setInputText(e.target.value);
+  };
+
+  // Chat---------->
+
   console.log('type', type);
   console.log('Values', defaultValue);
   switch (type) {
-    case 'Single Line1':
+    case 'Single Line':
       return (
         <input
           type="text"
@@ -513,7 +705,7 @@ const InputByType = ({
                   type="radio"
                   name="rating"
                   value={i + 1}
-                  style={{ display: 'none' }} // Hide the radio input
+                  style={{ display: 'none' }}
                 />
                 <FaStar
                   color={i < defaultValue ? '#ffc107' : '#e4e5e9'}
@@ -678,6 +870,300 @@ const InputByType = ({
               {button.label}
             </button>
           ))}
+        </div>
+      );
+
+    case 'Color Input':
+      return (
+        <div className="p-4">
+          <div className="flex items-center border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4">
+            <input
+              type="color"
+              value={color}
+              onChange={handleColorChange}
+              className="mr-2 w-8 h-8 p-0 border-none cursor-pointer"
+              style={{ backgroundColor: color }}
+            />
+            <input
+              type="text"
+              value={color}
+              onChange={handleTextChange}
+              className="w-full py-2 px-4 bg-[#E9F2EF] border-none outline-none"
+            />
+          </div>
+        </div>
+      );
+
+    case 'File Button':
+      return (
+        <div>
+          <input
+            type="file"
+            id="fileInput"
+            style={{ display: 'none' }} // Hide the file input visually
+            onChange={handleFileChange}
+          />
+          <button
+            onClick={() => document.getElementById('fileInput').click()} // Click event triggers file input click
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Choose File
+          </button>
+        </div>
+      );
+
+    case 'File Dropzone':
+      return (
+        <div
+          className="rounded-lg p-8 text-center border border-gray-300 w-full h-full"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
+          <input
+            type="file"
+            multiple
+            className="hidden w-full h-full cursor-pointer"
+            onChange={handleFileChangeDrop}
+            id="fileInput"
+          />
+          <LuFolderSearch
+            onClick={handleIconClick}
+            className="text-gray-500 w-16 h-16 mx-auto mb-4 cursor-pointer"
+          />
+          <div className="mt-4">
+            <p>Select and drag and drop</p>
+            <ul>
+              {selectedFiles.map((file, index) => (
+                <li key={index}>{file.name}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+
+    case 'File Input':
+      return (
+        <div className="flex flex-col space-y-2 cursor-pointer">
+          <div
+            className="border border-gray-300 rounded-lg flex items-center bg-gray-200 cursor-pointer"
+            onClick={handleIconClick}
+          >
+            <div className="flex items-center space-x-2 ">
+              {prefixText && <span className="bg-gray-200">{prefixText}</span>}
+              <LuFolderSearch className="text-gray-500 w-5 h-5" />
+            </div>
+            <input
+              type="text"
+              placeholder={selectedFiles.length > 0 ? '' : placeholder}
+              value={selectedFiles.length > 0 ? selectedFiles[0].name : ''}
+              readOnly
+              className="w-full outline-none px-2 py-1 placeholder-gray-400"
+            />
+            <input
+              type="file"
+              id="fileInput"
+              accept={fileType}
+              className="hidden"
+              onChange={handleFileChangeDrop}
+            />
+          </div>
+        </div>
+      );
+
+    case 'Microphone':
+      return (
+        <div className="flex flex-col items-center space-y-4">
+          {!isRecorded && !isRecording && (
+            <button
+              onClick={handleRecordClick}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
+            >
+              <FaMicrophone />
+              <span>Record</span>
+            </button>
+          )}
+
+          {isRecording && (
+            <button
+              onClick={handleStopClick}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
+            >
+              <FaStop />
+              <span>Stop</span>
+              <span>{recordingTime}s</span>
+            </button>
+          )}
+
+          {isRecorded && !isRecording && (
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={handleClearClick}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+              >
+                Clear
+              </button>
+              <FaPlay className="text-gray-700 w-6 h-6" />
+              <span>{recordingTime}s</span>
+              <div className="relative w-32 h-2 bg-gray-300 rounded">
+                <div
+                  className="absolute left-0 top-0 h-full bg-blue-500"
+                  style={{ width: `${(recordingTime / 60) * 100}%` }}
+                ></div>
+              </div>
+              <FaVolumeUp className="text-gray-700 w-6 h-6" />
+            </div>
+          )}
+        </div>
+      );
+
+    case 'Scanner':
+      return (
+        <div className="p-8">
+          <div className="flex flex-col items-center space-y-4">
+            <button
+              onClick={handleOpenScanner}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+            >
+              Launch Scanner
+            </button>
+
+            {isScannerOpen && (
+              <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+                <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+                  <p className="mb-4">Scanner is open</p>
+                  <button
+                    onClick={handleCloseScanner}
+                    className="bg-white text-blue-500 px-4 py-2 border border-blue-500 rounded-lg"
+                  >
+                    Close Scanner
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+
+    case 'Signature':
+      return (
+        <div className="flex flex-col items-center p-4">
+          <SignatureCanvas
+            penColor="black"
+            canvasProps={{
+              width: 500,
+              height: 200,
+              className: 'border border-gray-300 rounded-lg',
+            }}
+            ref={sigCanvas}
+          />
+          <div className="mt-4">
+            <button
+              onClick={clear}
+              className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-700"
+            >
+              Clear
+            </button>
+            <button
+              onClick={save}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      );
+
+    case 'Timer':
+      return (
+        <div className="flex flex-col items-center p-4">
+          <div className="text-3xl font-mono">
+            {formatTime(time.hours)}:{formatTime(time.minutes)}:
+            {formatTime(time.seconds)}.{formatMilliseconds(time.milliseconds)}
+          </div>
+          <div className="mt-4">
+            <button
+              onClick={() => setIsActive(!isActive)}
+              className={`px-4 py-2 rounded ${isActive ? 'bg-red-500 hover:bg-red-700' : 'bg-green-500 hover:bg-green-700'} text-white`}
+            >
+              {isActive ? 'Pause' : 'Start'}
+            </button>
+            <button
+              onClick={reset}
+              className="bg-gray-500 text-white px-4 py-2 rounded ml-2 hover:bg-gray-700"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      );
+
+    case 'Chat':
+      return (
+        <div className="max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+          <div className="flex justify-between items-center bg-gray-200 px-4 py-2">
+            <h2 className="text-lg font-semibold">Chat</h2>
+            <div className="flex">
+              <MdFileDownload
+                className="text-gray-600 mr-4 cursor-pointer"
+                onClick={() => console.log('Download')}
+              />
+              <MdDelete
+                className="text-gray-600 cursor-pointer"
+                onClick={() => console.log('Delete')}
+              />
+            </div>
+          </div>
+          <div className="h-64 p-4 overflow-y-auto">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`mb-4 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}
+              >
+                <span className="bg-gray-200 rounded-lg p-2">
+                  {message.text}
+                </span>
+                {message.sender === 'user' && (
+                  <MdDelete
+                    className="ml-2 text-xs text-gray-500 hover:text-red-600 focus:outline-none cursor-pointer"
+                    onClick={() => handleDeleteMessage(message.id)}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-between items-center p-4 border-t">
+            <input
+              type="text"
+              value={inputText}
+              onChange={handleChangeForChat}
+              placeholder="Type a message..."
+              className="w-full mr-2 p-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+            />
+            <button
+              onClick={handleSendMessage}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      );
+
+    case 'Annotation Text':
+      return (
+        <div className="max-w-md mx-auto">
+          <p className="text-lg leading-relaxed">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.
+            <span className="annotation">
+              [Note: This is a sample annotation.]
+            </span>
+          </p>
         </div>
       );
 
