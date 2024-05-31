@@ -4,6 +4,7 @@ import Modules from './Modules.jsx';
 import Entities from './Entities.jsx';
 import Pages from './Pages.jsx';
 import Editor from './Editor.jsx';
+import View from './View.jsx';
 
 const Builder = () => {
     const location = useLocation();
@@ -25,6 +26,9 @@ const Builder = () => {
                 break;
             case `/builder/editor`:
                 setComponentToRender(<Editor />);
+                break;
+            case `/builder/viewform`:
+                setComponentToRender(<View />);
                 break;
             default:
                 setComponentToRender(<></>);
