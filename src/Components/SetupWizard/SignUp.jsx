@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 // @ts-ignore
 import GoogleIcon from '../../assets/google.svg';
 // @ts-ignore
@@ -6,10 +6,9 @@ import FacebookIcon from '../../assets/facebook.svg';
 // @ts-ignore
 import MicrosoftIcon from '../../assets/microsoft.svg';
 // @ts-ignore
-import LinkedinIcon from '../../assets/linkedIn.svg';
 import { Link } from 'react-router-dom';
+import LinkedinIcon from '../../assets/linkedIn.svg';
 import { BackgroundsetupImg } from '../../svg';
-import { Form } from 'formik';
 const SignUp = ({ setUpImg, formikProps }) => {
   const { handleSubmit, values, touched, errors, handleChange } = formikProps;
 

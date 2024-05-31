@@ -1,34 +1,31 @@
 import React, { useEffect, useState } from 'react';
 const Validation = ({ regex, defaultValue }) => {
-  const [regexpermision, setregexpermiossion] = useState({});
-
-  const testLetterRegex = (value) => {
-    return (
-      <></>
-      // <div>{regexerr}</div>
-    );
-  };
-
-  useEffect(() => {
-    switch (regex) {
-      case 'alphabetOnly':
-        setregexpermiossion(alphabetOnly);
-      case 'emailregex':
-        setregexpermiossion(emailregex);
-      case 'passwordRegex':
-        setregexpermiossion(passwordRegex);
-      case 'numberOnly':
-        setregexpermiossion(numberOnly);
-      case 'mobileNumber':
-        setregexpermiossion(mobileNumber);
-      case 'positiveNumber':
-        setregexpermiossion(positiveNumber);
-      case 'imageRegex':
-        setregexpermiossion(imageRegex);
-    }
-  }, [regexpermision]);
-
-  return testLetterRegex(defaultValue);
+  // const [regexpermision, setregexpermiossion] = useState({});
+  // const testLetterRegex = (value) => {
+  //   return (
+  //     <></>
+  //     // <div>{regexerr}</div>
+  //   );
+  // };
+  // useEffect(() => {
+  //   switch (regex) {
+  //     case 'alphabetOnly':
+  //       setregexpermiossion(alphabetOnly);
+  //     case 'emailregex':
+  //       setregexpermiossion(emailregex);
+  //     case 'passwordRegex':
+  //       setregexpermiossion(passwordRegex);
+  //     case 'numberOnly':
+  //       setregexpermiossion(numberOnly);
+  //     case 'mobileNumber':
+  //       setregexpermiossion(mobileNumber);
+  //     case 'positiveNumber':
+  //       setregexpermiossion(positiveNumber);
+  //     case 'imageRegex':
+  //       setregexpermiossion(imageRegex);
+  //   }
+  // }, [regexpermision]);
+  // return testLetterRegex(defaultValue);
 };
 export default Validation();
 

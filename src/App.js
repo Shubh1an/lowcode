@@ -11,6 +11,7 @@ import Layout from './Layout/Layout';
 import Kanban from './Pages/Board/Kanban';
 import Builder from './Pages/Builder';
 import Templates from './Pages/Templates';
+import Authlayout from './Components/authorized/Authlayout';
 
 function App() {
   const [stepUpImg, setUpImg] = useState([]);
@@ -19,7 +20,7 @@ function App() {
       <GlobalProvider>
         <CustomTopLoader />
         <Routes>
-          <Route
+          {/* <Route
             path="/builder/*"
             element={
               <LayoutChild>
@@ -60,7 +61,7 @@ function App() {
                 </DndProvider>
               </LayoutChild>
             }
-          />
+          /> */}
           <Route
             path="/*"
             element={
@@ -69,6 +70,7 @@ function App() {
               </SetupLayout>
             }
           />
+          <Route path="/auth/*" element={<Authlayout />} />
         </Routes>
       </GlobalProvider>
     </div>

@@ -287,7 +287,6 @@ export const SetupBottom = () => {
     </svg>
   );
 };
-
 export const BackgroundsetupImg = () => {
   return (
     <svg

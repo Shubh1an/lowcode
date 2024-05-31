@@ -8,8 +8,10 @@ import Industry from './Industry';
 import Role from './Role';
 import { Formik } from 'formik';
 import {
+  initialLoginValues,
   initialValues,
   initialValues1,
+  validationLoginSchema,
   validationSchema,
   validationSchema1,
 } from './formvalue';
@@ -18,6 +20,7 @@ import { setuserOrg, userdetail } from '../../redux/userslice';
 import Business from './Business';
 import Appmodel from './Appmodel';
 import Invite from './Invite';
+import { userLogin } from '../../Requests/user';
 
 export default function Baselayout({ setUpImg }) {
   const navigate = useNavigate();
@@ -25,7 +28,30 @@ export default function Baselayout({ setUpImg }) {
   return (
     <div>
       <Routes>
-        <Route path="signin" element={<Login setUpImg={setUpImg} />} />
+        <Route
+          path="signin"
+          element={
+            <Formik
+              initialValues={initialLoginValues}
+              validationSchema={validationLoginSchema}
+              onSubmit={(values) => {
+                userLogin({ values }).then((res) => {
+                  if (res.status) {
+                    alert(res.data.message);
+                    localStorage.setItem('token', res.data.data);
+                    navigate('../auth/home');
+                  } else {
+                    navigate('/');
+                  }
+                });
+              }}
+            >
+              {(formikProps) => (
+                <Login setUpImg={setUpImg} formikProps={formikProps} />
+              )}
+            </Formik>
+          }
+        />
         <Route
           path="/"
           element={

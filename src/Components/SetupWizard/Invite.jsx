@@ -1,17 +1,12 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BackgroundsetupImg5 } from '../../svg';
 import { useSelector } from 'react-redux';
+import { Createcompany, Createuser } from '../../Requests/user';
 
 const Invite = ({ setUpImg }) => {
   const userdata = useSelector((state) => state['user']);
-  const orgdata = useSelector((state) => state['user']['orgdetail']);
-  const industry = useSelector((state) => state['user']['industry']);
-  const role = useSelector((state) => state['user']['role']);
-  const appDetail = useSelector((state) => state['user']['companyBusisness']);
-  const companyBusisness = useSelector(
-    (state) => state['user']['companyBusisness'],
-  );
+  const navigate = useNavigate();
 
   useEffect(() => {
     setUpImg(<BackgroundsetupImg5 />);
@@ -19,15 +14,28 @@ const Invite = ({ setUpImg }) => {
   // Create link and and send  is pending
 
   const finishSignup = () => {
-    console.log(
-      'final object have save in redux',
-      companyBusisness,
-      appDetail,
-      role,
-      industry,
-      orgdata,
-      userdata,
-    );
+    console.log('final object have save in redux', userdata);
+
+    Createuser({
+      fullname: userdata?.orgdetail?.fullname,
+      email: userdata?.orgdetail?.email,
+      password: userdata?.orgdetail?.password,
+      role: userdata?.role,
+    }).then((res) => {
+      let userId = res?.data?.data?._id;
+      Createcompany({
+        companyname: userdata?.orgdetail?.companyname,
+        userId: userId,
+        industryId: userdata?.industry?.industry,
+        businessmodelId: userdata?.industry?.busisnessmodel,
+        teamCount: userdata.companyBusisness.teamcount,
+        companyCount: userdata.companyBusisness.companycount,
+        selectedApps: userdata?.appDetail?.app,
+        choice: userdata?.appDetail?.focusaim,
+      }).then((res) => {
+        navigate('/signin');
+      });
+    });
   };
   return (
     <div className="bg-[#ffffff] flex flex-col w-[564px] rounded p-4">

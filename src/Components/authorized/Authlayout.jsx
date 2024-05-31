@@ -8,7 +8,7 @@ const Authlayout = () => {
     <div>
       <Routes>
         <Route
-          path="/auth/home"
+          path="/home"
           element={
             <Layout>
               <Home />
