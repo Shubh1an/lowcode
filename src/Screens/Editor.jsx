@@ -6,7 +6,7 @@ import config from '../Config/config.js';
 import Icons from '../Components/Utility/Icons';
 import { useDrag, useDrop } from 'react-dnd';
 import Control from './Components/MiniComponents/Control';
-import { updatePage } from '../Requests/page';
+import { getPageDetails, updatePage } from '../Requests/page';
 import { Link } from 'react-router-dom';
 
 
@@ -26,9 +26,28 @@ const Editor = () => {
 
     const [pageData, setPageData] = useState([])
 
-    useEffect(() => {
 
-    }, [isChildHovering])
+    const fetchPage = async () => {
+        getPageDetails(editor_id).then((res) => {
+            // setPage(res.data.form_schema)
+            // setPageData(res.data.page_data)
+            console.log(res.data.form_schema)
+            setPageData(res.data.form_schema)
+            res?.data?.form_schema?.forEach((item, index) => {
+                // { label, properties: controlls(label)?.properties, child: [] }
+                let pageControl = {
+                    label: item.control,
+                    properties: controlls(item.control).properties,
+                    child: []
+                }
+                setPage((prev) => [...prev, pageControl])
+            })
+        })
+    }
+
+    useEffect(() => {
+        fetchPage();
+    }, [])
 
 
     const handleSubmit = () => {
@@ -47,7 +66,7 @@ const Editor = () => {
     // use
     const handleDrop = ({ label }) => {
         if (!isChildHovering) {
-            setPage([...page, { label, properties: controlls(label)?.properties, child: [], component: <Control label={label} /> }])
+            setPage([...page, { label, properties: controlls(label)?.properties, child: [] }])
             setPageData((prev) => {
                 return [
                     ...prev,
@@ -60,11 +79,19 @@ const Editor = () => {
         setIsChildHovering(false)
     }
 
+    const handleRemove = (index) => {
+        setPage(page.filter((item, i) => i !== index))
+        setPageData(pageData.filter((item, i) => i !== index))
+    }
+
     useEffect(() => {
         setSelectedControl(page.length > 0 ? page.length - 1 : null)
     }, [page])
 
-
+    useEffect(() => {
+        console.log(pageData)
+        console.log(page)
+    }, [pageData])
 
     return (
         <div className="w-full h-[94%] bg-[#FCF9EE] flex flex-row p-4">
@@ -80,7 +107,7 @@ const Editor = () => {
             </div>
 
             <div className="w-2/4 h-full bg-[#FFF] rounded-2xl overflow-auto mx-4">
-                <EditorComponent editorId={editor_id} handleDrop={handleDrop} page={page} setPage={setPage} selectedControl={selectedControl} setSelectedControl={setSelectedControl} setPageData={setPageData} pageData={pageData} handleSubmit={handleSubmit} />
+                <EditorComponent editorId={editor_id} handleDrop={handleDrop} page={page} setPage={setPage} selectedControl={selectedControl} setSelectedControl={setSelectedControl} setPageData={setPageData} pageData={pageData} handleSubmit={handleSubmit} handleRemove={handleRemove} />
             </div>
             <div className="w-1/4 h-full bg-[#FFF] rounded-2xl overflow-auto">
                 <PropertyWindow page={page} selectedControl={selectedControl} pageData={pageData} setPageData={setPageData} />
@@ -111,7 +138,7 @@ const ControlCard = ({ label, icon, index }) => {
     )
 }
 
-const EditorComponent = ({ handleDrop, page, selectedControl, setSelectedControl, setPage, pageData, setPageData, handleSubmit, editorId }) => {
+const EditorComponent = ({ handleDrop, page, selectedControl, setSelectedControl, setPage, pageData, setPageData, handleSubmit, editorId, handleRemove }) => {
     const [hover, setHover] = useState(false);
     const [{ canDrop, isOver }, drop] = useDrop({
         accept: 'FIELD',
@@ -135,7 +162,9 @@ const EditorComponent = ({ handleDrop, page, selectedControl, setSelectedControl
                         return <div key={index} className={`${selectedControl === index ? 'bg-[#F9EFDE]' : ''} w-full bg-[#FCF9EE] rounded p-2 my-2 flex flex-col items-left border border-[#F9EFDE]`} >
                             <div className={`font-bold px-2 py-2 rounded flex justify-between`} >
                                 <div className="cursor-pointer" onClick={() => setSelectedControl(index)}>{pageData[index]?.properties?.displayName.value || item?.label}</div>
-                                <button className="ml-2" onClick={() => setPage([...page.slice(0, index), ...page.slice(index + 1)])}>Remove</button>
+                                <button className="ml-2" onClick={() => {
+                                    handleRemove(index)
+                                }}>Remove</button>
                             </div>
                             <Control label={item?.label} value={pageData} setValue={setPageData} index={index} />
                         </div>
@@ -146,7 +175,7 @@ const EditorComponent = ({ handleDrop, page, selectedControl, setSelectedControl
             </div>
             <div className='w-full flex items-center border-t-[1px] border-[#E9E9E9] mt-auto sticky bottom-0 bg-[#FFF] p-4'>
                 <button
-                    className="justify-center items-center bg-[#FCF9EE] rounded flex flex-col items-left border border-[#F9EFDE] font-bold text-[#FFF] px-4 py-2 text-center text-sm border border-[#E9E9E9] rounded-lg w-fit bg-[#F29900]"
+                    className="justify-center items-center rounded flex flex-col items-left border border-[#F9EFDE] font-bold text-[#FFF] px-4 py-2 text-center text-sm border border-[#E9E9E9] rounded-lg w-fit bg-[#F29900]"
                     onClick={handleSubmit}
                 >
                     Save
@@ -292,7 +321,7 @@ const EditorTopBar = ({ editorId }) => {
             <div className="w-full flex justify-between">
                 <p className="text-[#4D4D4D] font-semibold text-lg">Editor</p>
                 <Link to={"/builder/viewform?id=" + editorId}>
-                    <button className="justify-center items-center bg-[#FCF9EE] rounded flex flex-col items-left border border-[#F9EFDE] font-bold text-[#FFF] px-4 py-2 text-center text-sm border border-[#E9E9E9] rounded-lg w-fit bg-[#F29900]">
+                    <button className="justify-center items-center rounded flex flex-col items-left border border-[#F9EFDE] font-bold text-[#FFF] px-4 py-2 text-center text-sm border border-[#E9E9E9] rounded-lg w-fit bg-[#F29900]">
                         Preview
                     </button>
                 </Link>
