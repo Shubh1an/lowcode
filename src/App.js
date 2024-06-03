@@ -43,11 +43,14 @@ function App() {
               path="/kanban"
               element={
                 <LayoutChild>
-                    <Kanban />
+                  <Kanban />
                 </LayoutChild>
               }
             />
-            <Route path="/*" element={<SetupLayout> {<Login />} </SetupLayout>} />
+            <Route
+              path="/*"
+              element={<SetupLayout> {<Login />} </SetupLayout>}
+            />
           </Routes>
         </DndProvider>
       </GlobalProvider>

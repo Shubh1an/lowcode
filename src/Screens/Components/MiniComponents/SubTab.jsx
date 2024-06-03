@@ -13,7 +13,6 @@ const SubTab = ({ tabs, active, setActive }) => {
         />
       ))}
       {/* Search */}
-
     </div>
   );
 };

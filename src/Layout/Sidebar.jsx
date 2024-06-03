@@ -15,8 +15,7 @@ const Sidebar = () => {
       title: 'Builder',
       icon: <IoHomeOutline className="" />,
       url: '/builder',
-      subMenu: [
-      ],
+      subMenu: [],
     },
     {
       title: 'Template',
