@@ -61,71 +61,23 @@ const Module = () => {
   });
   const [headers, setHeaders] = useState([]);
   const [view, setView] = useState(true);
-  const [hashTable, setHashTable] = useState({});
-  const [hideColumns, setHideColumns] = useState([]);
-  const [renderHeaders, setRenderHeaders] = useState([]);
-  const [people, setPeoples] = useState({});
-  // const [cells, setCells] = useState([]);
 
-  useEffect(() => {
-    fetchModules();
-  }, []);
+  const [cells, setCells] = useState([]);
 
-  const fetchModules = () => {
-    getModules()
-      .then((data) => {
-        // let data = modules?.data;
-        setForms(data.data);
-        let headers_gen = Object.keys(data.data[0]);
-        headers_gen.forEach((header, index) => {
-          if (header === '_id' || header === '__v') {
-            headers_gen.splice(index, 1);
-          }
-        });
-        setRenderHeaders([...headers_gen]);
-        setHeaders([...headers_gen]);
-      })
-      .catch((err) => console.log(err));
-  };
-
-  useEffect(() => {
-    setFormsToRender(forms);
-    setHashTable(preprocessSearchData(forms, searchableHeaders));
-  }, [forms, searchableHeaders]);
-
-  const handleHide = (column, checked) => {
-    setHideColumns((prev) => {
-      if (!checked) {
-        return [...prev, column];
-      } else {
-        return prev.filter((col) => col !== column);
-      }
-    });
-  };
-
-  useEffect(() => {
-    // Remove hidden columns
-    setRenderHeaders((prev) => {
-      let newHeaders = [...headers];
-      hideColumns.forEach((col) => {
-        newHeaders = newHeaders.filter((header) => header !== col);
+  const fetchModules = async () => {
+    const modules = await getModules();
+    let data = modules?.data;
+    if (data) {
+      let headers_gen = Object.keys(data?.[0] || {});
+      headers_gen.forEach((header, index) => {
+        if (header === '_id' || header === '__v') {
+          headers_gen.splice(index, 1);
+        }
       });
-      return newHeaders;
-    });
-    // Add unhidden columns
-  }, [hideColumns, forms]);
-
-  useEffect(() => {}, [renderHeaders]);
-
-  const handleSearch = (value) => {
-    if (value) {
-      const results = search(value, searchableHeaders, hashTable);
-      setFormsToRender(results);
-    } else {
-      setFormsToRender(forms);
+      setHeaders(headers_gen);
+      setCells(data);
     }
   };
-
   useEffect(() => {
     formsToRender.forEach((form, index) => {
       let header = Object.keys(form);
@@ -157,7 +109,7 @@ const Module = () => {
   };
 
   return (
-    <div className="w-full h-full bg-[#E9F2EF] flex justify-center items-center px-6 py-6 ">
+    <div className="w-full h-full bg-[#FCF9EE] flex justify-center items-center px-6 py-6 ">
       <div className="w-full h-full bg-[#FFF] rounded-2xl">
         <TopBar
           showModal={showModal}
@@ -309,13 +261,13 @@ const ModalComponent = ({
 }) => {
   return (
     <div className="w-[400px]">
-      <div className="text-2xl font-bold text-[#227A60]">Add Modules</div>
+      <div className="text-2xl font-bold text-[#000]">Add Modules</div>
       <div className="w-full h-[1px] bg-[#E9E9E9]" />
       <div className="w-full mt-5">
         <p className="mb-2 text-lg font-bold">Module Name</p>
         <input
           type="text"
-          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#227A60] focus:border-[#227A60] focus:outline-none"
+          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none"
           placeholder="Enter Module Name"
           value={modalForm.name}
           onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
@@ -324,7 +276,7 @@ const ModalComponent = ({
       <div className="w-full mt-5">
         <p className="mb-2 text-lg font-bold">Description</p>
         <textarea
-          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#227A60] focus:border-[#227A60] focus:outline-none "
+          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none "
           placeholder="Enter Description"
           rows={3}
           value={modalForm.description}
@@ -335,7 +287,7 @@ const ModalComponent = ({
       </div>
       <div className="flex justify-start items-center mt-5">
         <button
-          className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
+          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
           onClick={() => {
             handleSubmit();
             closeModal();
@@ -344,7 +296,7 @@ const ModalComponent = ({
           Save
         </button>
         <button
-          className="text-[#227A60] px-4 py-1 rounded-md border border-[#227A60] font-bold"
+          className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
           onClick={closeModal}
         >
           Cancel

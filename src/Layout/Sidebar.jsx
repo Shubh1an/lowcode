@@ -8,26 +8,14 @@ import { PiGraphLight } from 'react-icons/pi';
 import { GoWorkflow } from 'react-icons/go';
 import GlobalContext from '../Context/Context';
 import { Link, BrowserRouter as router } from 'react-router-dom';
+import { GiHamburgerMenu } from 'react-icons/gi';
 const Sidebar = () => {
   const menuData = [
     {
       title: 'Builder',
       icon: <IoHomeOutline className="" />,
       url: '/builder',
-      subMenu: [
-        {
-          title: 'Module',
-          url: '/builder/module',
-        },
-        {
-          title: 'Entity',
-          url: '/builder/entity',
-        },
-        {
-          title: 'Pages',
-          url: '/builder/field',
-        },
-      ],
+      subMenu: [],
     },
     {
       title: 'Template',
@@ -81,12 +69,12 @@ const Sidebar = () => {
     setActiveSub(0);
   }, []);
   return (
-    <div className="h-full w-[13%] bg-[#FFFFFF]">
-      <div className="flex flex-col items-center py-7 ">
-        <img src={LCNC} alt="LCNC" className="" />
+    <div className="h-full w-[100px] bg-[#FFFFFF]">
+      <div className="flex flex-col items-center py-4">
+        <GiHamburgerMenu className="text-black text-2xl" />
       </div>
       <div className="flex flex-row w-full">
-        <div className="flex flex-col w-1/3">
+        <div className="flex flex-col">
           {menuData.map((menu, index) => {
             return (
               <SidebarMenu
@@ -100,28 +88,6 @@ const Sidebar = () => {
             );
           })}
         </div>
-        <div className="flex flex-col w-2/3 pl-7">
-          {menuData[active].subMenu.length > 0 ? (
-            menuData[active].subMenu.map((menu, index) => {
-              return (
-                <SidebarSubMenu
-                  key={index}
-                  menu={menu}
-                  setActive={setActiveSub}
-                  active={activeSub}
-                  index={index}
-                />
-              );
-            })
-          ) : (
-            <SidebarSubMenu
-              menu={{ title: 'No Sub Menu', url: '/builder' }}
-              setActive={setActiveSub}
-              active={0}
-              index={0}
-            />
-          )}
-        </div>
       </div>
     </div>
   );
@@ -131,7 +97,7 @@ const SidebarMenu = ({ menu, index, length, setActive, active }) => {
   return (
     <Link to={`${menu.url}`}>
       <div
-        className={`flex flex-col w-full items-center ${active === index ? 'bg-[#E9F2EF] text-[#227A60]' : 'bg-[#E9E9E9] text-[#7A7A7A]'} ml-3 mb-1 cursor-pointer ${index === 0 ? 'rounded-t-lg' : index === length - 1 ? 'rounded-b-lg' : ''}`}
+        className={`flex flex-col w-full items-center ${active === index ? 'bg-[#FCF9EE] text-[#000]' : 'bg-[#E9E9E9] text-[#7A7A7A]'} ml-3 mb-1 cursor-pointer ${index === 0 ? 'rounded-t-lg' : index === length - 1 ? 'rounded-b-lg' : ''}`}
         onClick={() => setActive(index)}
       >
         <div className="flex flex-col w-full items-center my-2">
@@ -149,7 +115,7 @@ const SidebarSubMenu = ({ menu, setActive, active, index }) => {
   return (
     <Link to={`${menu.url}`}>
       <div
-        className={`w-full mb-2 text-sm ${active === index ? 'text-[#227A60]' : 'text-[#7A7A7A]'} cursor-pointer`}
+        className={`w-full mb-2 text-sm ${active === index ? 'text-[#000]' : 'text-[#7A7A7A]'} cursor-pointer`}
         onClick={() => setActive(index)}
       >
         {menu.title}

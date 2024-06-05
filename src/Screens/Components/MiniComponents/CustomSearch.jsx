@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { IoClose } from 'react-icons/io5';
 import { LuSettings2 } from 'react-icons/lu';
-import ShortModal from '../ShortModal/ShortModal';
-import SearchHeaders from '../Modals/SearchHeaders';
+import ShortModal from './ShortModal';
+import SearchHeaders from './SearchHeaders';
 
 const CustomSearch = ({
   initialComponent,
@@ -15,10 +15,11 @@ const CustomSearch = ({
   headers = [],
   handleHeaderSelect = () => {},
 }) => {
-  const [text, setText] = useState('');
+  const [text, setText] = useState('Hello');
   const [value] = useDebounce(text, 300);
 
   const [showModal, setShowModal] = useState(false);
+  // title, handleHeaderSelect, checked
   useEffect(() => {
     handleSearch(value);
   }, [value]);

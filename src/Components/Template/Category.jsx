@@ -27,7 +27,7 @@ export const Category = () => {
             className="ml-4 cursor-pointer"
             onClick={() => setIsOpen(!isopen)}
           >
-            <IoMdAddCircle fill="#227A60" size={30} />
+            <IoMdAddCircle fill="#000" size={30} />
           </span>
         </div>
         <div className="flex space-x-4">
@@ -35,7 +35,7 @@ export const Category = () => {
             {category.map((cat, key) => (
               <div className="rounded-md mb-2 shadow-lg mt-4" key={key}>
                 <div
-                  className={`flex font-bold justify-between rounded-xl items-center p-4 cursor-pointer ${cat?.category === selectedCategory[0]?.category && 'bg-[#227A60] text-white'}`}
+                  className={`flex font-bold justify-between rounded-xl items-center p-4 cursor-pointer ${cat?.category === selectedCategory[0]?.category && 'bg-[#000] text-white'}`}
                   onClick={() => setSelectedCategory([cat])}
                 >
                   {cat?.category}
@@ -50,7 +50,7 @@ export const Category = () => {
                 className="ml-4 cursor-pointer"
                 onClick={() => (setIsOpen(!isopen), setSubCategory(true))}
               >
-                <IoMdAddCircle fill="#227A60" size={30} />
+                <IoMdAddCircle fill="#000" size={30} />
               </span>
             </div>
             <div className="w-1/2">
@@ -99,7 +99,7 @@ export const Category = () => {
             <div className="">
               <div className="flex pt-4">
                 <button
-                  className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
+                  className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
                   onClick={() => (
                     addcategory !== '' && subcategory
                       ? console.log(
@@ -122,7 +122,7 @@ export const Category = () => {
                   Save
                 </button>
                 <button
-                  className="text-[#227A60] px-4 py-1 rounded-md border border-[#227A60] font-bold"
+                  className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
                   onClick={() => onClose()}
                 >
                   Cancel

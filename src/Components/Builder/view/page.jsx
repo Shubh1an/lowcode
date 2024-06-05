@@ -109,7 +109,12 @@ const View = ({ newPageData }) => {
               field={{ ...field, id: index }}
               setActiveField={''}
               activePropertiesField={''}
+              fieldValue={fieldValue}
               onchange={(e) => {
+                console.log(
+                  field?.propertyValues?.display_name,
+                  e.target.value,
+                );
                 setFieldValue((prev) => {
                   return {
                     ...prev,
@@ -154,12 +159,12 @@ const Footer = ({ handleFormSubmit = () => {} }) => {
     <div className="w-full h-[60px] border-t-[1px] border-[#E9E9E9] mt-4">
       <div className="flex justify-center items-center h-full py-4">
         <button
-          className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mx-4 font-bold"
+          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mx-4 font-bold"
           onClick={handleFormSubmit}
         >
           Save
         </button>
-        <button className="text-[#227A60] px-4 py-1 rounded-md border border-[#227A60] font-bold">
+        <button className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold">
           Cancel
         </button>
       </div>

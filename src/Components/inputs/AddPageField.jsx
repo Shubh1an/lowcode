@@ -72,7 +72,7 @@ const InputByType = ({
   handleOptionToggle,
 }) => {
   const [selectOptions, setSelectOptions] = useState([]);
-  const [addOptionValue, setAddOptionValue] = useState('');
+  const [addOptionValue, setAddOptionValue] = useState({});
   useEffect(() => {
     if (type === 'add_option') {
       setSelectOptions(defaultValue);
@@ -83,7 +83,7 @@ const InputByType = ({
       return (
         <input
           type="text"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
           onChange={(e) => {
             let payload = {
               id: id,
@@ -105,7 +105,7 @@ const InputByType = ({
               >
                 <input
                   type="radio"
-                  className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+                  className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-4 h-4"
                   name={id}
                   onChange={(e) => {
                     let payload = {
@@ -198,7 +198,7 @@ const InputByType = ({
               selectOptions?.map((option, index) => {
                 return (
                   <li className="ml-2 mb-1" key={index}>
-                    {option}
+                    {option.label}
                     <button
                       onClick={() => {
                         let payload = {
@@ -217,14 +217,17 @@ const InputByType = ({
 
           <input
             type="text"
-            className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+            className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
             onChange={(e) => {
-              setAddOptionValue(e.target.value);
+              setAddOptionValue({
+                label: e.target.value,
+                value: e.target.value,
+              });
             }}
-            value={addOptionValue}
+            value={addOptionValue?.label || ''}
           />
           <button
-            className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold mt-2"
+            className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold mt-2"
             onClick={() => {
               let payload = {
                 id: id,

@@ -27,7 +27,11 @@ const Icons = ({ name }) => {
       return <BiText />;
     case 'User':
       return <MdPeopleAlt />;
+    default:
+      return <BiText />;
   }
 };
+
+//
 
 export default Icons;

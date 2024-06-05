@@ -159,7 +159,7 @@ const Entity = () => {
   };
 
   return (
-    <div className="w-full h-full bg-[#E9F2EF] flex justify-center items-center px-6 py-6 ">
+    <div className="w-full h-full bg-[#FCF9EE] flex justify-center items-center px-6 py-6 ">
       <div className="w-full h-full bg-[#FFF] rounded-2xl">
         <TopBar
           showModal={showModal}
@@ -264,13 +264,13 @@ const ModalComponent = ({
 }) => {
   return (
     <div className="w-[400px]">
-      <div className="text-2xl font-bold text-[#227A60]">Add Entities</div>
+      <div className="text-2xl font-bold text-[#000]">Add Entities</div>
       <div className="w-full h-[1px] bg-[#E9E9E9]" />
       <div className="w-full mt-5">
         <p className="mb-2 text-lg font-bold">Entity Name</p>
         <input
           type="text"
-          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#227A60] focus:border-[#227A60] focus:outline-none"
+          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none"
           placeholder="Enter Entity Name"
           value={modalForm.name}
           onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
@@ -279,7 +279,7 @@ const ModalComponent = ({
       <div className="w-full mt-5">
         <p className="mb-2 text-lg font-bold">Description</p>
         <textarea
-          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#227A60] focus:border-[#227A60] focus:outline-none "
+          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none "
           placeholder="Enter Description"
           rows={3}
           value={modalForm.description}
@@ -290,7 +290,7 @@ const ModalComponent = ({
       </div>
       <div className="flex justify-start items-center mt-5">
         <button
-          className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
+          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
           onClick={() => {
             handleSubmit();
             closeModal();
@@ -299,7 +299,7 @@ const ModalComponent = ({
           Save
         </button>
         <button
-          className="text-[#227A60] px-4 py-1 rounded-md border border-[#227A60] font-bold"
+          className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
           onClick={closeModal}
         >
           Cancel

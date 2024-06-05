@@ -115,13 +115,13 @@ const AddTemplate = ({ onClickSave = () => {}, onClickCancel = () => {} }) => {
           </div>
           <div className="mt-4">
             <button
-              className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
+              className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
               onClick={onClickSave}
             >
               Save
             </button>
             <button
-              className="text-[#227A60] px-4 py-1 rounded-md border border-[#227A60] font-bold"
+              className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
               onClick={onClickCancel}
             >
               Cancel

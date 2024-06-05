@@ -25,7 +25,7 @@ const Hide = ({ hideObject, handleHide, checked }) => {
     <div className="">
       <input
         type="checkbox"
-        className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+        className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-4 h-4"
         name={hideObject}
         onChange={(e) => {
           handleHide(hideObject, e.target.checked);
