@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import TopBar from './Components/TopBar';
 import SubTab from './Components/MiniComponents/SubTab';
 import controlls from '../Config/Controlls.jsx';
@@ -11,7 +11,6 @@ import { Link } from 'react-router-dom';
 import { getEntities } from '../Requests/entity';
 import CustomSelect from './Components/MiniComponents/CustomSelect';
 
-
 const Editor = () => {
     let editor_id = location.search.split('editor_id=')[1];
     let module_id = location.search.split('module_id=')[1].split('&')[0];
@@ -19,95 +18,99 @@ const Editor = () => {
     const [active, setActive] = useState(0);
     const [selectedControl, setSelectedControl] = useState(null);
 
-    const tabs = [
-        "Controlls",
-    ]
+  const tabs = ['Controlls'];
 
-    const { CONTROLLS } = config
+  const { CONTROLLS } = config;
 
-    const [page, setPage] = useState([]);
-    const [isChildHovering, setIsChildHovering] = useState(false);
+  const [page, setPage] = useState([]);
+  const [isChildHovering, setIsChildHovering] = useState(false);
 
-    const [pageData, setPageData] = useState([])
+  const [pageData, setPageData] = useState([]);
 
+  const fetchPage = async () => {
+    getPageDetails(editor_id).then((res) => {
+      // setPage(res.data.form_schema)
+      // setPageData(res.data.page_data)
+      console.log(res.data.form_schema);
+      setPageData(res.data.form_schema);
+      res?.data?.form_schema?.forEach((item, index) => {
+        // { label, properties: controlls(label)?.properties, child: [] }
+        let pageControl = {
+          label: item.control,
+          properties: controlls(item.control).properties,
+          child: [],
+        };
+        setPage((prev) => [...prev, pageControl]);
+      });
+    });
+  };
 
-    const fetchPage = async () => {
-        getPageDetails(editor_id).then((res) => {
-            // setPage(res.data.form_schema)
-            // setPageData(res.data.page_data)
-            console.log(res.data.form_schema)
-            setPageData(res.data.form_schema)
-            res?.data?.form_schema?.forEach((item, index) => {
-                // { label, properties: controlls(label)?.properties, child: [] }
-                let pageControl = {
-                    label: item.control,
-                    properties: controlls(item.control).properties,
-                    child: []
-                }
-                setPage((prev) => [...prev, pageControl])
-            })
-        })
+  useEffect(() => {
+    fetchPage();
+  }, []);
+
+  const handleSubmit = () => {
+    let payload = {
+      form_schema: pageData,
+    };
+    updatePage(editor_id, payload)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    console.log('Page Data: ', page);
+  };
+
+  // use
+  const handleDrop = ({ label }) => {
+    if (!isChildHovering) {
+      setPage([
+        ...page,
+        { label, properties: controlls(label)?.properties, child: [] },
+      ]);
+      setPageData((prev) => {
+        return [
+          ...prev,
+          {
+            control: label,
+          },
+        ];
+      });
     }
+    setIsChildHovering(false);
+  };
 
-    useEffect(() => {
-        fetchPage();
-    }, [])
+  const handleRemove = (index) => {
+    setPage(page.filter((item, i) => i !== index));
+    setPageData(pageData.filter((item, i) => i !== index));
+  };
 
-
-    const handleSubmit = () => {
-        let payload = {
-            form_schema: pageData
-        }
-        updatePage(editor_id, payload).then((res) => {
-            console.log(res.data)
-        }).catch((err) => {
-            console.log(err)
-        })
-        console.log("Page Data: ", page)
-    }
-
-
-    // use
-    const handleDrop = ({ label }) => {
-        if (!isChildHovering) {
-            setPage([...page, { label, properties: controlls(label)?.properties, child: [] }])
-            setPageData((prev) => {
-                return [
-                    ...prev,
-                    {
-                        control: label
-                    }
-                ]
-            })
-        }
-        setIsChildHovering(false)
-    }
-
-    const handleRemove = (index) => {
-        setPage(page.filter((item, i) => i !== index))
-        setPageData(pageData.filter((item, i) => i !== index))
-    }
-
-    useEffect(() => {
-        setSelectedControl(page.length > 0 ? page.length - 1 : null)
-    }, [page])
+  useEffect(() => {
+    setSelectedControl(page.length > 0 ? page.length - 1 : null);
+  }, [page]);
 
     useEffect(() => {
 
     }, [pageData])
 
-    return (
-        <div className="w-full h-[94%] bg-[#FCF9EE] flex flex-row p-4">
-            <div className="w-1/4 h-full bg-[#FFF] rounded-2xl overflow-auto">
-                <SubTab active={active} setActive={setActive} tabs={tabs} />
-                <div className="w-full p-4 grid grid-cols-2 gap-x-4">
-                    {
-                        CONTROLLS.map((control, index) => {
-                            return <ControlCard label={control} icon={<Icons name={control} />} index={index} />
-                        })
-                    }
-                </div>
-            </div>
+  return (
+    <div className="w-full h-[94%] bg-[#FCF9EE] flex flex-row p-4">
+      <div className="w-1/4 h-full bg-[#FFF] rounded-2xl overflow-auto">
+        <SubTab active={active} setActive={setActive} tabs={tabs} />
+        <div className="w-full p-4 grid grid-cols-2 gap-x-4">
+          {CONTROLLS.map((control, index) => {
+            return (
+              <ControlCard
+                label={control}
+                icon={<Icons name={control} />}
+                index={index}
+              />
+            );
+          })}
+        </div>
+      </div>
 
             <div className="w-2/4 h-full bg-[#FFF] rounded-2xl overflow-auto mx-4">
                 <EditorComponent editorId={editor_id} handleDrop={handleDrop} page={page} setPage={setPage} selectedControl={selectedControl} setSelectedControl={setSelectedControl} setPageData={setPageData} pageData={pageData} handleSubmit={handleSubmit} handleRemove={handleRemove} />
@@ -120,38 +123,51 @@ const Editor = () => {
 }
 
 const ControlCard = ({ label, icon, index }) => {
-    const [{ isDragging }, drag] = useDrag(() => ({
-        type: "FIELD",
-        collect: (monitor) => ({
-            isDragging: !!monitor.isDragging(),
-        }),
-        item: { label, index },
-    }));
-    // Remove underscore from label
-    label = label.replace("_", " ");
-    // Capitalize
-    label = label.charAt(0).toUpperCase() + label.slice(1);
-    return (
-        <div className="w-full h-10 bg-[#FCF9EE] rounded p-4 my-4 flex items-center justify-between border border-[#F9EFDE] cursor-grab select-none" ref={drag} key={index}>
-            {icon}
-            <div className="w-3/4">
-                {label}
-            </div>
-        </div>
-    )
-}
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: 'FIELD',
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+    item: { label, index },
+  }));
+  // Remove underscore from label
+  label = label.replace('_', ' ');
+  // Capitalize
+  label = label.charAt(0).toUpperCase() + label.slice(1);
+  return (
+    <div
+      className="w-full h-10 bg-[#FCF9EE] rounded p-4 my-4 flex items-center justify-between border border-[#F9EFDE] cursor-grab select-none"
+      ref={drag}
+      key={index}
+    >
+      {icon}
+      <div className="w-3/4">{label}</div>
+    </div>
+  );
+};
 
-const EditorComponent = ({ handleDrop, page, selectedControl, setSelectedControl, setPage, pageData, setPageData, handleSubmit, editorId, handleRemove }) => {
-    const [hover, setHover] = useState(false);
-    const [{ canDrop, isOver }, drop] = useDrop({
-        accept: 'FIELD',
-        drop: (item) => handleDrop(item),
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-            canDrop: monitor.canDrop(),
-        }),
-        hover: (item) => setHover(true),
-    });
+const EditorComponent = ({
+  handleDrop,
+  page,
+  selectedControl,
+  setSelectedControl,
+  setPage,
+  pageData,
+  setPageData,
+  handleSubmit,
+  editorId,
+  handleRemove,
+}) => {
+  const [hover, setHover] = useState(false);
+  const [{ canDrop, isOver }, drop] = useDrop({
+    accept: 'FIELD',
+    drop: (item) => handleDrop(item),
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+    hover: (item) => setHover(true),
+  });
 
     return (
         <div className={`w-full h-full flex flex-col  pb-0 border  ${isOver ? 'border-[black]' : ''}`} ref={drop}>
@@ -176,19 +192,20 @@ const EditorComponent = ({ handleDrop, page, selectedControl, setSelectedControl
                 }
 
             </div>
-            <div className='w-full flex items-center border-t-[1px] border-[#E9E9E9] mt-auto sticky bottom-0 bg-[#FFF] p-4'>
-                <button
-                    className="justify-center items-center rounded flex flex-col items-left border border-[#F9EFDE] font-bold text-[#FFF] px-4 py-2 text-center text-sm border border-[#E9E9E9] rounded-lg w-fit bg-[#F29900]"
-                    onClick={handleSubmit}
-                >
-                    Save
-                </button>
-
-            </div>
-        </div>
-    )
-}
-
+          );
+        })}
+      </div>
+      <div className="w-full flex items-center border-t-[1px] border-[#E9E9E9] mt-auto sticky bottom-0 bg-[#FFF] p-4">
+        <button
+          className="justify-center items-center rounded flex flex-col items-left border border-[#F9EFDE] font-bold text-[#FFF] px-4 py-2 text-center text-sm border border-[#E9E9E9] rounded-lg w-fit bg-[#F29900]"
+          onClick={handleSubmit}
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const PropertyWindow = ({ page, selectedControl, pageData, setPageData, module_id, entity_id }) => {
     let properties = page[selectedControl]?.properties
@@ -209,64 +226,82 @@ const PropertyInput = ({ type, property_key, pageData, setPageData, selectedCont
     const [options, setOptions] = useState([]);
     const [option, setOption] = useState("");
 
-    const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
 
-    const addOption = () => {
-        if (option === "") return;
-        setOptions([...options, option]);
-        setOption("");
-    };
-    useEffect(() => {
-        if (inputValue || options.length > 0) {
-            if (!pageData[selectedControl]?.properties) {
-                setPageData(prev => {
-                    let newPageData = [...prev]
-                    newPageData[selectedControl] = {
-                        ...newPageData[selectedControl],
-                        properties: {
-                            ...pageData[selectedControl]?.properties,
-                            [key]: {
-                                value: inputValue,
-                                options: options
-                            }
-                        }
-                    }
+  const addOption = () => {
+    if (option === '') return;
+    setOptions([...options, option]);
+    setOption('');
+  };
+  useEffect(() => {
+    if (inputValue || options.length > 0) {
+      if (!pageData[selectedControl]?.properties) {
+        setPageData((prev) => {
+          let newPageData = [...prev];
+          newPageData[selectedControl] = {
+            ...newPageData[selectedControl],
+            properties: {
+              ...pageData[selectedControl]?.properties,
+              [key]: {
+                value: inputValue,
+                options: options,
+              },
+            },
+          };
 
-                    return newPageData
-                })
-            }
-            else {
-                setPageData(prev => {
-                    let newPageData = [...prev]
-                    newPageData[selectedControl] = {
-                        ...newPageData[selectedControl],
-                        properties: {
-                            ...pageData[selectedControl]?.properties,
-                            [key]: {
-                                value: inputValue,
-                                options: options
-                            }
-                        }
-                    }
+          return newPageData;
+        });
+      } else {
+        setPageData((prev) => {
+          let newPageData = [...prev];
+          newPageData[selectedControl] = {
+            ...newPageData[selectedControl],
+            properties: {
+              ...pageData[selectedControl]?.properties,
+              [key]: {
+                value: inputValue,
+                options: options,
+              },
+            },
+          };
 
-                    return newPageData
-                })
-            }
-        }
-    }, [inputValue, options]);
+          return newPageData;
+        });
+      }
+    }
+  }, [inputValue, options]);
 
+  switch (type) {
+    case 'string':
+      return (
+        <input
+          type="text"
+          className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+      );
+    case 'number':
+      return (
+        <input
+          type="number"
+          className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+      );
 
-    switch (type) {
-        case 'string':
-            return <input type="text" className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
-        case 'number':
-            return <input type="number" className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
-
-        case 'boolean':
-            return <select className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm" value={inputValue} onChange={(e) => setInputValue(e.target.value)}>
-                <option value="true">True</option>
-                <option value="false">False</option>
-            </select>
+    case 'boolean':
+      return (
+        <select
+          className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        >
+          <option value="true">True</option>
+          <option value="false">False</option>
+        </select>
+      );
 
         case 'options':
             return <div className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm">

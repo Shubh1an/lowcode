@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import TopBar from './Components/TopBar'
+import React, { useEffect, useState } from 'react';
+import TopBar from './Components/TopBar';
 import { getPages } from '../Requests/page';
 import TableView from './Components/MiniComponents/Grid';
 
@@ -25,34 +25,31 @@ const Pages = () => {
     const handleSearch = (value) => {
     };
 
-    const handleHeaderSelect = (value, checked) => {
-    };
+  const handleHeaderSelect = (value, checked) => {};
 
-    const handleAddNewPage = (id, type) => {
-    };
+  const handleAddNewPage = (id, type) => {};
 
-    const addPage = (data) => {
-        console.log("Clicked: ", data);
-    }
+  const addPage = (data) => {
+    console.log('Clicked: ', data);
+  };
 
-    const fetchPages = () => {
-        getPages(entity_id).then((res) => {
-            let { data } = res;
-            let headers_gen = Object.keys(data?.[0] || {});
-            headers_gen.forEach((header, index) => {
-                if (header === '_id' || header === '__v') {
-                    headers_gen.splice(index, 1);
-                }
-            });
-            setHeaders(headers_gen);
-            setCells(data);
-        })
-    }
+  const fetchPages = () => {
+    getPages(entity_id).then((res) => {
+      let { data } = res;
+      let headers_gen = Object.keys(data?.[0] || {});
+      headers_gen.forEach((header, index) => {
+        if (header === '_id' || header === '__v') {
+          headers_gen.splice(index, 1);
+        }
+      });
+      setHeaders(headers_gen);
+      setCells(data);
+    });
+  };
 
-    useEffect(() => {
-        fetchPages();
-    }, [])
-
+  useEffect(() => {
+    fetchPages();
+  }, []);
 
     return (
         <div className="w-full h-full bg-[#FCF9EE] flex flex-col p-4">
@@ -82,4 +79,4 @@ const Pages = () => {
     )
 }
 
-export default Pages
+export default Pages;

@@ -5,7 +5,6 @@ import { LuSettings2 } from 'react-icons/lu';
 import ShortModal from './ShortModal';
 import SearchHeaders from './SearchHeaders';
 
-
 const CustomSearch = ({
   initialComponent,
   searchActive,
@@ -14,7 +13,7 @@ const CustomSearch = ({
   setShowSearch,
   searchHeaders = [],
   headers = [],
-  handleHeaderSelect = () => { },
+  handleHeaderSelect = () => {},
 }) => {
   const [text, setText] = useState('Hello');
   const [value] = useDebounce(text, 300);

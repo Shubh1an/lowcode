@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { getPageDetails } from '../Requests/page';
 import Control from './Components/MiniComponents/Control';
 import { fillData } from '../Requests/fillData';
@@ -71,15 +71,17 @@ const View = () => {
                 </div>
             </div>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
 const TopBar = ({ label }) => {
-    return (
-        <div className="flex w-full border-b p-4">
-            <p className="text-2xl font-bold">{label}</p>
-        </div>
-    )
-}
+  return (
+    <div className="flex w-full border-b p-4">
+      <p className="text-2xl font-bold">{label}</p>
+    </div>
+  );
+};
 
-export default View
+export default View;
