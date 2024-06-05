@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import CustomSelect from './CustomSelect';
 
 const Control = ({ label, value, setValue, index }) => {
     const handleValue = (field) => {
@@ -17,12 +18,13 @@ const Control = ({ label, value, setValue, index }) => {
         setInputValue(value[index]?.value);
     }, [value])
 
-
     switch (label) {
         case "section":
             return <div className="w-full min-h-[100px] border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF]"></div>
         case "single_line":
             return <input type="text" className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm" onChange={(e) => handleValue(e.target.value)} value={inputValue} />
+        case "lookup":
+            return <CustomSelect options={value} />
         case "dropdown":
             return <select className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm p-2 text-sm" onChange={(e) => handleValue(e.target.value)} value={inputValue}>
                 <option value="option1">Add Options in property window</option>

@@ -6,7 +6,7 @@ import { createPage } from '../Requests/page';
 import { type } from '@testing-library/user-event/dist/type';
 
 const Entities = () => {
-    let module_id = location.search.split('=')[1];
+    let module_id = location.search.split('module_id=')[1];
     const [showModal, setShowModal] = useState(false);
     const [modalForm, setModalForm] = useState({
         name: '',
@@ -85,7 +85,7 @@ const Entities = () => {
                     handleSubmit={handleSubmit}
                     modalComponent={<ModalComponent closeModal={setShowModal} modalForm={modalForm} setModalForm={setModalForm} handleSubmit={handleSubmit} />}
                 />
-                <TableView data={{ headers, cells }} linkto={"/builder/pages?entity_id"} />
+                <TableView data={{ headers, cells }} linkto={`/builder/pages?module_id=${module_id}&entity_id`} />
             </div>
         </div>
     )

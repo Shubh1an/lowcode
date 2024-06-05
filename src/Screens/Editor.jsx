@@ -8,10 +8,14 @@ import { useDrag, useDrop } from 'react-dnd';
 import Control from './Components/MiniComponents/Control';
 import { getPageDetails, updatePage } from '../Requests/page';
 import { Link } from 'react-router-dom';
+import { getEntities } from '../Requests/entity';
+import CustomSelect from './Components/MiniComponents/CustomSelect';
 
 
 const Editor = () => {
-    let editor_id = location.search.split('=')[1];
+    let editor_id = location.search.split('editor_id=')[1];
+    let module_id = location.search.split('module_id=')[1].split('&')[0];
+    let entity_id = location.search.split('entity_id=')[1].split('&')[0];
     const [active, setActive] = useState(0);
     const [selectedControl, setSelectedControl] = useState(null);
 
@@ -89,8 +93,7 @@ const Editor = () => {
     }, [page])
 
     useEffect(() => {
-        console.log(pageData)
-        console.log(page)
+
     }, [pageData])
 
     return (
@@ -110,7 +113,7 @@ const Editor = () => {
                 <EditorComponent editorId={editor_id} handleDrop={handleDrop} page={page} setPage={setPage} selectedControl={selectedControl} setSelectedControl={setSelectedControl} setPageData={setPageData} pageData={pageData} handleSubmit={handleSubmit} handleRemove={handleRemove} />
             </div>
             <div className="w-1/4 h-full bg-[#FFF] rounded-2xl overflow-auto">
-                <PropertyWindow page={page} selectedControl={selectedControl} pageData={pageData} setPageData={setPageData} />
+                <PropertyWindow page={page} selectedControl={selectedControl} pageData={pageData} setPageData={setPageData} module_id={module_id} entity_id={entity_id} />
             </div>
         </div>
     )
@@ -161,7 +164,7 @@ const EditorComponent = ({ handleDrop, page, selectedControl, setSelectedControl
                     page?.map((item, index) => {
                         return <div key={index} className={`${selectedControl === index ? 'bg-[#F9EFDE]' : ''} w-full bg-[#FCF9EE] rounded p-2 my-2 flex flex-col items-left border border-[#F9EFDE]`} >
                             <div className={`font-bold px-2 py-2 rounded flex justify-between`} >
-                                <div className="cursor-pointer" onClick={() => setSelectedControl(index)}>{pageData[index]?.properties?.displayName.value || item?.label}</div>
+                                <div className="cursor-pointer" onClick={() => setSelectedControl(index)}>{pageData[index]?.properties?.displayName?.value || item?.label}</div>
                                 <button className="ml-2" onClick={() => {
                                     handleRemove(index)
                                 }}>Remove</button>
@@ -187,7 +190,7 @@ const EditorComponent = ({ handleDrop, page, selectedControl, setSelectedControl
 }
 
 
-const PropertyWindow = ({ page, selectedControl, pageData, setPageData }) => {
+const PropertyWindow = ({ page, selectedControl, pageData, setPageData, module_id, entity_id }) => {
     let properties = page[selectedControl]?.properties
 
     if (!properties) return null
@@ -195,13 +198,13 @@ const PropertyWindow = ({ page, selectedControl, pageData, setPageData }) => {
         <div className="w-full h-full rounded-2xl overflow-auto p-4">
             {
                 Object.keys(properties).map((key, index) => {
-                    return <Property key={index} property={properties[key]} property_key={key} pageData={pageData} setPageData={setPageData} selectedControl={selectedControl} />
+                    return <Property key={index} property={properties[key]} property_key={key} pageData={pageData} setPageData={setPageData} selectedControl={selectedControl} module_id={module_id} entity_id={entity_id} />
                 })
             }
         </div>
     )
 }
-const PropertyInput = ({ type, property_key, pageData, setPageData, selectedControl, property }) => {
+const PropertyInput = ({ type, property_key, pageData, setPageData, selectedControl, property, module_id, entity_id }) => {
     let key = property_key
     const [options, setOptions] = useState([]);
     const [option, setOption] = useState("");
@@ -297,9 +300,18 @@ const PropertyInput = ({ type, property_key, pageData, setPageData, selectedCont
                 </div>
 
             </div>
+        case "lookup":
+            return <div className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm">
+                <LookupComponent module_id={module_id} entity_id={entity_id} setInputValue={setInputValue}/>
+            </div>
+        case "lookuptype":
+            return <select className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm" value={inputValue} onChange={(e) => setInputValue(e.target.value)}>
+                    <option value="onetoone">One to One</option>
+                    <option value="onetomany">One to Many</option>
+                </select>
     }
 }
-const Property = ({ property, pageData, setPageData, selectedControl, property_key }) => {
+const Property = ({ property, pageData, setPageData, selectedControl, property_key, module_id, entity_id }) => {
 
     return (
         <div className="w-full bg-[#FCF9EE] rounded p-4 my-4 flex-col items-center justify-between border border-[#F9EFDE]">
@@ -307,7 +319,7 @@ const Property = ({ property, pageData, setPageData, selectedControl, property_k
                 {property?.label}
             </div>
             <div className="w-">
-                <PropertyInput type={property?.type} property_key={property_key} property={property} pageData={pageData} setPageData={setPageData} selectedControl={selectedControl} />
+                <PropertyInput type={property?.type} property_key={property_key} property={property} pageData={pageData} setPageData={setPageData} selectedControl={selectedControl} module_id={module_id} entity_id={entity_id} />
             </div>
         </div>
     )
@@ -327,6 +339,30 @@ const EditorTopBar = ({ editorId }) => {
                 </Link>
             </div>
         </div>
+    )
+}
+
+
+const LookupComponent = ({ module_id, entity_id, setInputValue }) => {
+    const [entities, setEntities] = useState([])
+    useEffect(() => {
+        getEntities(module_id).then((data) => {
+            let entities = data?.data
+            entities.forEach((entity, index) => {
+                if (entity_id === entity._id) {
+                    // Remove the entity from the array
+                    entities.splice(index, 1);
+                }
+            })
+            setEntities(entities)
+        })
+    }, [])
+    return (
+        <CustomSelect options={entities.map((entity) => {
+            return {
+                label: entity.name, value: entity._id
+            }
+        })} setValue={setInputValue}/>
     )
 }
 export default Editor

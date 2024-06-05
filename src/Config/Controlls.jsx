@@ -45,6 +45,16 @@ const controlls = (internal_name, children) => {
         }
       }
 
+    case 'lookup':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          entity: { type: 'lookup', label: 'Entity' },
+          entityType: { type: 'lookuptype', label: 'Entity Type' },
+        }
+      }
+
 
     default:
       return {

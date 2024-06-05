@@ -14,15 +14,8 @@ const config = {
     "date",
     "time",
     "checkbox",
-    "dropdown"
-    // "radio",
-    // "gender",
-    // "image",
-    // "video",
-    // "file",
-    // "url",
-    // "date_time",
-    // "uploadfile",
+    "dropdown",
+    "lookup"
   ]
 };
 
