@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import CustomSelect from './CustomSelect';
+import { getPageDetails, getPages } from '../../../Requests/page';
+import { getFillData } from '../../../Requests/fillData';
 
-const Control = ({ label, value, setValue, index, options, links }) => {
+const Control = ({ label, value, setValue, index, options = [], links, field }) => {
   const handleValue = (field) => {
     setValue((prev) => {
       let newValue = [...prev];
@@ -15,6 +17,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
   };
   const [inputValue, setInputValue] = useState('');
   const [isToggled, setIsToggled] = useState(false);
+
   useEffect(() => {
     setInputValue(value[index]?.value);
   }, [value]);
@@ -32,6 +35,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
   const [isOpendropdown, setIsOpendropdown] = useState(false);
+
   const handleOptionSelect = (value) => {
     setSelectedOption(value);
     setIsOpen(false); // Close the dropdown after selecting an option
@@ -57,7 +61,11 @@ const Control = ({ label, value, setValue, index, options, links }) => {
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         >
-          <option value="option1">Add Options in property window</option>
+          {
+            options?.map((option, index) => (
+              <option key={index} value={option}>{option}</option>
+            ))
+          }
         </select>
       );
     case 'Image Upload': {
@@ -99,7 +107,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
       return (
         <input
           type="number"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -108,7 +116,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
       return (
         <input
           type="text"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -117,7 +125,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
       return (
         <input
           type="email"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -125,7 +133,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
     case 'Address':
       return (
         <textarea
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -134,7 +142,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
       return (
         <input
           type="tel"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -144,7 +152,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
       return (
         <input
           type="text"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -153,7 +161,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
       return (
         <input
           type="date"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -162,7 +170,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
       return (
         <input
           type="time"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -171,7 +179,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
       return (
         <input
           type="datetime-local"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4"
         />
       );
     case 'Radio':
@@ -181,7 +189,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
           className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm p-2 text-sm"
         />
 
-        // <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
+        // <div className="flex flex-row space-x-4 border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4">
         //   {option.map((options, index) => {
         //     return (
         //       <div
@@ -190,7 +198,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
         //       >
         //         <input
         //           type="radio"
-        //           className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+        //           className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-4 h-4"
         //         />
         //         <span className="ml-2">{options.label}</span>
         //       </div>
@@ -200,7 +208,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
       );
     case 'Checkbox':
       return (
-        // <div className="flex flex-row items-center justify-start border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4 ">
+        // <div className="flex flex-row items-center justify-start border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4 ">
         //   {option.map((options, index) => {
         //     return (
         //         <div
@@ -209,7 +217,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
         //         >
         //           <input
         //             type="checkbox"
-        //             className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+        //             className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-4 h-4"
         //           />
         //           <span className="ml-2 me-2">{options.value}</span>
         //         </div>
@@ -218,12 +226,12 @@ const Control = ({ label, value, setValue, index, options, links }) => {
         // </div>
         <input
           type="checkbox"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-4 h-4"
         />
       );
     case 'Star-Rating':
       return (
-        <div className="star-rating border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4 flex felx-raw">
+        <div className="star-rating border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-4 h-4 flex felx-raw">
           <input type="radio" />
           <input type="radio" />
           <input type="radio" />
@@ -237,7 +245,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
           type="image"
           alt="submit"
           src=""
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4"
         />
       );
     }
@@ -246,16 +254,16 @@ const Control = ({ label, value, setValue, index, options, links }) => {
         <input
           type="image"
           alt="Submit"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4"
         />
       );
     }
     case 'Icon': {
       return (
-        <i className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4 "></i>
+        <i className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4 "></i>
         // <input
         //   type="file"
-        //   className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+        //   className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-4 h-4"
         // />
         // &#8986;
       );
@@ -263,7 +271,7 @@ const Control = ({ label, value, setValue, index, options, links }) => {
     case 'Button':
       return (
         <div className="">
-          <button className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-[79px] py-2 px-4">
+          <button className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-[79px] py-2 px-4">
             Button
           </button>
         </div>
@@ -338,11 +346,10 @@ const Control = ({ label, value, setValue, index, options, links }) => {
       return (
         <div className="">
           <button
-            className={`border rounded-lg w-20 py-2 px-4 focus:outline-none transition-colors duration-300 ${
-              isToggled
-                ? 'bg-green-500 border-green-500'
-                : 'bg-gray-300 border-gray-300'
-            }`}
+            className={`border rounded-lg w-20 py-2 px-4 focus:outline-none transition-colors duration-300 ${isToggled
+              ? 'bg-green-500 border-green-500'
+              : 'bg-gray-300 border-gray-300'
+              }`}
             onClick={handleToggleButton}
           >
             {isToggled ? 'ON' : 'OFF'}
@@ -351,6 +358,67 @@ const Control = ({ label, value, setValue, index, options, links }) => {
       );
     case 'Link':
       return <button className="text-blue-500 hover:underline">Link</button>;
+
+    case 'lookup':
+      let entityType = field?.properties?.entityType?.value
+      let entity = field?.properties?.entity?.value
+      let entityColumn = field?.properties?.entityColumn?.value
+
+
+      const [entityData, setEntityData] = useState([])
+      useEffect(() => {
+        if (entity) {
+          getPages(entity).then((res) => {
+            let default_add = res?.data?.find((page) => {
+              if (page?.type === "default_add") {
+                return page
+              }
+            })?._id
+            getFillData(default_add).then((data) => {
+              // setEntityData(data?.data.map((entity) => {
+              //   return entity?.form_data.map((data) => {
+              //     if (data?.key === entityColumn) {
+              //       return {
+              //         label: data?.value, value: entity._id
+              //       }
+              //     }
+              //   })
+              // }))
+
+              let entityData = []
+
+              data?.data?.map((entity) => {
+                entity?.form_data?.map((data) => {
+                  if (data?.key === entityColumn) {
+                    entityData.push({
+                      label: data?.value, value: entity._id
+                    })
+                  }
+                })
+              })
+              setEntityData(entityData)
+            })
+          }).catch((err) => {
+            console.log(err)
+          })
+        }
+      }, [])
+
+      useEffect(() => {
+      }, [entityData])
+
+      if (!entity) {
+        return <div
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
+        >Lookup</div>
+      }
+      console.log(entityType, entity, entityColumn)
+
+      return <div>
+        {entityType && entity && <CustomSelect options={entityData} setValue={setInputValue} />}
+      </div>;
+    default:
+      return null;
   }
 };
 

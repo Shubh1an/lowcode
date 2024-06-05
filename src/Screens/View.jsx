@@ -52,11 +52,12 @@ const View = () => {
         >
           {
             page?.form_schema?.map((field, index) => {
+              let options = field?.properties?.options?.options || []
               return <div key={index} className={`w-full bg-[#FCF9EE] rounded p-2 my-2 flex flex-col items-left border border-[#F9EFDE]`} >
                 <div className={`font-bold px-2 py-2 rounded flex justify-between`} >
                   <div className="cursor-pointer" >{field?.properties?.displayName?.value}</div>
                 </div>
-                <Control label={field?.control} value={pageData} setValue={setPageData} index={index} />
+                <Control label={field?.control} field={field} value={pageData} setValue={setPageData} index={index} options={options}/>
               </div>
             })
           }

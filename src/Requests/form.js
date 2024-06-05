@@ -13,8 +13,8 @@ export const savePage = async (data) => {
 };
 
 export const getPages = async (entity_id) => {
-  let data = await apiInstance.get('/pages?entity_id=' + entity_id);
-  return data;
+  // let data = await apiInstance.get('/pages?entity_id=' + entity_id);
+  // return data;
 };
 
 export const editPages = async (id, data) => {

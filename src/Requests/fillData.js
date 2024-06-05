@@ -6,7 +6,7 @@ export const fillData = async (data) => {
 }
 
 export const getFillData = async (id) => {
-    let response = await apiInstance.get('/filledData');
+    let response = await apiInstance.get('/filledData?id=' + id);
     return response;
 }
 

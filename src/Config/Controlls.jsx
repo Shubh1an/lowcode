@@ -278,6 +278,7 @@ const controlls = (internal_name, children) => {
           displayName: { type: 'string', label: 'Display Name' },
           required: { type: 'boolean', label: 'Required' },
           entity: { type: 'lookup', label: 'Entity' },
+          entityColumn: { type: 'lookupcolumn', label: 'Entity Column' },
           entityType: { type: 'lookuptype', label: 'Entity Type' },
         }
       }

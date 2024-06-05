@@ -1,6 +1,7 @@
 const { default: apiInstance } = require('./instance');
 
 export const getPages = async (entity_id) => {
+  console.log("fetching for entity", entity_id);
   let data = await apiInstance.get('/pages?entity_id=' + entity_id);
   return data;
 };

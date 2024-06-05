@@ -7,7 +7,8 @@ const CustomSelect = ({ options, setValue }) => {
 
   useEffect(() => {
     if (setValue) {
-      setValue(selectedOption);
+      setValue(selectedOption?.value);
+      console.log("Setting ", selectedOption);
     }
   }, [selectedOption]);
   const toggleDropdown = () => {
@@ -24,9 +25,9 @@ const CustomSelect = ({ options, setValue }) => {
   );
 
   return (
-    <div className="relative inline-block text-left w-full">
+    <div className="relative inline-block text-left w-full ">
       <div>
-        <span className="rounded-md shadow-sm">
+        <span className="rounded-md shadow-sm z-[1]">
           <input
             type="text"
             placeholder="Select..."
@@ -38,7 +39,7 @@ const CustomSelect = ({ options, setValue }) => {
         </span>
       </div>
       {isOpen && (
-        <div className="origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+        <div className="origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-10">
           <div className="py-1">
             <input
               type="text"
