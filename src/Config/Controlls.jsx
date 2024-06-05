@@ -23,7 +23,7 @@ const controlls = (internal_name, children) => {
         },
       };
 
-    case 'multi_line':
+    case 'Multi_Line':
       return {
         properties: {
           displayName: { type: 'string', label: 'Display Name' },
@@ -125,8 +125,8 @@ const controlls = (internal_name, children) => {
       return {
         properties: {
           displayName: { type: 'string', label: 'Display Name' },
-          placeholder: { type: 'string', label: 'Placeholder' },
           required: { type: 'boolean', label: 'Required' },
+          placeholder: { type: 'string', label: 'Placeholder' },
           maxLength: { type: 'number', label: 'Max Length' },
           minLength: { type: 'number', label: 'Min Length' },
           pattern: { type: 'string', label: 'Pattern' },
@@ -140,6 +140,7 @@ const controlls = (internal_name, children) => {
           required: { type: 'boolean', label: 'Required' },
           maxLength: { type: 'number', label: 'Max Length' },
           minLength: { type: 'number', label: 'Min Length' },
+          pattern: { type: 'string', label: 'pattern' },
         },
       };
     }
@@ -148,6 +149,7 @@ const controlls = (internal_name, children) => {
         properties: {
           displayName: { type: 'string', label: 'Display Name' },
           required: { type: 'boolean', label: 'Required' },
+          minDate: { type: 'number', label: 'MinDate' },
         },
       };
     }
@@ -156,6 +158,7 @@ const controlls = (internal_name, children) => {
         properties: {
           displayName: { type: 'string', label: 'Display Name' },
           required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'defaultValue' },
           placeholder: { type: 'string', label: 'Placeholder' },
         },
       };
@@ -187,30 +190,6 @@ const controlls = (internal_name, children) => {
         },
       };
     }
-    case 'Avatar':
-      return {
-        properties: {
-          displayName: { type: 'string', label: 'Display Name' },
-          required: { type: 'boolean', label: 'Required' },
-          options: { type: 'options', label: 'Options' },
-        },
-      };
-    case 'Circular Image':
-      return {
-        properties: {
-          displayName: { type: 'string', label: 'Display Name' },
-          required: { type: 'boolean', label: 'Required' },
-          options: { type: 'options', label: 'Options' },
-        },
-      };
-    case 'Icon':
-      return {
-        properties: {
-          displayName: { type: 'string', label: 'Display Name' },
-          required: { type: 'boolean', label: 'Required' },
-          options: { type: 'options', label: 'Options' },
-        },
-      };
     case 'Button':
       return {
         properties: {
@@ -249,6 +228,7 @@ const controlls = (internal_name, children) => {
           displayName: { type: 'string', label: 'Display Name' },
           required: { type: 'boolean', label: 'Required' },
           defaultValue: { type: 'string', label: 'Default Value' },
+          placeholder: { type: 'string', label: 'Placeholder' },
           options: { type: 'options', label: 'Options' },
         },
       };
@@ -267,12 +247,218 @@ const controlls = (internal_name, children) => {
           displayName: { type: 'string', label: 'Display Name' },
           required: { type: 'boolean', label: 'Required' },
           placeholder: { type: 'string', label: 'Placeholder' },
+          link: { type: 'string', label: 'Link' },
+          pattern: { type: 'string', label: 'Pattern' },
+          max: { type: 'number', label: 'Max Length' },
+          min: { type: 'number', label: 'Min Length' },
+        },
+      };
+    case 'Link List':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          placeholder: { type: 'string', label: 'Placeholder' },
           pattern: { type: 'string', label: 'Pattern' },
           maxLength: { type: 'number', label: 'Max Length' },
           minLength: { type: 'number', label: 'Min Length' },
         },
       };
 
+    case 'Toggle Link':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          options: { type: 'options', label: 'Options' },
+        },
+      };
+
+    case 'Button Groups':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          options: { type: 'options', label: 'Options' },
+          maxLength: { type: 'number', label: 'Max Length' },
+          minLength: { type: 'number', label: 'Min Length' },
+        },
+      };
+    case 'Color Input':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          // id: { type: 'string', label: 'id' },
+        },
+      };
+    case 'File Button':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          options: { type: 'options', label: 'Options' },
+        },
+      };
+    case 'File Dropzone':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          options: { type: 'options', label: 'Options' },
+          maxFile: { type: 'number', label: 'MaxFile' },
+          minFile: { type: 'number', label: 'MinFile' },
+        },
+      };
+    case 'File Input':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          placeholder: { type: 'string', label: 'Placeholder' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          options: { type: 'options', label: 'Options' },
+        },
+      };
+    case 'Microphone':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          options: { type: 'options', label: 'Options' },
+        },
+      };
+    case 'Scanner':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          options: { type: 'options', label: 'Options' },
+          maxFile: { type: 'number', label: 'MaxFile' },
+          minFile: { type: 'number', label: 'MinFile' },
+        },
+      };
+    case 'Signature':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          // defaultValue: { type: 'string', label: 'Default Value' },
+          options: { type: 'options', label: 'Options' },
+          max: { type: 'number', label: 'Max' },
+          min: { type: 'number', label: 'Min' },
+        },
+      };
+    case 'Timer':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+        },
+      };
+    case 'Chat':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          placeholder: { type: 'string', label: 'placeholder' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          maxLength: { type: 'number', label: 'Max' },
+          minLength: { type: 'number', label: 'Min' },
+          authentication: { type: 'boolean', label: 'authentication' },
+        },
+      };
+    case 'Annotation Text':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          maxLength: { type: 'number', label: 'Max' },
+          minLength: { type: 'number', label: 'Min' },
+        },
+      };
+    case 'Text Input':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          placeholder: { type: 'string', label: 'placeholder' },
+          maxLength: { type: 'number', label: 'Max' },
+          minLength: { type: 'number', label: 'Min' },
+        },
+      };
+    case 'Form':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          maxLength: { type: 'number', label: 'Max' },
+          minLength: { type: 'number', label: 'Min' },
+        },
+      };
+    case 'Select':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          options: { type: 'options', label: 'Options' },
+          maxLength: { type: 'number', label: 'Max' },
+          minLength: { type: 'number', label: 'Min' },
+        },
+      };
+    case 'Image':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          options: { type: 'options', label: 'Options' },
+          max: { type: 'number', label: 'Max' },
+          min: { type: 'number', label: 'Min' },
+        },
+      };
+    case 'Editable Text':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'defaultValue' },
+          options: { type: 'options', label: 'Options' },
+          max: { type: 'number', label: 'Max' },
+          min: { type: 'number', label: 'Min' },
+        },
+      };
+    case 'Editable TextArea':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          placeholder: { type: 'string', label: 'Placeholder' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'string', label: 'Default Value' },
+          maxLength: { type: 'number', label: 'Max Length' },
+          minLength: { type: 'number', label: 'Min Length' },
+          pattern: { type: 'string', label: 'Pattern' },
+        },
+      };
+    case 'Password':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          placeholder: { type: 'string', label: 'Placeholder' },
+          required: { type: 'boolean', label: 'Required' },
+          maxLength: { type: 'number', label: 'Max Length' },
+          minLength: { type: 'number', label: 'Min Length' },
+          pattern: { type: 'string', label: 'Pattern' },
+        },
+      };
     default:
       return {
         component: <div>Not Found</div>,
