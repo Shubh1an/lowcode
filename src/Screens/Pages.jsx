@@ -18,7 +18,8 @@ const Pages = () => {
   ]);
   const [cells, setCells] = useState([]);
   const [people, setPeoples] = useState({});
-  let entity_id = location.search.split('=')[1];
+  let entity_id = location.search.split('entity_id=')[1];
+  let module_id = location.search.split('module_id=')[1];
   const handleHide = (column, checked) => {};
   const handleSearch = (value) => {};
 
@@ -72,7 +73,7 @@ const Pages = () => {
         />
         <TableView
           data={{ headers: headers, cells: cells }}
-          linkto={`/builder/editor?editor_id`}
+          linkto={`/builder/editor?module_id=${module_id}&editor_id`}
         />
       </div>
     </div>

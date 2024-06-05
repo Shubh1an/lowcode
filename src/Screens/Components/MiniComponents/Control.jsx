@@ -18,8 +18,11 @@ import {
   FaVolumeUp,
   FaPause,
 } from 'react-icons/fa';
+import CustomSelect from './CustomSelect';
+import { getPageDetails, getPages } from '../../../Requests/page';
+import { getFillData } from '../../../Requests/fillData';
 
-const Control = ({ label, value, setValue, index }) => {
+const Control = ({ label, value, setValue, index, options, links }) => {
   const handleValue = (field) => {
     setValue((prev) => {
       let newValue = [...prev];
@@ -33,6 +36,7 @@ const Control = ({ label, value, setValue, index }) => {
   };
   const [inputValue, setInputValue] = useState('');
   const [isToggled, setIsToggled] = useState(false);
+
   useEffect(() => {
     setInputValue(value[index]?.value);
   }, [value]);
@@ -60,6 +64,7 @@ const Control = ({ label, value, setValue, index }) => {
   const [newOption, setNewOption] = useState('');
   const prefixText = 'Browser ';
   const placeholder = 'Choose File';
+
   const handleOptionSelect = (value) => {
     setSelectedOption(value);
     setIsOpen(false); // Close the dropdown after selecting an option
@@ -272,7 +277,11 @@ const Control = ({ label, value, setValue, index }) => {
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         >
-          <option value="option1">Add Options in property window</option>
+          {options?.map((option, index) => (
+            <option key={index} value={option}>
+              {option}
+            </option>
+          ))}
         </select>
 
         // <select
@@ -336,7 +345,7 @@ const Control = ({ label, value, setValue, index }) => {
       return (
         <input
           type="number"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -345,7 +354,7 @@ const Control = ({ label, value, setValue, index }) => {
       return (
         <input
           type="text"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -354,7 +363,7 @@ const Control = ({ label, value, setValue, index }) => {
       return (
         <input
           type="email"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -362,7 +371,7 @@ const Control = ({ label, value, setValue, index }) => {
     case 'Address':
       return (
         <textarea
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -371,7 +380,7 @@ const Control = ({ label, value, setValue, index }) => {
       return (
         <input
           type="tel"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -381,7 +390,7 @@ const Control = ({ label, value, setValue, index }) => {
       return (
         <input
           type="text"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -390,7 +399,7 @@ const Control = ({ label, value, setValue, index }) => {
       return (
         <input
           type="date"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -399,7 +408,7 @@ const Control = ({ label, value, setValue, index }) => {
       return (
         <input
           type="time"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -408,7 +417,7 @@ const Control = ({ label, value, setValue, index }) => {
       return (
         <input
           type="datetime-local"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#E9E9E9] rounded-lg	bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -445,7 +454,7 @@ const Control = ({ label, value, setValue, index }) => {
       return (
         <input
           type="checkbox"
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+          className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-4 h-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
         />
@@ -535,7 +544,7 @@ const Control = ({ label, value, setValue, index }) => {
     case 'Button':
       return (
         <div className="">
-          <button className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-[79px] py-2 px-4">
+          <button className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-[79px] py-2 px-4">
             Button
           </button>
         </div>
@@ -1097,6 +1106,74 @@ const Control = ({ label, value, setValue, index }) => {
           </div>
         </div>
       );
+
+    case 'lookup':
+      let entityType = field?.properties?.entityType?.value;
+      let entity = field?.properties?.entity?.value;
+      let entityColumn = field?.properties?.entityColumn?.value;
+
+      const [entityData, setEntityData] = useState([]);
+      useEffect(() => {
+        if (entity) {
+          getPages(entity)
+            .then((res) => {
+              let default_add = res?.data?.find((page) => {
+                if (page?.type === 'default_add') {
+                  return page;
+                }
+              })?._id;
+              getFillData(default_add).then((data) => {
+                // setEntityData(data?.data.map((entity) => {
+                //   return entity?.form_data.map((data) => {
+                //     if (data?.key === entityColumn) {
+                //       return {
+                //         label: data?.value, value: entity._id
+                //       }
+                //     }
+                //   })
+                // }))
+
+                let entityData = [];
+
+                data?.data?.map((entity) => {
+                  entity?.form_data?.map((data) => {
+                    if (data?.key === entityColumn) {
+                      entityData.push({
+                        label: data?.value,
+                        value: entity._id,
+                      });
+                    }
+                  });
+                });
+                setEntityData(entityData);
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }, []);
+
+      useEffect(() => {}, [entityData]);
+
+      if (!entity) {
+        return (
+          <div className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4">
+            Lookup
+          </div>
+        );
+      }
+      console.log(entityType, entity, entityColumn);
+
+      return (
+        <div>
+          {entityType && entity && (
+            <CustomSelect options={entityData} setValue={setInputValue} />
+          )}
+        </div>
+      );
+    default:
+      return null;
   }
 };
 

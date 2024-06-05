@@ -459,6 +459,16 @@ const controlls = (internal_name, children) => {
           pattern: { type: 'string', label: 'Pattern' },
         },
       };
+    case 'lookup':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          entity: { type: 'lookup', label: 'Entity' },
+          entityColumn: { type: 'lookupcolumn', label: 'Entity Column' },
+          entityType: { type: 'lookuptype', label: 'Entity Type' },
+        },
+      };
     default:
       return {
         component: <div>Not Found</div>,

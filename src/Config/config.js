@@ -49,6 +49,7 @@ const config = {
     'Editable TextArea',
     'Password',
     'Comment',
+    'lookup',
     // "gender",
 
     // "video",

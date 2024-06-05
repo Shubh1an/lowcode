@@ -6,11 +6,15 @@ import config from '../Config/config.js';
 import Icons from '../Components/Utility/Icons';
 import { useDrag, useDrop } from 'react-dnd';
 import Control from './Components/MiniComponents/Control';
-import { getPageDetails, updatePage } from '../Requests/page';
+import { getPageDetails, getPages, updatePage } from '../Requests/page';
 import { Link } from 'react-router-dom';
+import { getEntities } from '../Requests/entity';
+import CustomSelect from './Components/MiniComponents/CustomSelect';
 
 const Editor = () => {
-  let editor_id = location.search.split('=')[1];
+  let editor_id = location.search.split('editor_id=')[1];
+  let module_id = location.search.split('module_id=')[1].split('&')[0];
+  let entity_id = location.search.split('entity_id=')[1].split('&')[0];
   const [active, setActive] = useState(0);
   const [selectedControl, setSelectedControl] = useState(null);
 
@@ -27,13 +31,12 @@ const Editor = () => {
     getPageDetails(editor_id).then((res) => {
       // setPage(res.data.form_schema)
       // setPageData(res.data.page_data)
-      console.log(res.data.form_schema);
-      setPageData(res.data.form_schema);
+      setPageData(res?.data?.form_schema);
       res?.data?.form_schema?.forEach((item, index) => {
         // { label, properties: controlls(label)?.properties, child: [] }
         let pageControl = {
-          label: item.control,
-          properties: controlls(item.control).properties,
+          label: item?.control,
+          properties: controlls(item?.control)?.properties,
           child: [],
         };
         setPage((prev) => [...prev, pageControl]);
@@ -87,10 +90,7 @@ const Editor = () => {
     setSelectedControl(page.length > 0 ? page.length - 1 : null);
   }, [page]);
 
-  useEffect(() => {
-    console.log(pageData);
-    console.log(page);
-  }, [pageData]);
+  useEffect(() => {}, [pageData]);
 
   return (
     <div className="w-full h-[94%] bg-[#FCF9EE] flex flex-row p-4">
@@ -129,6 +129,9 @@ const Editor = () => {
           selectedControl={selectedControl}
           pageData={pageData}
           setPageData={setPageData}
+          module_id={module_id}
+          entity_id={entity_id}
+          editor_id={editor_id}
         />
       </div>
     </div>
@@ -207,7 +210,7 @@ const EditorComponent = ({
                   className="cursor-pointer"
                   onClick={() => setSelectedControl(index)}
                 >
-                  {pageData[index]?.properties?.displayName.value ||
+                  {pageData[index]?.properties?.displayName?.value ||
                     item?.label}
                 </div>
                 <button
@@ -241,7 +244,15 @@ const EditorComponent = ({
   );
 };
 
-const PropertyWindow = ({ page, selectedControl, pageData, setPageData }) => {
+const PropertyWindow = ({
+  page,
+  selectedControl,
+  pageData,
+  setPageData,
+  module_id,
+  entity_id,
+  editor_id,
+}) => {
   let properties = page[selectedControl]?.properties;
 
   if (!properties) return null;
@@ -256,6 +267,9 @@ const PropertyWindow = ({ page, selectedControl, pageData, setPageData }) => {
             pageData={pageData}
             setPageData={setPageData}
             selectedControl={selectedControl}
+            module_id={module_id}
+            entity_id={entity_id}
+            editor_id={editor_id}
           />
         );
       })}
@@ -269,6 +283,9 @@ const PropertyInput = ({
   setPageData,
   selectedControl,
   property,
+  module_id,
+  entity_id,
+  editor_id,
 }) => {
   let key = property_key;
   const [options, setOptions] = useState([]);
@@ -403,6 +420,37 @@ const PropertyInput = ({
           </div>
         </div>
       );
+    case 'lookup':
+      return (
+        <div className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm">
+          <LookupComponent
+            module_id={module_id}
+            entity_id={entity_id}
+            setInputValue={setInputValue}
+          />
+        </div>
+      );
+    case 'lookupcolumn':
+      return (
+        <div className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm">
+          <LookupColumnComponent
+            pageData={pageData}
+            setInputValue={setInputValue}
+            selectedControl={selectedControl}
+          />
+        </div>
+      );
+    case 'lookuptype':
+      return (
+        <select
+          className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        >
+          <option value="onetoone">One to One</option>
+          <option value="onetomany">One to Many</option>
+        </select>
+      );
   }
 };
 const Property = ({
@@ -411,6 +459,9 @@ const Property = ({
   setPageData,
   selectedControl,
   property_key,
+  module_id,
+  entity_id,
+  editor_id,
 }) => {
   return (
     <div className="w-full bg-[#FCF9EE] rounded p-4 my-4 flex-col items-center justify-between border border-[#F9EFDE]">
@@ -423,6 +474,9 @@ const Property = ({
           pageData={pageData}
           setPageData={setPageData}
           selectedControl={selectedControl}
+          module_id={module_id}
+          entity_id={entity_id}
+          editor_id={editor_id}
         />
       </div>
     </div>
@@ -441,6 +495,65 @@ const EditorTopBar = ({ editorId }) => {
         </Link>
       </div>
     </div>
+  );
+};
+
+const LookupComponent = ({ module_id, entity_id, setInputValue }) => {
+  const [entities, setEntities] = useState([]);
+  useEffect(() => {
+    getEntities(module_id).then((data) => {
+      let entities = data?.data;
+      entities.forEach((entity, index) => {
+        if (entity_id === entity._id) {
+          // Remove the entity from the array
+          entities.splice(index, 1);
+        }
+      });
+      setEntities(entities);
+    });
+  }, []);
+  return (
+    <CustomSelect
+      options={entities.map((entity) => {
+        return {
+          label: entity.name,
+          value: entity._id,
+        };
+      })}
+      setValue={setInputValue}
+    />
+  );
+};
+
+const LookupColumnComponent = ({
+  pageData,
+  setInputValue,
+  selectedControl,
+}) => {
+  const [page, setPage] = useState([]);
+  useEffect(() => {
+    let pageDetailId = pageData[selectedControl]?.properties?.entity?.value;
+    if (pageDetailId) {
+      getPages(pageDetailId).then((data) => {
+        let form_schema = data?.data?.find((page) => {
+          if (page?.type === 'default_add') {
+            return page;
+          }
+        })?.form_schema;
+        setPage(form_schema || []);
+      });
+    }
+  }, [pageData]);
+  return (
+    <CustomSelect
+      options={page.map((entity) => {
+        return {
+          label: entity?.properties?.displayName?.value,
+          value: entity?.properties?.displayName?.value,
+        };
+      })}
+      setValue={setInputValue}
+    />
   );
 };
 export default Editor;
