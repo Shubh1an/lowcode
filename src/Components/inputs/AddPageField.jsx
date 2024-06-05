@@ -47,7 +47,7 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
       return (
         <input
           type="text"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
           onChange={(e) => {
             let payload = {
               id: id,
@@ -69,7 +69,7 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
               >
                 <input
                   type="radio"
-                  className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+                  className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-4 h-4"
                   name={id}
                   onChange={(e) => {
                     let payload = {
@@ -116,7 +116,7 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
 
           <input
             type="text"
-            className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+            className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
             onChange={(e) => {
               setAddOptionValue({
                 label: e.target.value,
@@ -126,7 +126,7 @@ const InputByType = ({ type, options, id, handleProperties, defaultValue }) => {
             value={addOptionValue?.label || ''}
           />
           <button
-            className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold mt-2"
+            className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold mt-2"
             onClick={() => {
               let payload = {
                 id: id,

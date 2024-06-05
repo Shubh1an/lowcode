@@ -64,7 +64,7 @@ function Kanban() {
         },
         {
           status: 'close',
-          color: '#227A60',
+          color: '#000',
           id: uuidv4(),
         },
       ],
@@ -95,7 +95,7 @@ function Kanban() {
       <div className="w-1/4 h-full bg-[#fff] rounded-2xl flex flex-col p-4">
         <BoardInput
           AdvancecFields={AdvancecFields}
-          extraClass="w-full text-[#4D4D4D] hover:text-[#FFFFFF] hover:bg-[#227A60] text-center text-sm border border-[#E9E9E9] rounded-lg py-2"
+          extraClass="w-full text-[#4D4D4D] hover:text-[#FFFFFF] hover:bg-[#000] text-center text-sm border border-[#E9E9E9] rounded-lg py-2"
         />
       </div>
       <div

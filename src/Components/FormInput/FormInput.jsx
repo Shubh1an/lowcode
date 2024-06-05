@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
-import { FaStar } from 'react-icons/fa';
-import { IoMdStar, IoMdStarOutline } from 'react-icons/io';
 
 const FormInput = ({
   field,
@@ -10,7 +8,6 @@ const FormInput = ({
   deleteProp = <></>,
   onchange = () => {},
   onUpload = (file) => {},
-  fieldValue = {},
 }) => {
   const {
     title: label,
@@ -28,7 +25,6 @@ const FormInput = ({
     labelClass = '',
     index,
   } = field;
-  console.log('field', field);
   const [file, setFile] = useState(null);
   const [tempOptions, setTempOptions] = useState(options);
   const [isOpen, setIsOpen] = useState(false);
@@ -110,11 +106,7 @@ const FormInput = ({
         type={type}
         options={options}
         id={id}
-        defaultValue={
-          defaultValue ||
-          fieldValue?.data?.[propertyValues?.display_name]?.value ||
-          ''
-        }
+        defaultValue={defaultValue}
         rows={rows}
         isOpen={isOpen}
         toggleOpen={toggleMultiSelect}
@@ -148,10 +140,8 @@ const InputByType = ({
   handleFileChange,
   handleUpload,
 }) => {
-  console.log('type', type);
-  console.log('Values', defaultValue);
   switch (type) {
-    case 'Single Line':
+    case 'Single Line1':
       return (
         <input
           type="text"
@@ -167,7 +157,6 @@ const InputByType = ({
           id={id}
           rows={rows}
           placeholder={defaultValue}
-          onChange={onchange}
         />
       );
     case 'Description':
@@ -177,7 +166,6 @@ const InputByType = ({
           id={id}
           rows={rows}
           placeholder={defaultValue}
-          onChange={onchange}
         />
       );
     case 'Number':
@@ -195,7 +183,6 @@ const InputByType = ({
           type="text"
           className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
           placeholder={defaultValue}
-          onChange={onchange}
         />
       );
     case 'Email':
@@ -214,7 +201,6 @@ const InputByType = ({
           id={id}
           rows={rows}
           placeholder={defaultValue}
-          onChange={onchange}
         />
       );
     case 'Phone': {
@@ -222,9 +208,6 @@ const InputByType = ({
         <input
           type="tel"
           className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
-          onChange={onchange}
-          placeholder={defaultValue}
-          id={id}
         />
       );
     }
@@ -234,8 +217,6 @@ const InputByType = ({
           type="text"
           className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
           onChange={onchange}
-          placeholder={defaultValue}
-          id={id}
         />
       );
     case 'Date':
@@ -244,8 +225,6 @@ const InputByType = ({
           type="date"
           className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
           defaultValue={defaultValue}
-          id={id}
-          onChange={onchange}
         />
       );
     case 'Time':
@@ -255,7 +234,6 @@ const InputByType = ({
           className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
           id={id}
           value={defaultValue}
-          onChange={onchange}
         />
       );
     case 'Date-Time':
@@ -264,8 +242,6 @@ const InputByType = ({
           type="datetime-local"
           className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
           id={id}
-          value={defaultValue}
-          onChange={onchange}
         />
       );
     case 'Dropdown':
@@ -348,73 +324,73 @@ const InputByType = ({
         />
       );
     }
-    case 'Multi Select': {
-      return (
-        <div ref={dropdownRef} className="relative">
-          <div
-            className={`block w-full content-center py-2 px-4 ${selectedOptions.length === 0 ? 'text-[#A6A6A6]' : 'bg-[#E9F2EF]'} border border-gray-300 rounded-lg text-left relative ${
-              isOpen ? ' bg-gray-100' : ''
-            }`}
-            onClick={() => toggleOpen()}
-          >
-            {selectedOptions.length === 0
-              ? '-- Select --'
-              : selectedOptions.map((option) => (
-                  <span
-                    key={option.value}
-                    className="inline-block bg-[#FFFFFF] rounded-lg mr-1 px-2"
-                  >
-                    {option.label}
-                    <button
-                      className="ml-1 focus:outline-none"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOptionToggle(option);
-                      }}
-                    >
-                      &#10005;
-                    </button>
-                  </span>
-                ))}
-          </div>
-          {isOpen && (
-            <div className="absolute top-full left-0 z-50 w-full bg-white border border-gray-300 shadow-md rounded-t-lg">
-              <div className="p-2">
-                {options?.map((option) => (
-                  <div
-                    key={option.value}
-                    className={`items-center p-2 cursor-pointer hover:bg-gray-100 ${
-                      selectedOptions.includes(option) ? 'bg-gray-200' : ''
-                    }`}
-                    onClick={() => handleOptionToggle(option)}
-                  >
-                    <span>{option.label}</span>
-                    {selectedOptions.includes(option) && (
-                      <span className="ml-auto">✓</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-end px-2 pb-2">
-                <button
-                  className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 mr-2"
-                  onClick={clearSelection}
-                >
-                  Clear
-                </button>
-                <button
-                  className="px-4 py-2 border border-gray-300 rounded-lg bg-blue-500 text-white"
-                  onClick={() => toggleOpen()}
-                >
-                  Done
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-    case 'Drop Down':
+    // case 'Single Line': {
+    //   return (
+    //     <div ref={dropdownRef} className="relative">
+    //       <div
+    //         className={`block w-full content-center py-2 px-4 ${selectedOptions.length === 0 ? 'text-[#A6A6A6]' : 'bg-[#E9F2EF]'} border border-gray-300 rounded-lg text-left relative ${
+    //           isOpen ? ' bg-gray-100' : ''
+    //         }`}
+    //         onClick={() => toggleOpen()}
+    //       >
+    //         {selectedOptions.length === 0
+    //           ? '-- Select --'
+    //           : selectedOptions.map((option) => (
+    //               <span
+    //                 key={option.value}
+    //                 className="inline-block bg-[#FFFFFF] rounded-lg mr-1 px-2"
+    //               >
+    //                 {option.label}
+    //                 <button
+    //                   className="ml-1 focus:outline-none"
+    //                   onClick={(e) => {
+    //                     e.stopPropagation();
+    //                     handleOptionToggle(option);
+    //                   }}
+    //                 >
+    //                   &#10005;
+    //                 </button>
+    //               </span>
+    //             ))}
+    //       </div>
+    //       {isOpen && (
+    //         <div className="absolute top-full left-0 z-50 w-full bg-white border border-gray-300 shadow-md rounded-t-lg">
+    //           <div className="p-2">
+    //             {options?.map((option) => (
+    //               <div
+    //                 key={option.value}
+    //                 className={`items-center p-2 cursor-pointer hover:bg-gray-100 ${
+    //                   selectedOptions.includes(option) ? 'bg-gray-200' : ''
+    //                 }`}
+    //                 onClick={() => handleOptionToggle(option)}
+    //               >
+    //                 <span>{option.label}</span>
+    //                 {selectedOptions.includes(option) && (
+    //                   <span className="ml-auto">✓</span>
+    //                 )}
+    //               </div>
+    //             ))}
+    //           </div>
+    //           <div className="flex justify-end px-2 pb-2">
+    //             <button
+    //               className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 mr-2"
+    //               onClick={clearSelection}
+    //             >
+    //               Clear
+    //             </button>
+    //             <button
+    //               className="px-4 py-2 border border-gray-300 rounded-lg bg-blue-500 text-white"
+    //               onClick={() => toggleOpen()}
+    //             >
+    //               Done
+    //             </button>
+    //           </div>
+    //         </div>
+    //       )}
+    //     </div>
+    //   );
+    // }
+    case 'Dropdown':
       return (
         <select
           value={options.value}
@@ -445,31 +421,46 @@ const InputByType = ({
           })}
         </div>
       );
-    case 'Star Rating':
-      let max = 5;
+    case 'Alert': {
       return (
-        <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
-          {[...Array(max)].map((star, i) => {
-            return (
-              <label key={i}>
-                <input
-                  type="radio"
-                  name="rating"
-                  value={i + 1}
-                  style={{ display: 'none' }} // Hide the radio input
-                />
-                <FaStar
-                  color={i < defaultValue ? '#ffc107' : '#e4e5e9'}
-                  size={24}
-                  style={{ cursor: 'pointer' }} // Change cursor to pointer to indicate clickability
-                  className="star"
-                  onClick={() => onchange({ target: { value: i + 1 } })}
-                />
-              </label>
-            );
-          })}
-        </div>
+        <input
+          type="text"
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+        />
       );
+    }
+    case 'Avatar': {
+      return (
+        <input
+          type="image"
+          alt="submit"
+          src=""
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+        />
+      );
+    }
+    case 'Circular Image': {
+      return (
+        <input
+          type="image"
+          alt="Submit"
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+        />
+      );
+    }
+    case 'Divider': {
+      return (
+        <input
+          type="text"
+          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+        />
+      );
+    }
+    case 'Icon': {
+      return (
+        <i className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4" />
+      );
+    }
 
     default:
       return <input type="text" />;

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
-import { Link } from 'react-router-dom';
 
 const AddNewButton = ({ onclick, isDropDown }) => {
   const types = ['Form', 'View'];

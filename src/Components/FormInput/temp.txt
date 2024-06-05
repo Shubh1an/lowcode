@@ -2,7 +2,7 @@ case 'Single Line':
       return (
         <input
           type="text"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
           onChange={onchange}
           placeholder={defaultValue}
         />
@@ -18,7 +18,7 @@ case 'Single Line':
               >
                 <input
                   type="radio"
-                  className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+                  className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-4 h-4"
                   name={id}
                 />
                 <label className="ml-2 text-lg font-bold cursor-pointer">
@@ -32,7 +32,7 @@ case 'Single Line':
     case 'textarea':
       return (
         <textarea
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-full py-2 px-4"
           placeholder={defaultValue}
           rows={rows}
         />
@@ -41,7 +41,7 @@ case 'Single Line':
       return (
         <input
           type="email"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
           placeholder={defaultValue}
         />
       );
@@ -49,7 +49,7 @@ case 'Single Line':
       return (
         <input
           type="number"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
           defaultValue={defaultValue}
           placeholder={defaultValue}
         />
@@ -58,7 +58,7 @@ case 'Single Line':
       return (
         <input
           type="date"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
         />
       );
 
@@ -66,7 +66,7 @@ case 'Single Line':
       return (
         <input
           type="time"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
         />
       );
     case 'checkbox':
@@ -80,7 +80,7 @@ case 'Single Line':
               >
                 <input
                   type="checkbox"
-                  className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+                  className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-4 h-4"
                   name={id}
                 />
                 <span className="ml-2">{option}</span>
@@ -93,17 +93,17 @@ case 'Single Line':
       return (
         <input
           type="tel"
-          className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
         />
       );
 
     case 'DropDown': {
       return (
-        <select className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
+        <select className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4">
           {options?.map((option, index) => {
             return (
               <option
-                className="border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4"
+                className="border border-[#ADADAD] rounded-lg	bg-[#FCF9EE] w-full py-2 px-4"
                 key={index}
               >
                 {option}
@@ -124,7 +124,7 @@ case 'Single Line':
               >
                 <input
                   type="radio"
-                  className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-4 h-4"
+                  className="border border-[#ADADAD] rounded-lg bg-[#FCF9EE] w-4 h-4"
                   name={id}
                 />
                 <span className="ml-2">{option}</span>
@@ -139,7 +139,7 @@ case 'Single Line':
       return (
         <div ref={dropdownRef} className="relative">
           <div
-            className={`block w-full content-center py-2 px-4 ${selectedOptions.length === 0 ? 'text-[#A6A6A6]' : 'bg-[#E9F2EF]'} border border-gray-300 rounded-lg text-left relative ${
+            className={`block w-full content-center py-2 px-4 ${selectedOptions.length === 0 ? 'text-[#A6A6A6]' : 'bg-[#FCF9EE]'} border border-gray-300 rounded-lg text-left relative ${
               isOpen ? 'bg-gray-100' : ''
             }`}
             onClick={() => toggleOpen()}

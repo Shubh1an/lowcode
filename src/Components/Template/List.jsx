@@ -87,7 +87,7 @@ const List = () => {
               className={`mb-2 w-[98%] m-auto ${view ? 'grid grid-cols-4 space-x-4' : 'space-y-4'}`}
             >
               {dummyData.map((data, key) => (
-                <div className={`py-2 px-2 bg-[#E9F2EF] rounded-xl`} key={key}>
+                <div className={`py-2 px-2 bg-[#FCF9EE] rounded-xl`} key={key}>
                   <div
                     className={`space-x-2 ${!view ? 'flex' : 'flex-col w-[90%] mx-auto space-y-4'}`}
                   >
