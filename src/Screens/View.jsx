@@ -42,6 +42,9 @@ const View = () => {
     });
   };
 
+  const [isValid, setIsValid] = useState(true);
+  const [isError, setIsError] = useState(false);
+
   return (
     <div className="w-full h-[94%] bg-[#FCF9EE] flex flex-col p-4">
       <div className="w-full h-full bg-[#FFF] rounded flex flex-col">
@@ -58,8 +61,12 @@ const View = () => {
                   className={`font-bold px-2 py-2 rounded flex justify-between`}
                 >
                   <div className="cursor-pointer">
-                    {field?.properties?.displayName?.value}
+                    {field?.properties?.displayName?.value}{' '}
+                    {field?.properties?.required?.value === 'true' ? (
+                      <span className="text-red-500">*</span>
+                    ) : null}
                   </div>
+                  <div className="cursor-pointer"></div>
                 </div>
                 <Control
                   label={field?.control}
@@ -68,17 +75,30 @@ const View = () => {
                   setValue={setPageData}
                   index={index}
                   options={options}
+                  isValid={isValid}
+                  setIsValid={setIsValid}
+                  isError={isError}
+                  setIsError={setIsError}
+                  name={field?.properties?.displayName?.value}
                 />
               </div>
             );
           })}
+          <div>
+            {isError ? <p className="text-red-500">{isError}</p> : null}
+          </div>
         </div>
         <div className="w-full bg-[#fff] flex flex-col p-4 justify-end">
           <button
-            className="justify-center items-center rounded flex flex-col items-left border border-[#F9EFDE] font-bold text-[#FFF] px-4 py-2 text-center text-sm border border-[#E9E9E9] rounded-lg w-fit bg-[#F29900]"
+            className="justify-center items-center rounded flex flex-col items-left border border-[#F9EFDE] font-bold text-[#FFF] px-4 py-2 text-center text-sm border border-[#E9E9E9] rounded-lg w-fit bg-[#F29900]
+            disabled:bg-[#E9E9E9]
+            disabled:text-[#A9A9A9]
+            disabled:border-[#E9E9E9]
+            "
             onClick={() => {
               handleSubmit();
             }}
+            disabled={isError}
           >
             Submit
           </button>

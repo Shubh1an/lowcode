@@ -65,6 +65,7 @@ const Editor = () => {
   // use
   const handleDrop = ({ label }) => {
     if (!isChildHovering) {
+      console.log('Properties', controlls(label)?.properties);
       setPage([
         ...page,
         { label, properties: controlls(label)?.properties, child: [] },
@@ -74,6 +75,13 @@ const Editor = () => {
           ...prev,
           {
             control: label,
+            properties: {
+              ...controlls(label)?.properties,
+              displayName: {
+                value: 'Display Name ' + (prev.length + 1),
+                options: [],
+              },
+            },
           },
         ];
       });
@@ -292,6 +300,11 @@ const PropertyInput = ({
   const [option, setOption] = useState('');
 
   const [inputValue, setInputValue] = useState('');
+
+  useEffect(() => {
+    let inputValue = pageData[selectedControl]?.properties?.[key]?.value;
+    setInputValue(inputValue);
+  }, [pageData, selectedControl]);
 
   const addOption = () => {
     if (option === '') return;

@@ -17,8 +17,8 @@ const controlls = (internal_name, children) => {
           placeholder: { type: 'string', label: 'Placeholder' },
           required: { type: 'boolean', label: 'Required' },
           defaultValue: { type: 'string', label: 'Default Value' },
-          maxLength: { type: 'number', label: 'Max Length' },
-          minLength: { type: 'number', label: 'Min Length' },
+          // maxLength: { type: 'number', label: 'Max Length' },
+          // minLength: { type: 'number', label: 'Min Length' },
           pattern: { type: 'string', label: 'Pattern' },
         },
       };
@@ -30,12 +30,22 @@ const controlls = (internal_name, children) => {
           placeholder: { type: 'string', label: 'Placeholder' },
           required: { type: 'boolean', label: 'Required' },
           defaultValue: { type: 'string', label: 'Default Value' },
-          maxLength: { type: 'number', label: 'Max Length' },
-          minLength: { type: 'number', label: 'Min Length' },
+          // maxLength: { type: 'number', label: 'Max Length' },
+          // minLength: { type: 'number', label: 'Min Length' },
+          // pattern: { type: 'string', label: 'Pattern' },
+        },
+      };
+    case 'Number':
+      return {
+        properties: {
+          displayName: { type: 'string', label: 'Display Name' },
+          required: { type: 'boolean', label: 'Required' },
+          defaultValue: { type: 'number', label: 'Default Value' },
+          // max: { type: 'number', label: 'Max Length' },
+          // min: { type: 'number', label: 'Min Length' },
           pattern: { type: 'string', label: 'Pattern' },
         },
       };
-
     case 'dropdown':
       return {
         properties: {
@@ -80,16 +90,7 @@ const controlls = (internal_name, children) => {
           minLength: { type: 'number', label: 'Min Length' },
         },
       };
-    case 'Number':
-      return {
-        properties: {
-          displayName: { type: 'string', label: 'Display Name' },
-          required: { type: 'boolean', label: 'Required' },
-          defaultValue: { type: 'number', label: 'Default Value' },
-          max: { type: 'number', label: 'Max Length' },
-          min: { type: 'number', label: 'Min Length' },
-        },
-      };
+
     case 'Name':
       return {
         properties: {

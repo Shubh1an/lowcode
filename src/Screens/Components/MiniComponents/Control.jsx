@@ -22,7 +22,21 @@ import CustomSelect from './CustomSelect';
 import { getPageDetails, getPages } from '../../../Requests/page';
 import { getFillData } from '../../../Requests/fillData';
 
-const Control = ({ label, value, setValue, index, options, links, field }) => {
+const Control = ({
+  label,
+  value,
+  setValue,
+  index,
+  options,
+  links,
+  field,
+  isValid,
+  isError,
+  setIsValid = () => {},
+  setIsError = () => {},
+  name,
+}) => {
+  const regex = field?.properties?.pattern?.value;
   const handleValue = (field) => {
     setValue((prev) => {
       let newValue = [...prev];
@@ -36,6 +50,21 @@ const Control = ({ label, value, setValue, index, options, links, field }) => {
   };
   const [inputValue, setInputValue] = useState('');
   const [isToggled, setIsToggled] = useState(false);
+
+  useEffect(() => {
+    // check if the value is valid
+    if (regex && inputValue) {
+      const isValid = new RegExp(regex).test(inputValue);
+      setIsValid(isValid);
+      if (!isValid) {
+        setIsError('Invalid input: ' + name);
+      } else {
+        setIsError('');
+      }
+    } else {
+      setIsError('');
+    }
+  }, [inputValue]);
 
   useEffect(() => {
     setInputValue(value[index]?.value);
@@ -258,6 +287,7 @@ const Control = ({ label, value, setValue, index, options, links, field }) => {
           className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
+          placeholder={field?.properties?.placeholder?.value || 'Enter Value'}
         />
       );
     case 'Multi_Line':
@@ -266,6 +296,7 @@ const Control = ({ label, value, setValue, index, options, links, field }) => {
           className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
+          placeholder={field?.properties?.placeholder?.value || 'Enter Value'}
         />
       );
     case 'dropdown':
@@ -346,6 +377,7 @@ const Control = ({ label, value, setValue, index, options, links, field }) => {
           className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
+          placeholder={field?.properties?.placeholder?.value || 'Enter Value'}
         />
       );
     case 'Name':
@@ -364,6 +396,7 @@ const Control = ({ label, value, setValue, index, options, links, field }) => {
           className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
+          placeholder={field?.properties?.placeholder?.value || 'Enter Value'}
         />
       );
     case 'Address':
@@ -635,7 +668,16 @@ const Control = ({ label, value, setValue, index, options, links, field }) => {
         </div>
       );
     case 'Link':
-      return <button className="text-blue-500 hover:underline">Link</button>;
+      return (
+        <input
+          type="text"
+          className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm"
+          placeholder="https://example.com"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder={field?.properties?.placeholder?.value || 'Enter Value'}
+        />
+      );
 
     case 'Link List':
       return (
