@@ -19,7 +19,7 @@ const TableView = ({ data = { headers: [], cells: [] }, linkto }) => {
       </div>
       {cells.map((row, index) => {
         return (
-          <Link to={`${linkto}=${row?._id}`} key={index + '_link'}>
+          <Link to={`${linkto}=${row?.id}`} key={index + '_link'}>
             <div
               className={`w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer  ${row?.['type'] == 'defination' ? 'bg-[#E9E9E9]' : ''}`}
               key={index + '_cell'}

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import TopBar from './Components/TopBar';
-import { getModules, saveModule } from '../Requests/module';
+import { saveModule } from '../Graphql/moduleMutation';
+import { getModules } from '../Graphql/modelQuery';
 import TableView from './Components/MiniComponents/Grid';
-
 const Modules = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalForm, setModalForm] = useState({
@@ -13,28 +13,35 @@ const Modules = () => {
   const handleSearch = (value) => {};
   const [view, setView] = useState(true);
   const [cells, setCells] = useState([]);
+
   const handleSubmit = () => {
-    console.log(modalForm);
+    // @ts-ignore
     saveModule(modalForm).then(() => {
-      setShowModal(false);
       fetchModules();
     });
   };
 
   const fetchModules = async () => {
-    const modules = await getModules();
-    let data = modules?.data;
-    if (data) {
-      let headers_gen = Object.keys(data?.[0] || {});
-      headers_gen.forEach((header, index) => {
-        if (header === '_id' || header === '__v') {
-          headers_gen.splice(index, 1);
-        }
-      });
-      setHeaders(headers_gen);
-      setCells(data);
+    try {
+      console.log('Loading modules at:', Date.now());
+      //setLoading(true);
+      const modulesData = await getModules();
+
+      const data = modulesData.modules;
+      if (data) {
+        const headers_gen = Object.keys(data?.[0] || {}).filter(
+          (header) => header !== 'id' && header !== '__v',
+        );
+        setHeaders(headers_gen);
+        setCells(data);
+      }
+    } catch (error) {
+      console.error('Error fetching modules:', error);
+    } finally {
+      //setLoading(false); // Set loading state to false after fetching
     }
   };
+
   useEffect(() => {
     fetchModules();
   }, []);
@@ -43,6 +50,7 @@ const Modules = () => {
     <div className="w-full h-full bg-[#FCF9EE] flex flex-col p-4">
       <div className="w-full h-full bg-[#FFF] rounded overflow-auto">
         <TopBar
+          // @ts-ignore
           label={'Modules'}
           showModal={showModal}
           setShowModal={setShowModal}
