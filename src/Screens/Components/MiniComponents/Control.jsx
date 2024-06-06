@@ -430,7 +430,7 @@ const Control = ({ label, value, setValue, index, options, links, field }) => {
         // />
 
         <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
-          {option.map((options, index) => {
+          {options?.map((option, index) => {
             return (
               <div
                 className="flex flex-row items-center justify-start "
@@ -442,7 +442,7 @@ const Control = ({ label, value, setValue, index, options, links, field }) => {
                   onChange={(e) => handleValue(e.target.value)}
                   value={inputValue}
                 />
-                <span className="ml-2">{options.label}</span>
+                <span className="ml-2">{option.label}</span>
               </div>
             );
           })}
