@@ -22,7 +22,7 @@ import CustomSelect from './CustomSelect';
 import { getPageDetails, getPages } from '../../../Requests/page';
 import { getFillData } from '../../../Requests/fillData';
 
-const Control = ({ label, value, setValue, index, options, links }) => {
+const Control = ({ label, value, setValue, index, options, links, field }) => {
   const handleValue = (field) => {
     setValue((prev) => {
       let newValue = [...prev];
@@ -53,14 +53,12 @@ const Control = ({ label, value, setValue, index, options, links }) => {
     setIsToggled(!isToggled);
   };
   const [buttons, setButtons] = useState([]);
-  const [links, setLinks] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
   const [isOpendropdown, setIsOpendropdown] = useState(false);
   const [isLinkVisible, setIsLinkVisible] = useState(false);
   const [color, setColor] = useState('#ff0000');
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [options, setOptions] = useState([]);
   const [newOption, setNewOption] = useState('');
   const prefixText = 'Browser ';
   const placeholder = 'Choose File';
