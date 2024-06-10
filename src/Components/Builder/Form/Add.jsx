@@ -252,7 +252,7 @@ const Add = ({ newPageData, selectedPage }) => {
                   icon={field.icon}
                   onclick={() => setActiveField(index)}
                   titleClass={''}
-                  extraClass="w-full text-[#4D4D4D] hover:text-[#FFFFFF] hover:bg-[#227A60] text-center text-sm border border-[#E9E9E9] rounded-lg py-2"
+                  extraClass="w-full text-[#4D4D4D] hover:text-[#FFFFFF] hover:bg-[#000] text-center text-sm border border-[#E9E9E9] rounded-lg py-2"
                   index={index}
                   field={field}
                 />
@@ -267,7 +267,7 @@ const Add = ({ newPageData, selectedPage }) => {
       >
         <BuildFormNav setFormName={setPageName} formName={pageName} />
         <div
-          className={`max-h-[65vh] border-2 ${isActive ? ' border-[#227A60]' : 'border-transparent'} p-4 flex flex-wrap overflow-auto justify-around`}
+          className={`max-h-[65vh] border-2 ${isActive ? ' border-[#000]' : 'border-transparent'} p-4 flex flex-wrap overflow-auto justify-around`}
         >
           {formFields.map((field, index) => {
             console.log('field', field);
@@ -288,7 +288,7 @@ const Add = ({ newPageData, selectedPage }) => {
                         );
                       }}
                     >
-                      <FaTrash className="text-[#227A60] cursor-pointer" />
+                      <FaTrash className="text-[#000] cursor-pointer" />
                     </div>
                   }
                 />
@@ -341,12 +341,12 @@ const Footer = ({ handleFormSubmit }) => {
     <div className="w-full h-[60px] border-t-[1px] border-[#E9E9E9] mt-auto">
       <div className="flex justify-start items-center h-full py-4">
         <button
-          className="bg-[#227A60] text-[#fff] px-4 py-1 rounded-md mx-4 font-bold"
+          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mx-4 font-bold"
           onClick={handleFormSubmit}
         >
           Save
         </button>
-        <button className="text-[#227A60] px-4 py-1 rounded-md border border-[#227A60] font-bold">
+        <button className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold">
           Cancel
         </button>
       </div>

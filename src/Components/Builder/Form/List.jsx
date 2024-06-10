@@ -401,7 +401,7 @@ const Table = ({ headers, data, onNewPage, setSelectedPage }) => {
         })
       ) : (
         <div className="w-full flex flex-row px-[2px] py-[1px]">
-          <div className="w-full flex justify-center items-center text-base	font-medium	mx-[2px] py-2 bg-[#E9F2EF]">
+          <div className="w-full flex justify-center items-center text-base	font-medium	mx-[2px] py-2 bg-[#FCF9EE]">
             No Records Found
           </div>
         </div>

@@ -31,7 +31,7 @@ const Form = () => {
     }
   }, [active]);
   return (
-    <div className="w-full h-full bg-[#E9F2EF] flex flex-col">
+    <div className="w-full h-full bg-[#FCF9EE] flex flex-col">
       <MainTab tabs={tabs} active={active} setActive={setActive} />
       {active === 0 ? (
         <List
