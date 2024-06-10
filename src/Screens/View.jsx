@@ -3,29 +3,49 @@ import React, { useEffect, useState } from 'react';
 import { getPageDetails } from '../Requests/page';
 import Control from './Components/MiniComponents/Control';
 import { fillData } from '../Requests/fillData';
+import { getPage, pages } from '../Graphql/modelQuery';
+import { createFilledData } from '../Graphql/moduleMutation';
 
 const View = () => {
   let page_id = location.search.split('=')[1];
   const [page, setPage] = useState({});
-  const fetchPage = async () => {
-    getPageDetails(page_id).then((res) => {
-      setPage(res?.data);
-    });
-  };
+  // const fetchPage = async () => {
+  //   getPageDetails(page_id).then((res) => {
+  //     setPage(res?.data);
+  //   });
+  // };
 
   const [pageData, setPageData] = useState([]);
+
+  const fetchPagebyID = async () => {
+    try {
+      const pageDetails = await getPage(page_id);
+      const data = pageDetails?.getPage;
+      if (data) {
+        setPage(data);
+      }
+    } catch (error) {
+      console.error('Error fetching enity:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPagebyID();
+  }, []);
+
   useEffect(() => {
     // console.log(page?.form_schema)
   }, [page]);
-  useEffect(() => {
-    fetchPage();
-  }, []);
+
+  // useEffect(() => {
+  //   fetchPage();
+  // }, []);
 
   useEffect(() => {
     // console.log("pageData", pageData)
   }, [pageData]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let payload = {
       page_id: page_id,
       form_data: [],
@@ -36,10 +56,11 @@ const View = () => {
 
       payload.form_data.push({ key, value });
     });
-
-    fillData(payload).then((res) => {
-      console.log(res);
-    });
+    const res = await createFilledData(payload);
+    console.log('filled data', res);
+    // fillData(payload).then((res) => {
+    //   console.log(res);
+    // });
   };
 
   return (

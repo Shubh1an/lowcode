@@ -28,3 +28,61 @@ export const saveModule = async (data) => {
     return err;
   }
 };
+export const Create_Filled = gql`
+  mutation ($page_id: ID!, $form_data: JSON) {
+    createFilledData(page_id: $page_id, form_data: $form_data) {
+      id
+      form_data
+    }
+  }
+`;
+
+export const createFilledData = async (data) => {
+  console.log('object<<<<<', data);
+  const { page_id, form_data } = data;
+
+  try {
+    return client
+      .mutate({
+        mutation: Create_Filled,
+        variables: { page_id, form_data },
+      })
+      .then((res) => {
+        console.log('Res', res, 'At', Date.now());
+        return res.data;
+      });
+
+    //return response.data;
+  } catch (err) {
+    console.log('err', err);
+    return err;
+  }
+};
+
+export const UpdatePageBYId = gql`
+  mutation ($updatePageId: ID!, $form_schema: JSON) {
+    updatePage(id: $updatePageId, form_schema: $form_schema) {
+      id
+      form_schema
+    }
+  }
+`;
+
+export const updatePage = async (updatePageId, form_schema) => {
+  try {
+    return client
+      .mutate({
+        mutation: UpdatePageBYId,
+        variables: { updatePageId, form_schema },
+      })
+      .then((res) => {
+        console.log('Res', res, 'At', Date.now());
+        return res.data;
+      });
+
+    //return response.data;
+  } catch (err) {
+    console.log('err', err);
+    return err;
+  }
+};

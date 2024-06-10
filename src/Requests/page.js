@@ -14,7 +14,7 @@ export const createPage = async (data) => {
   return response;
 };
 
-export const updatePage = async (page_id, data) => {
-  let response = await apiInstance.put('/pages?id=' + page_id, data);
-  return response;
-};
+// export const updatePage = async (page_id, data) => {
+//   let response = await apiInstance.put('/pages?id=' + page_id, data);
+//   return response;
+// };

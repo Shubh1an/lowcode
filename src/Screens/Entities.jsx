@@ -3,7 +3,7 @@ import { getEntities, saveEntity } from '../Requests/entity.js';
 import { createPage } from '../Requests/page';
 import TableView from './Components/MiniComponents/Grid';
 import TopBar from './Components/TopBar';
-import { entities, getEnityById } from '../Graphql/modelQuery.js';
+import { entities } from '../Graphql/modelQuery.js';
 
 const Entities = () => {
   let module_id = location.search.split('module_id=')[1];
@@ -51,28 +51,10 @@ const Entities = () => {
     });
   };
 
-  // const fetchEntities = async () => {
-  //   const entity = await getEntities(module_id);
-  //   let data = entity?.data;
-  //   if (data) {
-  //     let headers_gen = Object.keys(data?.[0] || {});
-  //     headers_gen.forEach((header, index) => {
-  //       if (header === '_id' || header === '__v') {
-  //         headers_gen.splice(index, 1);
-  //       }
-  //     });
-  //     setHeaders(headers_gen);
-  //     setCells(data);
-  //   }
-  // };
-
   const fetchEntities = async () => {
     try {
-      console.log('Loading modules at:', Date.now());
-      //setLoading(true);
-      const entity = await entities(module_id);
-
-      const data = entity.entities;
+      const entity = await entities(modalForm?.module_id);
+      const data = entity?.entities;
       if (data) {
         const headers_gen = Object.keys(data?.[0] || {}).filter(
           (header) => header !== 'id' && header !== '__v',
@@ -82,8 +64,6 @@ const Entities = () => {
       }
     } catch (error) {
       console.error('Error fetching enity:', error);
-    } finally {
-      //setLoading(false); // Set loading state to false after fetching
     }
   };
 

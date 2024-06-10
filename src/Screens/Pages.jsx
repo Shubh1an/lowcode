@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import TopBar from './Components/TopBar';
 import { getPages } from '../Requests/page';
 import TableView from './Components/MiniComponents/Grid';
+import { pages } from '../Graphql/modelQuery';
 
 const Pages = () => {
   const [forms, setForms] = useState([]);
@@ -19,7 +20,7 @@ const Pages = () => {
   const [cells, setCells] = useState([]);
   const [people, setPeoples] = useState({});
   let entity_id = location.search.split('entity_id=')[1];
-  let module_id = location.search.split('module_id=')[1];
+  let module_id = location.search.split('module_id=')[1].split('&')[0];
   const handleHide = (column, checked) => {};
   const handleSearch = (value) => {};
 
@@ -31,18 +32,20 @@ const Pages = () => {
     console.log('Clicked: ', data);
   };
 
-  const fetchPages = () => {
-    getPages(entity_id).then((res) => {
-      let { data } = res;
-      let headers_gen = Object.keys(data?.[0] || {});
-      headers_gen.forEach((header, index) => {
-        if (header === '_id' || header === '__v') {
-          headers_gen.splice(index, 1);
-        }
-      });
-      setHeaders(headers_gen);
-      setCells(data);
-    });
+  const fetchPages = async () => {
+    try {
+      const entity = await pages(entity_id);
+      const data = entity?.pages;
+      if (data) {
+        const headers_gen = Object.keys(data?.[0] || {}).filter(
+          (header) => header !== 'id' && header !== '__v',
+        );
+        setHeaders(headers_gen);
+        setCells(data);
+      }
+    } catch (error) {
+      console.error('Error fetching enity:', error);
+    }
   };
 
   useEffect(() => {
@@ -73,7 +76,7 @@ const Pages = () => {
         />
         <TableView
           data={{ headers: headers, cells: cells }}
-          linkto={`/builder/editor?module_id=${module_id}&editor_id`}
+          linkto={`/builder/editor?module_id=${module_id}&entity_id=${entity_id}&page_id`}
         />
       </div>
     </div>

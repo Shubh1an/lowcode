@@ -37,8 +37,6 @@ const Modules = () => {
       }
     } catch (error) {
       console.error('Error fetching modules:', error);
-    } finally {
-      //setLoading(false); // Set loading state to false after fetching
     }
   };
 
