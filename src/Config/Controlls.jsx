@@ -279,9 +279,8 @@ const controlls = (internal_name, children) => {
           required: { type: 'boolean', label: 'Required' },
           entity: { type: 'lookup', label: 'Entity' },
           entityType: { type: 'lookuptype', label: 'Entity Type' },
-        }
-      }
-
+        },
+      };
 
     default:
       return {

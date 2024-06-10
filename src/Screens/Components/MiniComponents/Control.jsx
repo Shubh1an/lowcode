@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import CustomSelect from './CustomSelect';
 
 const Control = ({ label, value, setValue, index, options, links }) => {

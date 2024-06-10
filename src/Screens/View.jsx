@@ -9,62 +9,73 @@ const View = () => {
   const [page, setPage] = useState({});
   const fetchPage = async () => {
     getPageDetails(page_id).then((res) => {
-      setPage(res?.data)
-    })
-  }
+      setPage(res?.data);
+    });
+  };
 
   const [pageData, setPageData] = useState([]);
   useEffect(() => {
     // console.log(page?.form_schema)
-  }, [page])
+  }, [page]);
   useEffect(() => {
     fetchPage();
-  }, [])
+  }, []);
 
   useEffect(() => {
     // console.log("pageData", pageData)
-  }, [pageData])
+  }, [pageData]);
 
   const handleSubmit = () => {
     let payload = {
       page_id: page_id,
-      form_data: []
-    }
+      form_data: [],
+    };
     pageData.map((item, index) => {
-      let key = page?.form_schema?.[index]?.properties?.displayName?.value
-      let value = item?.value
+      let key = page?.form_schema?.[index]?.properties?.displayName?.value;
+      let value = item?.value;
 
-      payload.form_data.push({ key, value })
-    })
+      payload.form_data.push({ key, value });
+    });
 
     fillData(payload).then((res) => {
-      console.log(res)
-    })
-
-  }
+      console.log(res);
+    });
+  };
 
   return (
     <div className="w-full h-[94%] bg-[#FCF9EE] flex flex-col p-4">
       <div className="w-full h-full bg-[#FFF] rounded flex flex-col">
         <TopBar label={page?.name} />
-        <div
-          className="w-full h-full bg-[#FFF] flex flex-col p-4 overflow-scroll"
-        >
-          {
-            page?.form_schema?.map((field, index) => {
-              return <div key={index} className={`w-full bg-[#FCF9EE] rounded p-2 my-2 flex flex-col items-left border border-[#F9EFDE]`} >
-                <div className={`font-bold px-2 py-2 rounded flex justify-between`} >
-                  <div className="cursor-pointer" >{field?.properties?.displayName?.value}</div>
+        <div className="w-full h-full bg-[#FFF] flex flex-col p-4 overflow-scroll">
+          {page?.form_schema?.map((field, index) => {
+            return (
+              <div
+                key={index}
+                className={`w-full bg-[#FCF9EE] rounded p-2 my-2 flex flex-col items-left border border-[#F9EFDE]`}
+              >
+                <div
+                  className={`font-bold px-2 py-2 rounded flex justify-between`}
+                >
+                  <div className="cursor-pointer">
+                    {field?.properties?.displayName?.value}
+                  </div>
                 </div>
-                <Control label={field?.control} value={pageData} setValue={setPageData} index={index} />
+                <Control
+                  label={field?.control}
+                  value={pageData}
+                  setValue={setPageData}
+                  index={index}
+                />
               </div>
-            })
-          }
+            );
+          })}
         </div>
         <div className="w-full bg-[#fff] flex flex-col p-4 justify-end">
           <button
             className="justify-center items-center rounded flex flex-col items-left border border-[#F9EFDE] font-bold text-[#FFF] px-4 py-2 text-center text-sm border border-[#E9E9E9] rounded-lg w-fit bg-[#F29900]"
-            onClick={() => { handleSubmit() }}
+            onClick={() => {
+              handleSubmit();
+            }}
           >
             Submit
           </button>
@@ -73,7 +84,6 @@ const View = () => {
     </div>
   );
 };
-
 
 const TopBar = ({ label }) => {
   return (

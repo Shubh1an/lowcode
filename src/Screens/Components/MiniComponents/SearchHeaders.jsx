@@ -1,5 +1,5 @@
 import React from 'react';
-
+//title=header;
 const Search = ({ title, handleHeaderSelect, checked }) => {
   return (
     <div className="">
