@@ -5,6 +5,9 @@ import TableView from './Components/MiniComponents/Grid';
 import { createPage } from '../Requests/page';
 import { type } from '@testing-library/user-event/dist/type';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Entities = () => {
   let module_id = location.search.split('module_id=')[1];
   const [showModal, setShowModal] = useState(false);
@@ -17,11 +20,12 @@ const Entities = () => {
   const handleSearch = (value) => {};
   const [view, setView] = useState(true);
   const [cells, setCells] = useState([]);
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log(modalForm);
-    saveEntity(modalForm).then((data) => {
+    try {
+      const data = await saveEntity(modalForm);
       console.log(data);
-      createPage({
+      await createPage({
         name: modalForm.name,
         entity_id: data?.data?._id,
         description: 'This is the default page for this entity',
@@ -29,7 +33,7 @@ const Entities = () => {
         form_data: {},
         type: 'default_add',
       });
-      createPage({
+      await createPage({
         name: modalForm.name,
         entity_id: data?.data?._id,
         description: 'This is the default page for this entity',
@@ -37,7 +41,7 @@ const Entities = () => {
         form_data: {},
         type: 'default_edit',
       });
-      createPage({
+      await createPage({
         name: modalForm.name,
         entity_id: data?.data?._id,
         description: 'This is the default page for this entity',
@@ -46,8 +50,13 @@ const Entities = () => {
         type: 'default_view',
       });
       setShowModal(false);
+      console.log('Successfully saved!');
+      toast.success('Successfully saved!');
       fetchEntities();
-    });
+    } catch (error) {
+      console.error(error);
+      toast.error(`Error: ${error.message}`);
+    }
   };
 
   const fetchEntities = async () => {
@@ -68,6 +77,14 @@ const Entities = () => {
     fetchEntities();
   }, []);
 
+  const resetModalState = () => {
+    setModalForm({
+      name: '',
+      description: '',
+      module_id: module_id,
+    });
+    setShowModal(true);
+  };
   return (
     <div className="w-full h-full bg-[#FCF9EE] flex flex-col p-4">
       <div className="w-full h-full bg-[#FFF] rounded overflow-auto">
@@ -75,6 +92,7 @@ const Entities = () => {
           label={'Entities'}
           showModal={showModal}
           setShowModal={setShowModal}
+          resetModalState={resetModalState}
           modalForm={modalForm}
           setModalForm={setModalForm}
           headers={headers}
@@ -97,6 +115,7 @@ const Entities = () => {
           linkto={`/builder/pages?module_id=${module_id}&entity_id`}
         />
       </div>
+      <ToastContainer />
     </div>
   );
 };
@@ -107,6 +126,18 @@ const ModalComponent = ({
   setModalForm,
   handleSubmit,
 }) => {
+  const handleSave = async () => {
+    try {
+      console.log('handleSave called');
+      await handleSubmit();
+      console.log('handleSubmit resolved');
+      closeModal();
+    } catch (error) {
+      console.log('handleSubmit error:', error);
+      toast.error(`Error: ${error.message}`);
+    }
+  };
+
   return (
     <div className="w-[400px]">
       <div className="text-2xl font-bold text-[#000]">Add Entities</div>
@@ -124,7 +155,7 @@ const ModalComponent = ({
       <div className="w-full mt-5">
         <p className="mb-2 text-lg font-bold">Description</p>
         <textarea
-          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none "
+          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none"
           placeholder="Enter Description"
           rows={3}
           value={modalForm.description}
@@ -135,19 +166,16 @@ const ModalComponent = ({
       </div>
       <div className="flex justify-start items-center mt-5">
         <button
-          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
-          onClick={() => {
-            handleSubmit();
-            closeModal();
-          }}
-        >
-          Save
-        </button>
-        <button
           className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
           onClick={closeModal}
         >
           Cancel
+        </button>
+        <button
+          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
+          onClick={handleSave}
+        >
+          Save
         </button>
       </div>
     </div>

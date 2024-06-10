@@ -9,6 +9,7 @@ const AddNewButton = ({ onclick, isDropDown }) => {
       <button
         className="bg-[#000] text-[#fff] px-1 py-1 rounded-md mx-4 font-bold flex"
         onClick={() => {
+          console.log('sgddsadfdafsdf');
           if (!isDropDown) {
             onclick('add');
           } else {
