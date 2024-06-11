@@ -5,6 +5,7 @@ import Entities from './Entities.jsx';
 import Pages from './Pages.jsx';
 import Editor from './Editor.jsx';
 import View from './View.jsx';
+import ListView from './ListView.jsx';
 
 const Builder = () => {
   const location = useLocation();
@@ -29,6 +30,9 @@ const Builder = () => {
         break;
       case `/builder/viewform`:
         setComponentToRender(<View />);
+        break;
+      case `/builder/listview`:
+        setComponentToRender(<ListView />);
         break;
       default:
         setComponentToRender(<></>);

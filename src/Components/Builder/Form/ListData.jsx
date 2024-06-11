@@ -1,24 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import AddNewButton from '../../inputs/AddNewButton.jsx';
+import { useEffect, useState } from 'react';
+import { BiHide } from 'react-icons/bi';
+import { CiFilter } from 'react-icons/ci';
 import { IoSearch } from 'react-icons/io5';
 import { LiaUserCircle } from 'react-icons/lia';
-import { CiFilter } from 'react-icons/ci';
 import { MdOutlineSwapVert } from 'react-icons/md';
-import { BiHide } from 'react-icons/bi';
-import ListHeaderButton from '../../inputs/ListHeaderButton.jsx';
-import {
-  createPage,
-  createPageDetail,
-  getPageDetails,
-  getPages,
-} from '../../../Requests/form.js';
-import moment from 'moment';
-import ShortModal from '../../ShortModal/ShortModal.jsx';
-import HideModal from '../../Modals/Hide.jsx';
-import CustomSearch from '../../CustomSearch/CustomSearch.jsx';
-import PersonModal from '../../Modals/PersonModal.jsx';
-import { formatValue } from '../../../Utility/utility.js';
+import { getPageDetails } from '../../../Requests/form.js';
 import { getFillPage } from '../../../Requests/pade_data.js';
+import { formatValue } from '../../../Utility/utility.js';
+import CustomSearch from '../../CustomSearch/CustomSearch.jsx';
+import HideModal from '../../Modals/Hide.jsx';
+import PersonModal from '../../Modals/PersonModal.jsx';
+import ShortModal from '../../ShortModal/ShortModal.jsx';
+import ListHeaderButton from '../../inputs/ListHeaderButton.jsx';
 
 function preprocessSearchData(searchData, searchableHeaders) {
   const hashTable = {};

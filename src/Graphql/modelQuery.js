@@ -79,9 +79,9 @@ export const GET_PAGES_BY_Id = gql`
     getPage(id: $getPageId) {
       id
       name
-      type
       description
       form_schema
+      type
     }
   }
 `;
@@ -93,6 +93,33 @@ export const getPage = async (getPageId) => {
         query: GET_PAGES_BY_Id,
         fetchPolicy: 'no-cache',
         variables: { getPageId },
+      })
+      .then((res) => {
+        console.log('Res', res);
+        return res.data;
+      });
+  } catch (error) {
+    console.error('Error fetching enity:', error);
+  }
+};
+
+export const GET_VIWES_BY_Id = gql`
+  query ($pageId: ID!) {
+    getFilledData(page_id: $pageId) {
+      id
+      form_data
+      page_id
+    }
+  }
+`;
+
+export const getFilledData = async (pageId) => {
+  try {
+    return await client
+      .query({
+        query: GET_VIWES_BY_Id,
+        fetchPolicy: 'no-cache',
+        variables: { pageId },
       })
       .then((res) => {
         console.log('Res', res);

@@ -4,18 +4,14 @@ import { CiFilter } from 'react-icons/ci';
 import { IoSearch } from 'react-icons/io5';
 import { LiaUserCircle } from 'react-icons/lia';
 import { MdOutlineSwapVert } from 'react-icons/md';
-import {
-  createPage,
-  createPageDetail,
-  getPages,
-} from '../../../Requests/form.js';
-import { formatValue } from '../../../Utility/utility.js';
-import CustomSearch from '../../CustomSearch/CustomSearch.jsx';
-import HideModal from '../../Modals/Hide.jsx';
-import PersonModal from '../../Modals/PersonModal.jsx';
-import ShortModal from '../../ShortModal/ShortModal.jsx';
-import AddNewButton from '../../inputs/AddNewButton.jsx';
-import ListHeaderButton from '../../inputs/ListHeaderButton.jsx';
+import HideModal from '../Components/Modals/Hide';
+import PersonModal from '../Components/Modals/PersonModal';
+import { formatValue } from '../Utility/utility';
+import CustomSearch from './Components/MiniComponents/CustomSearch';
+import ListHeaderButton from './Components/MiniComponents/ListHeaderButton';
+import ShortModal from './Components/MiniComponents/ShortModal';
+import { getFilledData } from '../Graphql/modelQuery';
+// import { getFilledData } from '../Graphql/modelQuery';
 
 function preprocessSearchData(searchData, searchableHeaders) {
   const hashTable = {};
@@ -56,10 +52,12 @@ function search(searchValue, searchableHeaders, hashTable) {
   return results;
 }
 
-const List = ({ setNewPageData, setSelectedPage, setActive }) => {
+const ListView = () => {
+  let page_id = location.search.split('=')[1];
+  console.log('jhhsghd', page_id);
+
   const [forms, setForms] = useState([]);
   const [formsToRender, setFormsToRender] = useState([]);
-  const [headers, setHeaders] = useState([]);
   const [renderHeaders, setRenderHeaders] = useState([]);
   const [hideColumns, setHideColumns] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -71,33 +69,42 @@ const List = ({ setNewPageData, setSelectedPage, setActive }) => {
   ]);
   const [people, setPeoples] = useState({});
 
-  let entity_id = location.search.split('=')[1];
+  const [page_detail_id, setPage_detail_id] = useState('');
+  const [headers, setHeaders] = useState([]);
+  const [data, setData] = useState([]);
+
+  const getviewPage = async (page_id) => {
+    try {
+      const res = await getFilledData(page_id);
+      let high_index = 0;
+      let high_length = 0;
+      let form_data = res.getFilledData;
+      let data_array = form_data.map((data, index) => {
+        if (data?.form_data?.length > high_length) {
+          high_index = index;
+          high_length = data?.form_data?.length;
+        }
+        return data.form_data;
+      });
+      console.log('Form Data: ', form_data);
+      console.log('Data Array: ', data_array);
+      setHeaders(form_data[high_index || 0]?.form_data.map((dt) => dt.key));
+      setRenderHeaders(
+        form_data[high_index || 0]?.form_data.map((dt) => dt.key),
+      );
+      setData(data_array);
+      setForms(data_array);
+      setFormsToRender(data_array);
+    } catch (err) {
+      console.log('object', err);
+    }
+  };
+
   useEffect(() => {
-    getPages(entity_id)
-      .then((data) => {
-        setForms(data.data);
-        let headers_gen = Object.keys(data.data[0]);
-        headers_gen.forEach((header, index) => {
-          // if data type is Object, do not show
-          if (typeof data.data[0][header] === 'object') {
-            if (header === 'created_by') {
-            } else {
-              headers_gen.splice(index, 1);
-            }
-          }
-          if (
-            header.includes('created_at') ||
-            header.includes('updated_at') ||
-            header.includes('_id')
-          ) {
-            headers_gen.splice(index, 1);
-          }
-        });
-        setRenderHeaders([...headers_gen]);
-        setHeaders([...headers_gen]);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    getviewPage(page_id);
+  }, [page_id]);
+
+  //let entity_id = location.search.split('=')[1];
 
   useEffect(() => {
     // Remove hidden columns
@@ -147,31 +154,6 @@ const List = ({ setNewPageData, setSelectedPage, setActive }) => {
     }
   };
 
-  const handleAddNewPage = (id, type) => {
-    setNewPageData((prev) => {
-      return {
-        ...prev,
-        type: type,
-        entity_id: entity_id,
-        id: id,
-        mode: 'edit',
-      };
-    });
-    setActive(1);
-  };
-
-  const handleEditPage = (id, type) => {
-    setNewPageData((prev) => {
-      return {
-        ...prev,
-        id: id,
-        type: type,
-        entity_id: entity_id,
-        mode: 'edit',
-      };
-    });
-    setActive(1);
-  };
   useEffect(() => {
     formsToRender.forEach((form, index) => {
       let header = Object.keys(form);
@@ -204,15 +186,8 @@ const List = ({ setNewPageData, setSelectedPage, setActive }) => {
           searchableHeaders={searchableHeaders}
           handleHeaderSelect={handleHeaderSelect}
           people={people}
-          onNewPage={handleAddNewPage}
-          entity_id={entity_id}
         />
-        <Table
-          headers={renderHeaders}
-          data={formsToRender}
-          onNewPage={handleEditPage}
-          setSelectedPage={setSelectedPage}
-        />
+        <Table headers={renderHeaders} data={formsToRender} />
       </div>
     </div>
   );
@@ -231,39 +206,13 @@ const TopBar = ({
   searchableHeaders,
   handleHeaderSelect,
   people,
-  onNewPage,
-  entity_id,
 }) => {
   const [showSearch, setShowSearch] = useState(false);
   return (
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
-        <p className="text-2xl font-bold	">Pages</p>
-        <AddNewButton
-          onclick={(type) => {
-            createPage({
-              thumbnail: 'Thumbnail',
-              title: 'Untitled',
-              created_by: {
-                name: 'Gopala',
-                profile_image: '',
-              },
-              entity_id: entity_id,
-              page_type: type,
-            }).then((res) => {
-              // onNewPage(res?.data?.data?.id, type)
-              let page_id = res?.data?.data?._id;
-              createPageDetail({
-                page_id: page_id,
-                page_data: [],
-                type: type,
-              }).then((res) => {
-                onNewPage(page_id, type);
-              });
-            });
-          }}
-          isDropDown={true}
-        />
+        <p className="text-2xl font-bold	">View</p>
+
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -357,10 +306,10 @@ const modalComponents = (
   };
 };
 
-const Table = ({ headers, data, onNewPage, setSelectedPage }) => {
+const Table = ({ headers, data }) => {
   return (
-    <div className="w-full h-full flex flex-col overflow-auto px-4">
-      <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]">
+    <div className="w-full h-full flex flex-col max-h-[75vh] px-4 overflow-scroll">
+      <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff] ">
         {headers.map((header, index) => {
           return (
             <div
@@ -374,14 +323,11 @@ const Table = ({ headers, data, onNewPage, setSelectedPage }) => {
       </div>
       {data.length > 0 ? (
         data.map((row, index) => {
+          if (row.length == 0) return null;
           return (
             <div
               className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer"
               key={index + '_cell'}
-              onClick={() => {
-                setSelectedPage(row);
-                onNewPage(row._id, row.page_type);
-              }}
             >
               {headers.map((header, index) => {
                 return (
@@ -389,7 +335,7 @@ const Table = ({ headers, data, onNewPage, setSelectedPage }) => {
                     className="w-full flex justify-center items-center text-base	font-medium	py-2 border border-[#E9E9E9]"
                     key={index + '_cell'}
                   >
-                    {formatValue(row[header], header)}
+                    {formatValue(row[index]?.value || '--', header)}
                   </div>
                 );
               })}
@@ -406,5 +352,4 @@ const Table = ({ headers, data, onNewPage, setSelectedPage }) => {
     </div>
   );
 };
-
-export default List;
+export default ListView;

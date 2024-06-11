@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import TopBar from './Components/TopBar';
-import SubTab from './Components/MiniComponents/SubTab';
+import { useEffect, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import Icons from '../Components/Utility/Icons';
 import controlls from '../Config/Controlls.jsx';
 import config from '../Config/config.js';
-import Icons from '../Components/Utility/Icons';
-import { useDrag, useDrop } from 'react-dnd';
 import Control from './Components/MiniComponents/Control';
+import SubTab from './Components/MiniComponents/SubTab';
 
 import { Link } from 'react-router-dom';
+import { getPage } from '../Graphql/modelQuery';
+import { updatePage } from '../Graphql/moduleMutation';
 import { getEntities } from '../Requests/entity';
 import CustomSelect from './Components/MiniComponents/CustomSelect';
-import { getPage } from '../Graphql/modelQuery';
-import { UpdatePageId, updatePage } from '../Graphql/moduleMutation';
 
 const Editor = () => {
   let page_id = location.search.split('page_id=')[1];
@@ -28,15 +27,6 @@ const Editor = () => {
   const [isChildHovering, setIsChildHovering] = useState(false);
 
   const [pageData, setPageData] = useState([]);
-
-  // const fetchPage = async () => {
-  //   getPageDetails(editor_id).then((res) => {
-
-  // };
-
-  // useEffect(() => {
-  //   fetchPage();
-  // }, []);
 
   const fetchPagebyID = async () => {
     try {

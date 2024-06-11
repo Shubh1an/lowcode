@@ -5,6 +5,7 @@ import Control from './Components/MiniComponents/Control';
 import { fillData } from '../Requests/fillData';
 import { getPage, pages } from '../Graphql/modelQuery';
 import { createFilledData } from '../Graphql/moduleMutation';
+import { useNavigate } from 'react-router-dom';
 
 const View = () => {
   let page_id = location.search.split('=')[1];
@@ -14,7 +15,7 @@ const View = () => {
   //     setPage(res?.data);
   //   });
   // };
-
+  const navigate = useNavigate();
   const [pageData, setPageData] = useState([]);
 
   const fetchPagebyID = async () => {
@@ -58,6 +59,7 @@ const View = () => {
     });
     const res = await createFilledData(payload);
     console.log('filled data', res);
+    navigate(`/builder/listview?id=` + page_id);
     // fillData(payload).then((res) => {
     //   console.log(res);
     // });
