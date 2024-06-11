@@ -3,6 +3,9 @@ import TopBar from './Components/TopBar';
 import { getModules, saveModule } from '../Requests/module';
 import TableView from './Components/MiniComponents/Grid';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Modules = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalForm, setModalForm] = useState({
@@ -16,8 +19,15 @@ const Modules = () => {
   const handleSubmit = () => {
     console.log(modalForm);
     saveModule(modalForm).then(() => {
-      setShowModal(false);
-      fetchModules();
+      try {
+        setShowModal(false);
+        console.log('Successfully saved!');
+        toast.success('Successfully saved!');
+        fetchModules();
+      } catch (error) {
+        console.error(error);
+        toast.error(`Error: ${error.message}`);
+      }
     });
   };
 
@@ -39,6 +49,14 @@ const Modules = () => {
     fetchModules();
   }, []);
 
+  const resetModalState = () => {
+    setModalForm({
+      name: '',
+      description: '',
+    });
+    setShowModal(true);
+  };
+
   return (
     <div className="w-full h-full bg-[#FCF9EE] flex flex-col p-4">
       <div className="w-full h-full bg-[#FFF] rounded overflow-auto">
@@ -48,6 +66,7 @@ const Modules = () => {
           setShowModal={setShowModal}
           modalForm={modalForm}
           setModalForm={setModalForm}
+          resetModalState={resetModalState}
           headers={headers}
           handleSearch={handleSearch}
           searchableHeaders={headers}
@@ -68,6 +87,7 @@ const Modules = () => {
           linkto={'/builder/entity?module_id'}
         />
       </div>
+      <ToastContainer />
     </div>
   );
 };
@@ -78,6 +98,18 @@ const ModalComponent = ({
   setModalForm,
   handleSubmit,
 }) => {
+  const handleSave = async () => {
+    try {
+      console.log('handleSave called');
+      await handleSubmit();
+      console.log('handleSubmit resolved');
+      closeModal();
+    } catch (error) {
+      console.log('handleSubmit error:', error);
+      toast.error(`Error: ${error.message}`);
+    }
+  };
+
   return (
     <div className="w-[400px]">
       <div className="text-2xl font-bold text-[#000]">Add Modules</div>
@@ -106,19 +138,17 @@ const ModalComponent = ({
       </div>
       <div className="flex justify-start items-center mt-5">
         <button
-          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
-          onClick={() => {
-            handleSubmit();
-            closeModal();
-          }}
-        >
-          Save
-        </button>
-        <button
           className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
           onClick={closeModal}
         >
           Cancel
+        </button>
+
+        <button
+          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
+          onClick={handleSave}
+        >
+          Save
         </button>
       </div>
     </div>

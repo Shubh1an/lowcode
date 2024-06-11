@@ -23,13 +23,24 @@ const TopBar = ({
   modalComponent = () => {},
   isDropDownButton = false,
   onclick = () => setShowModal(!showModal),
+  resetModalState = () => {},
 }) => {
+  const handleAddNewButtonClick = () => {
+    resetModalState(); // Call resetModalState function
+    handlePatch(); // Toggle showModal
+  };
+  const handlePatch = () => {
+    setShowModal(true);
+  };
   const [showSearch, setShowSearch] = useState(false);
   return (
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold">{label}</p>
-        <AddNewButton onclick={onclick} isDropDown={isDropDownButton} />
+        <AddNewButton
+          onclick={handleAddNewButtonClick}
+          isDropDown={isDropDownButton}
+        />
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={

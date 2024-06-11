@@ -88,6 +88,7 @@ const FormInput = ({
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <div className="w-full">
       <div className={`w-full flex flex-row items-center`}>
@@ -122,6 +123,7 @@ const FormInput = ({
     </div>
   );
 };
+
 const InputByType = ({
   type,
   options,
@@ -405,6 +407,7 @@ const InputByType = ({
       return (
         <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
           {options.map((option, index) => {
+            console.log('Rendering radio option:', option.label);
             return (
               <div
                 className="flex flex-row items-center justify-start "

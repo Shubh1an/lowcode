@@ -33,8 +33,10 @@ const Module = () => {
       });
       setHeaders(headers_gen);
       setCells(data);
+      console.log('data ----------->', data);
     }
   };
+
   useEffect(() => {
     fetchModules();
   }, []);
@@ -46,6 +48,31 @@ const Module = () => {
       fetchModules();
     });
   };
+
+  // const handleSubmit = async () => {
+  //   try {
+  //     const response = await saveModule(modalForm);
+  //     console.log("save data module---->", response);
+
+  //     // Trigger a reload of the module data
+  //     fetchModules();
+  //   } catch (error) {
+  //     console.error("Error saving module:", error);
+  //   }
+  // };
+
+  // const handleAddNew = () => {
+  //   console.log("Before resetting modalForm:", modalForm);
+  //   // Reset modalForm to its initial blank state
+  //   setModalForm({
+  //     name: '',
+  //     description: '',
+  //     ownerId: 'erfgjhw', // Assuming this is the default ownerId
+  //   });
+  //   console.log("After resetting modalForm:", modalForm);
+  //   // Show modal
+  //   setShowModal(true);
+  // };
   return (
     <div className="w-full h-full bg-[#FCF9EE] flex justify-center items-center px-6 py-6 ">
       <div className="w-full h-full bg-[#FFF] rounded-2xl">
@@ -60,6 +87,7 @@ const Module = () => {
           setView={setView}
           view={view}
           handleSubmit={handleSubmit}
+          // handleAddNew={handleAddNew}
         />
         <TableView data={{ headers, cells }} />
       </div>
@@ -78,16 +106,27 @@ const TopBar = ({
   setView,
   view,
   handleSubmit,
+  handleAddNew,
 }) => {
+  console.log('setModelForm----->', setModalForm);
+  console.log('setShowModal-->', setShowModal);
   const [showSearch, setShowSearch] = useState(false);
   return (
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold">Modules</p>
         <AddNewButton
-          onclick={() => setShowModal(!showModal)}
+          // onclick={() => setShowModal(!showModal)}
+
+          onclick={onclick}
           isDropDown={false}
         />
+        {/* <AddNewButton
+         
+          onclick={handleAddNew} // Call handleAddNew function here
+          isDropDown={false}
+        /> */}
+
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -175,6 +214,7 @@ const ModalComponent = ({
   setModalForm,
   handleSubmit,
 }) => {
+  console.log('ModalComponent rendered with modalForm:', modalForm);
   return (
     <div className="w-[400px]">
       <div className="text-2xl font-bold text-[#000]">Add Modules</div>
@@ -203,6 +243,13 @@ const ModalComponent = ({
       </div>
       <div className="flex justify-start items-center mt-5">
         <button
+          className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
+          onClick={closeModal}
+        >
+          Cancel
+        </button>
+
+        <button
           className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
           onClick={() => {
             handleSubmit();
@@ -210,12 +257,6 @@ const ModalComponent = ({
           }}
         >
           Save
-        </button>
-        <button
-          className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
-          onClick={closeModal}
-        >
-          Cancel
         </button>
       </div>
     </div>
