@@ -75,12 +75,12 @@ const Raw = () => {
   }, [formsToRender]);
 
   useEffect(() => {
-    let formvalue = [];
-    forms?.form_schema?.map(() => {
-      let value = '';
-      formvalue.push({ value });
-    });
-    setPageData([{ ...formvalue }]);
+    // let formvalue = [];
+    // forms?.form_schema?.map(() => {
+    //   let value = '';
+    //   formvalue.push({ value });
+    // });
+    // setPageData([{ ...formvalue }]);
   }, [pageData]);
 
   const handleSubmit = async () => {
@@ -118,7 +118,7 @@ const Raw = () => {
     });
     setPageData([{ ...formvalue }]);
 
-    if (pageData) document.getElementById('my-drawer').click();
+    if (formvalue) document.getElementById('my-drawer').click();
   };
 
   return (
