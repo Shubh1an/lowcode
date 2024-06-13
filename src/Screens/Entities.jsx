@@ -458,7 +458,8 @@ import { useLocation } from 'react-router-dom';
 import TopBar from './Components/TopBar';
 import { getPaginatedEntities, saveEntity } from '../Requests/entity';
 import TableView from './Components/MiniComponents/Grid';
-import { createPage } from '../Requests/page';
+import { GET_PAGE_DETAILS } from '../Requests/page';
+import { savePage } from '../Requests/page';
 
 const Entities = () => {
   const location = useLocation();
@@ -478,18 +479,55 @@ const Entities = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  // const handleSubmit = async () => {
+  //   try {
+  //     setLoading(true);
+  //     console.log('Submit', modalForm);
+  //     const data = await saveEntity(modalForm);
+  //     // Additional page creation logic can be added here if needed
+  //     setShowModal(false);
+  //     fetchEntities({}, currentPage);
+  //   } catch (error) {
+  //     console.error('Error saving entity:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async () => {
     try {
-      setLoading(true);
-      console.log('Submit', modalForm);
+      debugger;
       const data = await saveEntity(modalForm);
-      // Additional page creation logic can be added here if needed
+      debugger;
+      await savePage({
+        name: modalForm.name,
+        entity_id: data.id,
+        description: 'This is the default page for this entity',
+        form_schema: [],
+        form_data: {},
+        type: 'default_add',
+      });
+
+      await savePage({
+        name: modalForm.name,
+        entity_id: data.id,
+        description: 'This is the default page for this entity',
+        form_schema: [],
+        form_data: {},
+        type: 'default_edit',
+      });
+      await savePage({
+        name: modalForm.name,
+        entity_id: data.id,
+        description: 'This is the default page for this entity',
+        form_schema: [],
+        form_data: {},
+        type: 'default_view',
+      });
       setShowModal(false);
-      fetchEntities({}, currentPage);
+      fetchEntities();
     } catch (error) {
       console.error('Error saving entity:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -506,8 +544,13 @@ const Entities = () => {
       const { entities, totalEntities } = await getPaginatedEntities(variables);
       if (entities) {
         const headers_gen = Object.keys(entities?.[0] || {}).filter(
-          (header) => header !== '_id' && header !== '__v',
+          (header) =>
+            header !== '_id' &&
+            header !== '__v' &&
+            header !== 'id' &&
+            header !== '__typename',
         );
+        console.log('headers_gen1', headers_gen);
         setHeaders(headers_gen);
         setCells(entities);
         setTotalPages(Math.ceil(totalEntities / limit));
@@ -561,7 +604,7 @@ const Entities = () => {
         ) : (
           <TableView
             data={{ headers, cells }}
-            linkto={`/builder/pages?module_id=${module_id}&entity_id`}
+            linkto={`/builder/pages?module_id=${module_id}&&entity_id`}
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}

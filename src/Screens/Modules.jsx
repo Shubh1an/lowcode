@@ -7,6 +7,7 @@ import {
   getPaginatedModules,
 } from '../Requests/module';
 import TableView from './Components/MiniComponents/Grid';
+import CustomHide from './Components/MiniComponents/CustomHide';
 import { isNullableType } from 'graphql';
 import { empty } from '@apollo/client';
 
@@ -18,8 +19,9 @@ const Modules = () => {
   });
   const [headers, setHeaders] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [cachedData, setCachedData] = useState(null);
   const [SearchableHeaders, setSearchableHeaders] = useState(headers);
+  const [hiddenHeaders, setHiddenHeaders] = useState([]);
 
   // Modify handleSearch function to properly pass searchCriteria
   const handleSearch = async (searchCriteria) => {
@@ -38,6 +40,8 @@ const Modules = () => {
 
   const handleSubmit = async () => {
     try {
+      debugger;
+
       setLoading(true);
       await saveModule(modalForm);
       setShowModal(false);
@@ -49,24 +53,32 @@ const Modules = () => {
     }
   };
 
-  const fetchModules = async (search = {}, page = 1, limit = 4) => {
+  const fetchModules = async (
+    search = {},
+    page = 1,
+    limit = 4,
+    sort = { field: 'name', order: 'asc' },
+  ) => {
     try {
       //return console.log("Loading", search);
       setLoading(true);
       const variables = {
         page,
         limit,
-        sort: { field: 'name', order: 'asc' },
+        sort,
         search,
         filter: {},
       };
       console.log('vvvv', variables);
       const modulesData = await getPaginatedModules(variables);
+      console.log('modulesData', modulesData);
       const data = modulesData.modules;
       if (data) {
         const headers_gen = Object.keys(data?.[0] || {}).filter(
-          (header) => header !== 'id' && header !== '__v',
+          (header) =>
+            header !== 'id' && header !== '__v' && header !== '__typename',
         );
+        console.log('headers_gen', headers_gen);
         setHeaders(headers_gen);
         setCells(data);
         setTotalPages(Math.ceil(modulesData.totalmodules / limit));
@@ -135,6 +147,9 @@ const Modules = () => {
           setView={setView}
           view={view}
           handleSubmit={handleSubmit}
+          fetchModules={fetchModules}
+          setHiddenHeaders={setHiddenHeaders}
+          hiddenHeaders={hiddenHeaders}
           modalComponent={
             <ModalComponent
               closeModal={setShowModal}
