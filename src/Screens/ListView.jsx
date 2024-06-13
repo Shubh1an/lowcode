@@ -54,7 +54,6 @@ function search(searchValue, searchableHeaders, hashTable) {
 
 const ListView = () => {
   let page_id = location.search.split('=')[1];
-  console.log('jhhsghd', page_id);
 
   const [forms, setForms] = useState([]);
   const [formsToRender, setFormsToRender] = useState([]);
@@ -86,8 +85,6 @@ const ListView = () => {
         }
         return data.form_data;
       });
-      console.log('Form Data: ', form_data);
-      console.log('Data Array: ', data_array);
       setHeaders(form_data[high_index || 0]?.form_data.map((dt) => dt.key));
       setRenderHeaders(
         form_data[high_index || 0]?.form_data.map((dt) => dt.key),

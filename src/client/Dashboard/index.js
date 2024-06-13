@@ -1,15 +1,14 @@
-import React from 'react';
-
 import OverviewCard from './OverviewCard';
 
+import '../service/service.js';
 import withCard from '../withCard';
-import SalesChart from './SalesChart';
 import FunnelGraph from './FunnelGraph';
 import RecentDeals from './RecentDeals';
-import TopDeals from './TopDeals';
-import TargetProgress from './TargetProgress';
+import SalesChart from './SalesChart';
 import SalesGraph from './SalesGraph';
-
+import TargetProgress from './TargetProgress';
+import TopDeals from './TopDeals';
+import { useSelector } from 'react-redux';
 const OverviewCardWithCard = withCard(OverviewCard);
 const SalesChartWithCard = withCard(SalesChart);
 const TargetProgressWithCard = withCard(TargetProgress);

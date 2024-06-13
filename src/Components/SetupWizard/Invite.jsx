@@ -14,8 +14,6 @@ const Invite = ({ setUpImg }) => {
   // Create link and and send  is pending
 
   const finishSignup = () => {
-    console.log('final object have save in redux', userdata);
-
     Createuser({
       fullname: userdata?.orgdetail?.fullname,
       email: userdata?.orgdetail?.email,

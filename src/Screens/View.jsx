@@ -1,20 +1,12 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { getPageDetails } from '../Requests/page';
-import Control from './Components/MiniComponents/Control';
-import { fillData } from '../Requests/fillData';
-import { getPage, pages } from '../Graphql/modelQuery';
-import { createFilledData } from '../Graphql/moduleMutation';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getPage } from '../Graphql/modelQuery';
+import { createFilledData } from '../Graphql/moduleMutation';
+import Control from './Components/MiniComponents/Control';
 
 const View = () => {
   let page_id = location.search.split('=')[1];
   const [page, setPage] = useState({});
-  // const fetchPage = async () => {
-  //   getPageDetails(page_id).then((res) => {
-  //     setPage(res?.data);
-  //   });
-  // };
   const navigate = useNavigate();
   const [pageData, setPageData] = useState([]);
 
@@ -34,17 +26,9 @@ const View = () => {
     fetchPagebyID();
   }, []);
 
-  useEffect(() => {
-    // console.log(page?.form_schema)
-  }, [page]);
+  useEffect(() => {}, [page]);
 
-  // useEffect(() => {
-  //   fetchPage();
-  // }, []);
-
-  useEffect(() => {
-    // console.log("pageData", pageData)
-  }, [pageData]);
+  useEffect(() => {}, [pageData]);
 
   const handleSubmit = async () => {
     let payload = {
@@ -60,9 +44,6 @@ const View = () => {
     const res = await createFilledData(payload);
     console.log('filled data', res);
     navigate(`/builder/listview?id=` + page_id);
-    // fillData(payload).then((res) => {
-    //   console.log(res);
-    // });
   };
 
   return (

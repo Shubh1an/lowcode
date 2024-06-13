@@ -1,82 +1,91 @@
 import { useContext, useEffect, useState } from 'react';
 // @ts-ignore
-import { PiGraphLight } from 'react-icons/pi';
-import { RiLayout4Line } from 'react-icons/ri';
 import { BsGraphUpArrow } from 'react-icons/bs';
-import { PiFolderUserBold } from 'react-icons/pi';
-import { LiaHandshake } from 'react-icons/lia';
-import { PiUsersFour } from 'react-icons/pi';
 import { Link } from 'react-router-dom';
-import { Sidebaricon } from '../svg';
 import GlobalContext from '../../Context/Context';
+import { Sidebaricon } from '../svg';
+import { useSelector } from 'react-redux';
 const Sidebar = () => {
-  const menuData = [
-    {
-      title: 'Dashboard',
-      icon: <RiLayout4Line />,
-      url: '/dashboard',
-      subMenu: [],
-    },
-    {
-      title: 'Raw Data',
-      icon: <BsGraphUpArrow />,
-      url: '/page/raw',
-      subMenu: [],
-    },
-    {
-      title: 'Leads',
-      icon: <PiFolderUserBold />,
-      url: '/page/lead',
-      subMenu: [],
-    },
-    {
-      title: 'Deals',
-      icon: <LiaHandshake />,
-      url: '/page/deal',
-      subMenu: [],
-    },
+  const modulesdata = useSelector((state) => state['modules']);
 
-    {
-      title: 'Products',
-      icon: <PiGraphLight />,
-      url: '/Products',
-      subMenu: [],
-    },
+  useEffect(() => {}, []);
 
-    {
-      title: 'Products',
-      icon: <PiGraphLight />,
-      url: '/Products',
-      subMenu: [],
-    },
+  const menuData =
+    modulesdata?.entity &&
+    modulesdata?.entity?.map((em) => {
+      return {
+        ...em,
+        icon: <BsGraphUpArrow />,
+        url: '/page/raw',
+        subMenu: [],
+      };
+    });
 
-    {
-      title: 'Team',
-      icon: <PiUsersFour />,
-      url: '/Products',
-      subMenu: [],
-    },
+  // {
+  //   title: 'Dashboard',
+  //   icon: <RiLayout4Line />,
+  //   url: '/dashboard',
+  //   subMenu: [],
+  // },
+  // {
+  //   title: 'Raw Data',
+  //   icon: <BsGraphUpArrow />,
+  //   url: '/page/raw',
+  //   subMenu: [],
+  // },
+  // {
+  //   title: 'Leads',
+  //   icon: <PiFolderUserBold />,
+  //   url: '/page/lead',
+  //   subMenu: [],
+  // },
+  // {
+  //   title: 'Deals',
+  //   icon: <LiaHandshake />,
+  //   url: '/page/deal',
+  //   subMenu: [],
+  // },
 
-    {
-      title: 'Competitors',
-      icon: <PiGraphLight />,
-      url: '/Products',
-      subMenu: [],
-    },
+  // {
+  //   title: 'Products',
+  //   icon: <PiGraphLight />,
+  //   url: '/Products',
+  //   subMenu: [],
+  // },
 
-    {
-      title: 'Contacts',
-      icon: <PiGraphLight />,
-      url: '/Products',
-      subMenu: [],
-    },
-    {
-      title: 'Settings',
-      icon: <PiGraphLight />,
-      url: '/Products',
-      subMenu: [],
-    },
-  ];
+  // {
+  //   title: 'Products',
+  //   icon: <PiGraphLight />,
+  //   url: '/Products',
+  //   subMenu: [],
+  // },
+
+  // {
+  //   title: 'Team',
+  //   icon: <PiUsersFour />,
+  //   url: '/Products',
+  //   subMenu: [],
+  // },
+
+  // {
+  //   title: 'Competitors',
+  //   icon: <PiGraphLight />,
+  //   url: '/Products',
+  //   subMenu: [],
+  // },
+
+  // {
+  //   title: 'Contacts',
+  //   icon: <PiGraphLight />,
+  //   url: '/Products',
+  //   subMenu: [],
+  // },
+  // {
+  //   title: 'Settings',
+  //   icon: <PiGraphLight />,
+  //   url: '/Products',
+  //   subMenu: [],
+  // },
   // @ts-ignore
   const { setSelectedMenu, setSelectedSubMenu } = useContext(GlobalContext);
   const [active, setActive] = useState(0);
@@ -87,7 +96,7 @@ const Sidebar = () => {
   }, [active]);
 
   useEffect(() => {
-    setSelectedSubMenu(menuData[active].subMenu[activeSub]);
+    setSelectedSubMenu(menuData[active]?.subMenu[activeSub]);
   }, [activeSub]);
 
   useEffect(() => {
@@ -121,7 +130,7 @@ const Sidebar = () => {
 
 const SidebarMenu = ({ menu, index, length, setActive, active }) => {
   return (
-    <Link to={`${menu.url}`}>
+    <Link to={`${menu.url}?entityId=${menu?.id}`}>
       <div
         className={`flex flex-col w-full items-center ${active === index ? '' : ''} ml-3 mb-1 cursor-pointer ${index === 0 ? 'rounded-t-lg' : index === length - 1 ? 'rounded-b-lg' : ''}`}
         onClick={() => setActive(index)}
@@ -130,7 +139,7 @@ const SidebarMenu = ({ menu, index, length, setActive, active }) => {
           <div className="w-full flex flex-row items-center text-2xl  justify-center ">
             {menu.icon}
           </div>
-          <span className="text-xs">{menu.title}</span>
+          <span className="text-xs">{menu.name}</span>
         </div>
       </div>
     </Link>
@@ -144,7 +153,7 @@ const SidebarSubMenu = ({ menu, setActive, active, index }) => {
         className={`w-full mb-4 text-sm ${active === index ? 'text-[#000]' : 'text-[#7A7A7A]'} cursor-pointer`}
         onClick={() => setActive(index)}
       >
-        {menu.title}
+        {menu.name}
       </div>
     </Link>
   );

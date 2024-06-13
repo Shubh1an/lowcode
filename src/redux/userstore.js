@@ -3,7 +3,7 @@ import userSlice from '../redux/userslice';
 
 const userstore = configureStore({
   reducer: {
-    user: userSlice,
+    modules: userSlice,
   },
 });
 export default userstore;

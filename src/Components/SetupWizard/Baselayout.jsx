@@ -37,7 +37,6 @@ export default function Baselayout({ setUpImg }) {
               onSubmit={(values) => {
                 userLogin({ values }).then((res) => {
                   if (res.status) {
-                    debugger;
                     if (res.data.data != false) {
                       localStorage.setItem('token', res.data.data);
                       alert(res.data.message);

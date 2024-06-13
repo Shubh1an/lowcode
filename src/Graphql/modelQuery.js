@@ -10,7 +10,6 @@ export const GET_MODULES = gql`
     }
   }
 `;
-
 export const getModules = async () => {
   const response = await client.query({
     query: GET_MODULES,
@@ -38,7 +37,7 @@ export const entities = async (moduleId) => {
         variables: { moduleId },
       })
       .then((res) => {
-        console.log('Res', res);
+        // console.log('Res', res);
         return res.data;
       });
   } catch (error) {
@@ -67,7 +66,7 @@ export const pages = async (entityId) => {
         variables: { entityId },
       })
       .then((res) => {
-        console.log('Res', res);
+        // console.log('Res', res);
         return res.data;
       });
   } catch (error) {
@@ -95,7 +94,7 @@ export const getPage = async (getPageId) => {
         variables: { getPageId },
       })
       .then((res) => {
-        console.log('Res', res);
+        // console.log('Res', res);
         return res.data;
       });
   } catch (error) {
@@ -122,7 +121,7 @@ export const getFilledData = async (pageId) => {
         variables: { pageId },
       })
       .then((res) => {
-        console.log('Res', res);
+        // console.log('Res', res);
         return res.data;
       });
   } catch (error) {

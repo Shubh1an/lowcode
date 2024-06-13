@@ -111,10 +111,6 @@ const View = ({ newPageData }) => {
               activePropertiesField={''}
               fieldValue={fieldValue}
               onchange={(e) => {
-                console.log(
-                  field?.propertyValues?.display_name,
-                  e.target.value,
-                );
                 setFieldValue((prev) => {
                   return {
                     ...prev,

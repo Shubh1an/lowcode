@@ -1,43 +1,42 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const userSlice = createSlice({
-  name: 'user',
+  name: 'modules',
   initialState: {
-    email: '',
-    orgdetail: {},
-    industry: {},
-    role: '',
-    companyBusisness: {},
-    appDetail: {},
+    permissionapp: 'Raw',
+    module: [],
+    entity: [],
+    pages: [],
+    filledData: [],
+    newForm: {},
   },
   reducers: {
     userdetail: (state, action) => {
-      state.email = action.payload;
+      state.permissionapp = action.payload;
     },
-    setuserOrg: (state, action) => {
-      state.orgdetail = action.payload;
+    setModule: (state, action) => {
+      state.module = action.payload;
     },
-    setIndustryDetail: (state, action) => {
-      state.industry = action.payload;
+    setEntity: (state, action) => {
+      state.entity = action.payload;
     },
-    setCompanyBusiness: (state, action) => {
-      state.companyBusisness = action.payload;
+    setPages: (state, action) => {
+      state.pages = action.payload;
     },
-    setRoleRedux: (state, action) => {
-      state.role = action.payload;
+    setFilledData: (state, action) => {
+      state.filledData = action.payload;
     },
-    setApp: (state, action) => {
-      state.appDetail = action.payload;
+    setNewform: (state, action) => {
+      state.newForm = action.payload;
     },
   },
 });
-
 export const {
+  setModule,
   userdetail,
-  setuserOrg,
-  setIndustryDetail,
-  setRoleRedux,
-  setCompanyBusiness,
-  setApp,
+  setEntity,
+  setPages,
+  setFilledData,
+  setNewform,
 } = userSlice.actions;
 export default userSlice.reducer;

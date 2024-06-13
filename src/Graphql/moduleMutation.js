@@ -38,7 +38,6 @@ export const Create_Filled = gql`
 `;
 
 export const createFilledData = async (data) => {
-  console.log('object<<<<<', data);
   const { page_id, form_data } = data;
 
   try {
@@ -74,6 +73,34 @@ export const updatePage = async (updatePageId, form_schema) => {
       .mutate({
         mutation: UpdatePageBYId,
         variables: { updatePageId, form_schema },
+      })
+      .then((res) => {
+        console.log('Res', res, 'At', Date.now());
+        return res.data;
+      });
+
+    //return response.data;
+  } catch (err) {
+    console.log('err', err);
+    return err;
+  }
+};
+export const UpdatePage_filledData = gql`
+  mutation ($id: ID!, $form_data: JSON) {
+    updateFilledData(id: $id, form_data: $form_data) {
+      id
+      page_id
+      form_data
+    }
+  }
+`;
+
+export const updateFilledData = async (id, form_data) => {
+  try {
+    return client
+      .mutate({
+        mutation: UpdatePage_filledData,
+        variables: { id, form_data },
       })
       .then((res) => {
         console.log('Res', res, 'At', Date.now());

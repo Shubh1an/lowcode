@@ -13,9 +13,25 @@ import Dashboard from './client/Dashboard';
 import Raw from './client/pages/Raw';
 import Lead from './client/pages/Lead';
 import Deal from './client/pages/Deal';
-
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Entity, moduleselected } from './client/service/service';
 function App() {
-  // dfdsfsdfdfsd
+  const dispatch = useDispatch();
+  const [modules, setmoules] = useState();
+  const [entity, setentity] = useState([]);
+  const modulesdata = useSelector((state) => state['modules']);
+
+  useEffect(() => {
+    moduleselected(dispatch, modulesdata?.permissionapp);
+    let modulename = modulesdata?.module.find(
+      (em) => em.name === modulesdata?.permissionapp,
+    );
+    if (modulename) {
+      setmoules(modulename);
+    }
+  }, [entity]);
+
   return (
     <div className="App">
       <GlobalProvider>
