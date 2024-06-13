@@ -22,7 +22,7 @@ const View = () => {
   }, []);
 
   useEffect(() => {
-    // console.log("pageData", pageData)
+    console.log('pageData', pageData);
   }, [pageData]);
 
   const handleSubmit = () => {
@@ -31,8 +31,12 @@ const View = () => {
       form_data: [],
     };
     pageData.map((item, index) => {
+      console.log('item:', item);
+      console.log('index:', index);
       let key = page?.form_schema?.[index]?.properties?.displayName?.value;
+      console.log('key:', key);
       let value = item?.value;
+      console.log('value:', value);
 
       payload.form_data.push({ key, value });
     });

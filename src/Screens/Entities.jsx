@@ -126,7 +126,38 @@ const ModalComponent = ({
   setModalForm,
   handleSubmit,
 }) => {
+  const [errors, setErrors] = useState({
+    name: '',
+  });
+
+  const validateForm = () => {
+    const newErrors = { name: '' };
+    let isValid = true;
+
+    if (!modalForm.name) {
+      newErrors.name = 'Enttity name is required!';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+  // const handleSave = async () => {
+  //   try {
+  //     console.log('handleSave called');
+  //     await handleSubmit();
+  //     console.log('handleSubmit resolved');
+  //     closeModal();
+  //   } catch (error) {
+  //     console.log('handleSubmit error:', error);
+  //     toast.error(`Error: ${error.message}`);
+  //   }
+  // };
+
   const handleSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
     try {
       console.log('handleSave called');
       await handleSubmit();
@@ -151,6 +182,7 @@ const ModalComponent = ({
           value={modalForm.name}
           onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
         />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
       </div>
       <div className="w-full mt-5">
         <p className="mb-2 text-lg font-bold">Description</p>
@@ -164,10 +196,11 @@ const ModalComponent = ({
           }
         />
       </div>
-      <div className="flex justify-start items-center mt-5">
+      <div className="flex justify-start items-center mt-5 space-x-2">
         <button
           className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
-          onClick={closeModal}
+          // onClick={closeModal}
+          onClick={() => closeModal()}
         >
           Cancel
         </button>

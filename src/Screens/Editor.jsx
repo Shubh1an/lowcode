@@ -54,7 +54,7 @@ const Editor = () => {
     };
     updatePage(editor_id, payload)
       .then((res) => {
-        console.log(res.data);
+        console.log('data change -----> ', res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -65,7 +65,8 @@ const Editor = () => {
   // use
   const handleDrop = ({ label }) => {
     if (!isChildHovering) {
-      console.log('Properties', controlls(label)?.properties);
+      console.log('Properties-----> ', controlls(label)?.properties);
+
       setPage([
         ...page,
         { label, properties: controlls(label)?.properties, child: [] },
@@ -106,6 +107,7 @@ const Editor = () => {
         <SubTab active={active} setActive={setActive} tabs={tabs} />
         <div className="w-full p-4 grid grid-cols-2 gap-x-4">
           {CONTROLLS.map((control, index) => {
+            // console.log("controlls in editor-->")
             return (
               <ControlCard
                 label={control}
@@ -182,6 +184,7 @@ const EditorComponent = ({
   editorId,
   handleRemove,
 }) => {
+  // console.log("Editor Component setSelectedControl ----> ",setSelectedControl)
   const [hover, setHover] = useState(false);
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'FIELD',
@@ -261,6 +264,9 @@ const PropertyWindow = ({
   entity_id,
   editor_id,
 }) => {
+  // console.log("selectControl 1 ----->",selectedControl)
+  // console.log("selectControl 2----->",  pageData)
+  // console.log("selectControl 3 ----->",selectedControl)
   let properties = page[selectedControl]?.properties;
 
   if (!properties) return null;
@@ -295,6 +301,9 @@ const PropertyInput = ({
   entity_id,
   editor_id,
 }) => {
+  // console.log("Property key------->",property_key)
+  // console.log("PropertyInput selectedControl----->",selectedControl)
+  console.log('PropertyInput PageData------>', pageData);
   let key = property_key;
   const [options, setOptions] = useState([]);
   const [option, setOption] = useState('');
@@ -302,8 +311,23 @@ const PropertyInput = ({
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
+    console.log(
+      'page data editor KEY---->',
+      pageData[selectedControl]?.properties?.[key],
+    );
+    console.log(
+      'page data editor---->',
+      pageData[selectedControl]?.properties?.[key]?.options,
+    );
     let inputValue = pageData[selectedControl]?.properties?.[key]?.value;
+    // let inputValue;
+    // if (pageData[selectedControl]?.properties?.[key]?.options) {
+    //   inputValue = pageData[selectedControl]?.properties?.[key]?.options;
+    // } else {
+    //   inputValue = pageData[selectedControl]?.properties?.[key]?.value;
+    // }
     setInputValue(inputValue);
+    console.log('data-->', inputValue);
   }, [pageData, selectedControl]);
 
   const addOption = () => {
@@ -312,7 +336,11 @@ const PropertyInput = ({
     setOption('');
   };
   useEffect(() => {
+    console.log('Editor options---->', options);
+
     if (inputValue || options.length > 0) {
+      console.log('Editor options111 ---->', options); // Log options
+      console.log('Editor inputValue ---->', inputValue); // Log inputValue
       if (!pageData[selectedControl]?.properties) {
         setPageData((prev) => {
           let newPageData = [...prev];
@@ -356,7 +384,10 @@ const PropertyInput = ({
           type="text"
           className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            console.log(e.target.value); // Log the value
+            setInputValue(e.target.value);
+          }}
         />
       );
     case 'number':
@@ -368,7 +399,6 @@ const PropertyInput = ({
           onChange={(e) => setInputValue(e.target.value)}
         />
       );
-
     case 'boolean':
       return (
         <select
@@ -380,8 +410,8 @@ const PropertyInput = ({
           <option value="false">False</option>
         </select>
       );
-
     case 'options':
+      console.log('Option Enter ---->', options);
       return (
         <div className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm">
           {options.map((option, index) => {
@@ -433,6 +463,7 @@ const PropertyInput = ({
           </div>
         </div>
       );
+
     case 'lookup':
       return (
         <div className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm">
@@ -476,6 +507,7 @@ const Property = ({
   entity_id,
   editor_id,
 }) => {
+  console.log('Property123 ------>', pageData);
   return (
     <div className="w-full bg-[#FCF9EE] rounded p-4 my-4 flex-col items-center justify-between border border-[#F9EFDE]">
       <div className="">{property?.label}</div>
@@ -516,6 +548,7 @@ const LookupComponent = ({ module_id, entity_id, setInputValue }) => {
   useEffect(() => {
     getEntities(module_id).then((data) => {
       let entities = data?.data;
+      // console.log("data---------------",data)
       entities.forEach((entity, index) => {
         if (entity_id === entity._id) {
           // Remove the entity from the array

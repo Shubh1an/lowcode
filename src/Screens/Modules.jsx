@@ -22,7 +22,11 @@ const Modules = () => {
       try {
         setShowModal(false);
         console.log('Successfully saved!');
-        toast.success('Successfully saved!');
+        toast.success('Module successfully saved!', {
+          className:
+            'bg-green-100 border-2 border-green-500 text-[#000] rounded-lg p-4 font-poppins text-base leading-[21px]',
+        });
+
         fetchModules();
       } catch (error) {
         console.error(error);
@@ -87,7 +91,10 @@ const Modules = () => {
           linkto={'/builder/entity?module_id'}
         />
       </div>
-      <ToastContainer />
+      <ToastContainer
+        //  toastClassName="bg-[#F0F9FA] border-2 border-[#3A9EA5] rounded-full"
+        toastClassName="bg-green-100 border-2 border-green-500 rounded-lg p-4"
+      />
     </div>
   );
 };
@@ -98,7 +105,27 @@ const ModalComponent = ({
   setModalForm,
   handleSubmit,
 }) => {
+  const [errors, setErrors] = useState({
+    name: '',
+  });
+
+  const validateForm = () => {
+    const newErrors = { name: '' };
+    let isValid = true;
+
+    if (!modalForm.name) {
+      newErrors.name = 'Module name is required!';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
     try {
       console.log('handleSave called');
       await handleSubmit();
@@ -123,6 +150,7 @@ const ModalComponent = ({
           value={modalForm.name}
           onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
         />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
       </div>
       <div className="w-full mt-5">
         <p className="mb-2 text-lg font-bold">Description</p>
@@ -136,10 +164,10 @@ const ModalComponent = ({
           }
         />
       </div>
-      <div className="flex justify-start items-center mt-5">
+      <div className="flex justify-start items-center mt-5 space-x-2">
         <button
           className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
-          onClick={closeModal}
+          onClick={() => closeModal()}
         >
           Cancel
         </button>
