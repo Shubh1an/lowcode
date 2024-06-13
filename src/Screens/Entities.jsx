@@ -4,9 +4,7 @@ import { getEntities, saveEntity } from '../Requests/entity.js';
 import TableView from './Components/MiniComponents/Grid';
 import { createPage } from '../Requests/page';
 import { type } from '@testing-library/user-event/dist/type';
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Toast from './Components/Toaster';
 
 const Entities = () => {
   let module_id = location.search.split('module_id=')[1];
@@ -20,10 +18,15 @@ const Entities = () => {
   const handleSearch = (value) => {};
   const [view, setView] = useState(true);
   const [cells, setCells] = useState([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
   const handleSubmit = async () => {
     console.log(modalForm);
+    debugger;
     try {
       const data = await saveEntity(modalForm);
+      debugger;
       console.log(data);
       await createPage({
         name: modalForm.name,
@@ -51,11 +54,13 @@ const Entities = () => {
       });
       setShowModal(false);
       console.log('Successfully saved!');
-      toast.success('Successfully saved!');
+      setToastMessage('Entity saved successfully.');
+      setShowToast(true);
       fetchEntities();
     } catch (error) {
-      console.error(error);
-      toast.error(`Error: ${error.message}`);
+      console.error('Error saving module:', error);
+      setToastMessage('Failed to save module.');
+      setShowToast(true);
     }
   };
 
@@ -115,7 +120,11 @@ const Entities = () => {
           linkto={`/builder/pages?module_id=${module_id}&entity_id`}
         />
       </div>
-      <ToastContainer />
+      <Toast
+        message={toastMessage}
+        showToast={showToast}
+        setShowToast={setShowToast}
+      />
     </div>
   );
 };
@@ -135,7 +144,7 @@ const ModalComponent = ({
     let isValid = true;
 
     if (!modalForm.name) {
-      newErrors.name = 'Enttity name is required!';
+      newErrors.name = 'Entity name is required!';
       isValid = false;
     }
 

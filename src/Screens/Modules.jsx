@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import TopBar from './Components/TopBar';
 import { getModules, saveModule } from '../Requests/module';
 import TableView from './Components/MiniComponents/Grid';
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import Toast from './Components/Toaster';
 const Modules = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalForm, setModalForm] = useState({
@@ -16,23 +13,26 @@ const Modules = () => {
   const handleSearch = (value) => {};
   const [view, setView] = useState(true);
   const [cells, setCells] = useState([]);
-  const handleSubmit = () => {
-    console.log(modalForm);
-    saveModule(modalForm).then(() => {
-      try {
-        setShowModal(false);
-        console.log('Successfully saved!');
-        toast.success('Module successfully saved!', {
-          className:
-            'bg-green-100 border-2 border-green-500 text-[#000] rounded-lg p-4 font-poppins text-base leading-[21px]',
-        });
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
-        fetchModules();
-      } catch (error) {
-        console.error(error);
-        toast.error(`Error: ${error.message}`);
-      }
-    });
+  // const handleSubmit = () => {
+  //   console.log(modalForm);
+  //   saveModule(modalForm)
+  // };
+
+  const handleSubmit = async () => {
+    console.log(modalForm);
+    try {
+      await saveModule(modalForm);
+      setToastMessage('Module saved successfully.');
+      setShowToast(true);
+      fetchModules(); // Fetch modules after saving
+    } catch (error) {
+      console.error('Error saving module:', error);
+      setToastMessage('Failed to save module.');
+      setShowToast(true);
+    }
   };
 
   const fetchModules = async () => {
@@ -91,9 +91,15 @@ const Modules = () => {
           linkto={'/builder/entity?module_id'}
         />
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         //  toastClassName="bg-[#F0F9FA] border-2 border-[#3A9EA5] rounded-full"
         toastClassName="bg-green-100 border-2 border-green-500 rounded-lg p-4"
+      /> */}
+
+      <Toast
+        message={toastMessage}
+        showToast={showToast}
+        setShowToast={setShowToast}
       />
     </div>
   );
