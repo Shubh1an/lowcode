@@ -45,34 +45,36 @@ export const entities = async (moduleId) => {
   }
 };
 
-// export const GET_PAGES_BY_ENTITY = gql`
-//   query ($entityId: ID) {
-//     pages(entity_id: $entityId) {
-//       id
-//       name
-//       type
-//       description
-//       form_schema
-//     }
-//   }
-// `;
+export const GET_PAGES_BY_ENTITY = gql`
+  query ($entity_id: ID!) {
+    getPagebyEntityid(entity_id: $entity_id) {
+      id
+      name
+      entity_id
+      description
+      form_schema
+      type
+    }
+  }
+`;
 
-// export const pages = async (entityId) => {
-//   try {
-//     return await client
-//       .query({
-//         query: GET_PAGES_BY_ENTITY,
-//         fetchPolicy: 'no-cache',
-//         variables: { entityId },
-//       })
-//       .then((res) => {
-//         // console.log('Res', res);
-//         return res.data;
-//       });
-//   } catch (error) {
-//     console.error('Error fetching enity:', error);
-//   }
-// };
+export const getPagebyEntityid = async (entity_id) => {
+  try {
+    return await client
+      .query({
+        query: GET_PAGES_BY_ENTITY,
+        fetchPolicy: 'no-cache',
+        variables: { entity_id },
+      })
+      .then((res) => {
+        console.log('Res for raw', res);
+        return res.data;
+      });
+  } catch (error) {
+    console.error('Error fetching enity:', error);
+  }
+};
+
 export const GET_PAGES_BY_Id = gql`
   query ($getPageId: ID!) {
     getPagebyid(id: $getPageId) {

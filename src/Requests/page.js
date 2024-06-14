@@ -171,6 +171,7 @@ export const GET_NEW_PAGE = gql`
 `;
 
 export const getNewPage = async (pageId) => {
+  console.log('pageId', pageId);
   try {
     debugger;
     const { data } = await client.query({

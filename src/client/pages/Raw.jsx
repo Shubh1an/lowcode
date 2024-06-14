@@ -7,6 +7,8 @@ import { formatValue } from '../../Utility/utility';
 import { setNewform } from '../../redux/userslice';
 import { Pages, PagesFilleddata } from '../service/service';
 import { getPagebyid } from '../../Graphql/modelQuery';
+import { getNewPage } from '../../Requests/page';
+import { useNavigate } from 'react-router-dom';
 
 const Raw = () => {
   const dispatch = useDispatch();
@@ -21,20 +23,27 @@ const Raw = () => {
   const [pageData, setPageData] = useState([]);
   const [pageId, setPageID] = useState('');
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     getFilledDataTable();
     if (pageId) {
+      debugger;
+      console.log('useffect', pageId);
       getviewPage();
       getForm(pageId);
-      setForms(modulesdata?.newForm);
+      // setForms(modulesdata?.newForm);
     }
   }, [entityId, pageId]);
 
   const getFilledDataTable = async () => {
     const pagesdefaultadd = await Pages(dispatch, entityId);
-    console.log('pagesdefaultadd', pagesdefaultadd);
-    if (pagesdefaultadd.length > 0) {
-      setPageID(pagesdefaultadd.find((em) => em.type === 'default_add')?.id);
+    if (pagesdefaultadd.getPagebyEntityid.length > 0) {
+      setPageID(
+        pagesdefaultadd.getPagebyEntityid.find(
+          (em) => em.type === 'default_add',
+        )?.id,
+      );
     }
   };
 
@@ -55,8 +64,10 @@ const Raw = () => {
   };
 
   const getForm = async (pageId) => {
-    const addnewform = await getPagebyid(pageId);
-    dispatch(setNewform(addnewform?.getPagebyid));
+    const addnewform = await getNewPage(pageId);
+    console.log('addnewform', addnewform);
+    setForms(addnewform);
+    dispatch(setNewform(addnewform));
   };
 
   useEffect(() => {
@@ -84,6 +95,7 @@ const Raw = () => {
     // setPageData([{ ...formvalue }]);
   }, [pageData]);
 
+  console.log('after use effect', forms);
   const handleSubmit = async () => {
     let payload = {
       page_id: forms?.id,
@@ -102,21 +114,24 @@ const Raw = () => {
   };
 
   const getFormByRow = (data) => {
-    let formvalue = [];
-    forms?.form_schema?.map((item, index) => {
-      let value = data?.[index]?.value ? data?.[index]?.value : '';
-      formvalue.push({ value });
-    });
-    setPageData({ ...formvalue });
-    document.getElementById('my-drawer').click();
+    navigate('');
+    // let formvalue = [];
+    // forms?.form_schema?.map((item, index) => {
+    //   let value = data?.[index]?.value ? data?.[index]?.value : '';
+    //   formvalue.push({ value });
+    // });
+    // setPageData({ ...formvalue });
+    // document.getElementById('my-drawer').click();
   };
 
   const openDrawer = () => {
+    console.log('object', forms);
     let formvalue = [];
     forms?.form_schema?.map(() => {
       let value = '';
       formvalue.push({ value });
     });
+    console.log('formvalue', formvalue);
     setPageData([{ ...formvalue }]);
 
     if (formvalue) document.getElementById('my-drawer').click();
