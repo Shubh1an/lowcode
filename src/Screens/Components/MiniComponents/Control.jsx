@@ -62,6 +62,7 @@ const Control = ({
 
   useEffect(() => {
     // check if the value is valid
+
     if (regex && inputValue) {
       const isValid = new RegExp(regex).test(inputValue);
       setIsValid(isValid);
@@ -1206,6 +1207,7 @@ const Control = ({
       let entityColumn = field?.properties?.entityColumn?.value;
 
       const [entityData, setEntityData] = useState([]);
+      console.log('entityData---->', entityData);
       useEffect(() => {
         if (entity) {
           getPages(entity)
@@ -1229,6 +1231,7 @@ const Control = ({
                 let entityData = [];
 
                 data?.data?.map((entity) => {
+                  console.log('Finial data1111------>', entity);
                   entity?.form_data?.map((data) => {
                     if (data?.key === entityColumn) {
                       entityData.push({
@@ -1256,6 +1259,7 @@ const Control = ({
           </div>
         );
       }
+      debugger;
       console.log(entityType, entity, entityColumn);
 
       return (
