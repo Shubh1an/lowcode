@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AiOutlineLeft, AiOutlineMail } from 'react-icons/ai';
-import { BsThreeDots } from 'react-icons/bs';
+import { BsCalendar4Event, BsThreeDots } from 'react-icons/bs';
 import { CiEdit, CiSearch } from 'react-icons/ci';
 import {
   IoIosAddCircleOutline,
@@ -18,6 +18,8 @@ import ActivityCard from '../Components/Card/ActivityCard';
 import { timelineData } from '../Components/timelineData.js';
 import NewLead from '../assets/newlead.svg';
 import Deal from '../assets/deal.svg';
+import { SlArrowRight } from 'react-icons/sl';
+import { RiArrowRightWideLine } from 'react-icons/ri';
 const Profile = () => {
   const tabs = [{ title: 'Basic Details' }, { title: 'Extra Details' }];
   const activityTabs = [
@@ -112,35 +114,64 @@ const Profile = () => {
           </div>
           <div className="font-semibold text-2xl">Daisy Wilson</div>
         </div>
-        <div className="hidden w-full md:block md:w-auto" id="navbar-solid-bg">
-          <ul className="flex flex-col font-medium mt-4 rounded-lg  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
-            <li className="bg-[#FCF9EE] p-2">
+        <div className="hidden w-full md:block md:w-auto">
+          <ul className="flex flex-col font-medium mt-4 rounded-lg  rtl:space-x-reverse md:flex-row md:mt-0  md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
+            <li className="bg-[#FCF9EE] pl-1 flex items-center">
               <a href="#" className="text-[#F29900]">
-                Home
+                New Lead
               </a>
+              <SlArrowRight
+                style={{
+                  color: 'white',
+                  filter: 'drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff)',
+                }}
+                fontSize={40}
+                fontWeight={700}
+              />
             </li>
-            <li>
-              <a
-                href="#"
-                className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Services
+
+            <li className="bg-[#F8F8F8] pl-1 flex items-center">
+              <a href="#" className="text-[#323232]">
+                Contacted
               </a>
+              <SlArrowRight
+                style={{
+                  color: 'white',
+                  filter: 'drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff)',
+                }}
+                fontSize={40}
+                fontWeight={700}
+              />
             </li>
-            <li>
-              <a
-                href="#"
-                className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Pricing
+            <li className="bg-[#F8F8F8] pl-1 flex items-center ">
+              <a href="#" className="text-[#323232]">
+                Prospect
               </a>
+              <SlArrowRight
+                style={{
+                  color: 'white',
+                  filter: 'drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff)',
+                }}
+                fontSize={40}
+                fontWeight={700}
+              />
             </li>
-            <li>
-              <a
-                href="#"
-                className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Contact
+            <li className="bg-[#F8F8F8] pl-1 flex items-center">
+              <a href="#" className="text-[#323232]">
+                Won
+              </a>
+              <SlArrowRight
+                style={{
+                  color: 'white',
+                  filter: 'drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff)',
+                }}
+                fontSize={40}
+                fontWeight={700}
+              />
+            </li>
+            <li className="bg-[#F8F8F8] pl-1 flex items-center">
+              <a href="#" className="text-[#323232]">
+                Dead
               </a>
             </li>
           </ul>
@@ -433,16 +464,38 @@ const Profile = () => {
                   />
                 </div>
                 <button className="flex items-center border border-[#999999] rounded-md p-1.5">
-                  <LuFilter className="h-5 w-5 text-[#323232] mr-1" />
+                  <LuFilter className="h-5 w-5 text-[#323232] " />
                 </button>
               </div>
             </div>
+
+            {/* SEARCH EVENT */}
+            {/* <hr /> */}
+            {/* <div className="flex flex-row-reverse mt-2 gap-2">
+              <div className="flex justify-center">
+                <button className=" bg-[#323232]  text-white font-bold p-2 rounded-lg ">
+                  Reset
+                </button>
+              </div>
+              <button className="flex items-center border border-[#999999] rounded-md p-1.5">
+                <BsCalendar4Event className="h-5 w-5 text-[#323232] " />
+              </button>
+              <div className="flex items-center border border-[#999999] rounded-md p-1.5">
+                <input
+                  type="text"
+                  placeholder="Document"
+                  className="outline-none flex-1 text-sm max-w-16 text-[#323232]" // Adjusted width here
+                />
+              </div>
+            </div> */}
+
             <div className="flex items-center font-bold bg-[#FCF9EE]">
               <ActivityTab
                 tabs={activityTabs}
                 handleActivityTabClick={handleActivityTabClick}
               />
             </div>
+
             <div className="mt-4">{renderView()}</div>
           </div>
           <div className="w-1/4 bg-[#FFFFFF] overflow-scroll no-scrollbar p-4 flex flex-col max-h-[80%]">
@@ -472,7 +525,7 @@ const Profile = () => {
                 </div>
               </li>
               <div className="flex ">
-                <div className="w-px h-8 bg-[#4691FF] dark:bg-gray-600"></div>
+                <div className="w-px h-8 bg-[#4691FF] dark:bg-gray-600 ml-9"></div>
                 <span className="ml-5 mt-2 font-semibold text-[#888888] text-xs">
                   Duration (5 days)
                 </span>
