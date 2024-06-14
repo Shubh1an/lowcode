@@ -174,7 +174,6 @@ const ModalComponent = ({
       closeModal();
     } catch (error) {
       console.log('handleSubmit error:', error);
-      toast.error(`Error: ${error.message}`);
     }
   };
 

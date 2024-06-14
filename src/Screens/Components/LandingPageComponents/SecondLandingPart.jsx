@@ -60,7 +60,10 @@ import TemplateIcon from '../../../assets/TemplateIcon.svg';
 
 function SecondLandingPart() {
   return (
-    <div className="max-w-6xl ml-80" style={{ marginTop: '300px' }}>
+    <div
+      className="max-w-10xl "
+      style={{ position: 'absolute', left: '20%', right: '20%' }}
+    >
       <div className="font-sans text-gray-800 text-2xl font-semibold mb-4 bold">
         Featured App
       </div>
