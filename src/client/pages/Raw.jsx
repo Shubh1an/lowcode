@@ -6,7 +6,6 @@ import Control from '../../Screens/Components/MiniComponents/Control';
 import { formatValue } from '../../Utility/utility';
 import { setNewform } from '../../redux/userslice';
 import { Pages, PagesFilleddata } from '../service/service';
-import { getPagebyid } from '../../Graphql/modelQuery';
 import { getNewPage } from '../../Requests/page';
 import { useNavigate } from 'react-router-dom';
 
@@ -114,7 +113,7 @@ const Raw = () => {
   };
 
   const getFormByRow = (data) => {
-    navigate('');
+    navigate('../page/contactview');
     // let formvalue = [];
     // forms?.form_schema?.map((item, index) => {
     //   let value = data?.[index]?.value ? data?.[index]?.value : '';

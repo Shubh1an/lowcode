@@ -11,3 +11,26 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #f5f5f5;
 }
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+.arrow-right {
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent; /* Adjust the size of the arrow */
+  border-bottom: 12px solid transparent; /* Adjust the size of the arrow */
+  border-left: 12px solid white; /* Color of the arrow */
+  position: absolute;
+  right: -6px; /* Adjust the position of the arrow */
+  top: 50%;
+  transform: translateY(-50%);
+}
