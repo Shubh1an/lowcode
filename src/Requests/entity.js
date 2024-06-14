@@ -7,6 +7,5 @@ export const getEntities = async (module_id) => {
 
 export const saveEntity = async (data) => {
   let response = await apiInstance.post('/entities', data);
-
   return response;
 };

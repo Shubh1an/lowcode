@@ -36,8 +36,16 @@ const Control = ({
   setIsError = () => {},
   name,
 }) => {
+  console.log('values of Control----->', value);
   const regex = field?.properties?.pattern?.value;
+  let maxLength = field?.properties?.maxLength?.value || 1000;
+  let minLength = field?.properties?.minLength?.value || 0;
+  const dropdownOptions = field?.properties?.options?.options || [];
+  console.log('Control -------> ', field?.properties);
+  console.log('Dropdown options:', field?.properties?.options?.options);
+
   const handleValue = (field) => {
+    console.log('Field value:', field);
     setValue((prev) => {
       let newValue = [...prev];
 
@@ -45,6 +53,7 @@ const Control = ({
         ...newValue[index],
         value: field,
       };
+      console.log('data saved', newValue);
       return newValue;
     });
   };
@@ -63,6 +72,16 @@ const Control = ({
       }
     } else {
       setIsError('');
+    }
+    if (inputValue) {
+      if (inputValue.length < minLength) {
+        setIsValid(false);
+        setIsError('Min input length: ' + minLength);
+      }
+      if (inputValue.length > maxLength) {
+        setIsValid(false);
+        setIsError('Max input length: ' + name);
+      }
     }
   }, [inputValue]);
 
@@ -128,7 +147,8 @@ const Control = ({
     setComments(updatedComments);
   };
   const [rating, setRating] = useState(null);
-  const [hover, setHover] = useState(false);
+  const [hoveredRating, setHoveredRating] = useState(0);
+  // const [hover, setHover] = useState(false);
   const [totalStars, setTotalStars] = useState(5);
 
   const [isRecording, setIsRecording] = useState(false);
@@ -147,6 +167,12 @@ const Control = ({
     //   setFileContent(reader.result);
     // };
     // reader.readAsText(file); // or readAsDataURL(file) for images
+  };
+
+  const handleRatingClick = (value) => {
+    setRating(value); // Set the selected rating
+    handleValue(value); // Call the handleValue function with the selected rating
+    console.log('value----->', value);
   };
 
   const handleRecordClick = () => {
@@ -275,12 +301,15 @@ const Control = ({
   const handleSubmit = () => {
     alert('Submitted!');
   };
+
   switch (label) {
     case 'section':
       return (
         <div className="w-full min-h-[100px] border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF]"></div>
       );
     case 'single_line':
+      console.log('Placeholder:', field?.properties?.placeholder?.value);
+      console.log('vaue:', { inputValue });
       return (
         <input
           type="text"
@@ -293,7 +322,7 @@ const Control = ({
     case 'Multi_Line':
       return (
         <textarea
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border rounded-lg bg-white w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
           placeholder={field?.properties?.placeholder?.value || 'Enter Value'}
@@ -302,15 +331,20 @@ const Control = ({
     case 'dropdown':
       return (
         <select
-          className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm p-2 text-sm"
+          className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
+          placeholder={field?.properties?.placeholder?.value || 'Enter Value'}
         >
-          {options?.map((option, index) => (
-            <option key={index} value={option}>
-              {option}
-            </option>
-          ))}
+          {/* {hardCodedOptions.map((option, index) => { */}
+          {dropdownOptions.map((option, index) => {
+            console.log(`Option ${index}:`, option); // Log each option
+            return (
+              <option key={index} value={option}>
+                {option}
+              </option>
+            );
+          })}
         </select>
 
         // <select
@@ -396,7 +430,9 @@ const Control = ({
           className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4"
           onChange={(e) => handleValue(e.target.value)}
           value={inputValue}
-          placeholder={field?.properties?.placeholder?.value || 'Enter Value'}
+          placeholder={
+            field?.properties?.placeholder?.value || 'email@example.com'
+          }
         />
       );
     case 'Address':
@@ -490,59 +526,73 @@ const Control = ({
           value={inputValue}
         />
       );
-    case 'Star Rating':
-      let max = 5;
-      let defaultValue = 0;
-      return (
-        <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
-          {[...Array(max)].map((star, i) => {
-            return (
-              <label key={i}>
-                <input
-                  type="radio"
-                  name="rating"
-                  value={i + 1}
-                  style={{ display: 'none' }}
-                />
-                <FaStar
-                  color={i < defaultValue ? '#ffc107' : '#e4e5e9'}
-                  // color={rating >= star ? 'gold' : 'gray'}
-                  size={24}
-                  style={{ cursor: 'pointer' }} // Change cursor to pointer to
-                  indicate
-                  clickability
-                  className="star"
-                  onClick={() => onchange({ target: { value: i + 1 } })}
-                />
-              </label>
-            );
-          })}
-        </div>
-      );
-    // case 'Star-Rating': {
+    // case 'Star Rating':
     //   let max = 5;
+    //   let defaultValue = 0;
     //   return (
-    //     <div>
-    //       {[...Array(max)].map((star) => {
+    //     <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
+    //       {[...Array(max)].map((star, i) => {
     //         return (
-    //           <span
-    //             className="start"
-    //             style={{
-    //               cursor: 'pointer',
-    //               color: rating >= star ? 'gold' : 'gray',
-    //               fontSize: `35px`,
-    //             }}
-    //             onClick={() => {
-    //               setRating(star);
-    //             }}
-    //           >
-    //             <FaStar style={{ display: 'flex', flex: 'inline' }} />
-    //           </span>
+    //           <label key={i}>
+    //             <input
+    //               type="radio"
+    //               name="rating"
+    //               value={i + 1}
+    //               style={{ display: 'none' }}
+    //             />
+    //             <FaStar
+    //               color={i < defaultValue ? '#ffc107' : '#e4e5e9'}
+    //               // color={rating >= star ? 'gold' : 'gray'}
+    //               size={24}
+    //               style={{ cursor: 'pointer' }} // Change cursor to pointer to
+    //               indicate
+    //               clickability
+    //               className="star"
+    //               onClick={() => onchange({ target: { value: i + 1 } })}
+    //             />
+    //           </label>
     //         );
     //       })}
     //     </div>
     //   );
-    // }
+    case 'Star-Rating': {
+      let max = 5;
+      let defaultValue = 0;
+      return (
+        <div className="flex">
+          {' '}
+          {/* Flex container */}
+          {[...Array(max)].map((_, index) => (
+            <span
+              key={index}
+              className="star"
+              style={{
+                cursor: 'pointer',
+                color:
+                  rating >= index + 1 ||
+                  index < defaultValue ||
+                  index + 1 <= hoveredRating
+                    ? 'gold'
+                    : 'gray',
+                fontSize: `30px`,
+              }}
+              onMouseEnter={() => {
+                setHoveredRating(index + 1); // Update hovered rating state
+              }}
+              onMouseLeave={() => {
+                setHoveredRating(0); // Reset hovered rating state
+              }}
+              onClick={() => {
+                // setRating(index + 1);
+                handleRatingClick(index + 1);
+              }}
+            >
+              <FaStar style={{ display: 'inline-block' }} />
+            </span>
+          ))}
+        </div>
+      );
+    }
     // case 'Avatar': {
     //   return (
     //     <input
@@ -674,8 +724,11 @@ const Control = ({
           className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm"
           placeholder="https://example.com"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder={field?.properties?.placeholder?.value || 'Enter Value'}
+          onChange={(e) => handleValue(e.target.value)}
+          //placeholder={"http://" + (field?.properties?.placeholder?.value || ' Enter Link')}
+          placeholder={
+            field?.properties?.placeholder?.value || 'https://example.com'
+          }
         />
       );
 

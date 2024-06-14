@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import TopBar from './Components/TopBar';
 import { getModules, saveModule } from '../Requests/module';
 import TableView from './Components/MiniComponents/Grid';
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import Toast from './Components/Toaster';
 const Modules = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalForm, setModalForm] = useState({
@@ -16,19 +13,26 @@ const Modules = () => {
   const handleSearch = (value) => {};
   const [view, setView] = useState(true);
   const [cells, setCells] = useState([]);
-  const handleSubmit = () => {
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  // const handleSubmit = () => {
+  //   console.log(modalForm);
+  //   saveModule(modalForm)
+  // };
+
+  const handleSubmit = async () => {
     console.log(modalForm);
-    saveModule(modalForm).then(() => {
-      try {
-        setShowModal(false);
-        console.log('Successfully saved!');
-        toast.success('Successfully saved!');
-        fetchModules();
-      } catch (error) {
-        console.error(error);
-        toast.error(`Error: ${error.message}`);
-      }
-    });
+    try {
+      await saveModule(modalForm);
+      setToastMessage('Module saved successfully.');
+      setShowToast(true);
+      fetchModules(); // Fetch modules after saving
+    } catch (error) {
+      console.error('Error saving module:', error);
+      setToastMessage('Failed to save module.');
+      setShowToast(true);
+    }
   };
 
   const fetchModules = async () => {
@@ -87,7 +91,16 @@ const Modules = () => {
           linkto={'/builder/entity?module_id'}
         />
       </div>
-      <ToastContainer />
+      {/* <ToastContainer
+        //  toastClassName="bg-[#F0F9FA] border-2 border-[#3A9EA5] rounded-full"
+        toastClassName="bg-green-100 border-2 border-green-500 rounded-lg p-4"
+      /> */}
+
+      <Toast
+        message={toastMessage}
+        showToast={showToast}
+        setShowToast={setShowToast}
+      />
     </div>
   );
 };
@@ -98,7 +111,27 @@ const ModalComponent = ({
   setModalForm,
   handleSubmit,
 }) => {
+  const [errors, setErrors] = useState({
+    name: '',
+  });
+
+  const validateForm = () => {
+    const newErrors = { name: '' };
+    let isValid = true;
+
+    if (!modalForm.name) {
+      newErrors.name = 'Module name is required!';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
     try {
       console.log('handleSave called');
       await handleSubmit();
@@ -123,6 +156,7 @@ const ModalComponent = ({
           value={modalForm.name}
           onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
         />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
       </div>
       <div className="w-full mt-5">
         <p className="mb-2 text-lg font-bold">Description</p>
@@ -136,10 +170,10 @@ const ModalComponent = ({
           }
         />
       </div>
-      <div className="flex justify-start items-center mt-5">
+      <div className="flex justify-start items-center mt-5 space-x-2">
         <button
           className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
-          onClick={closeModal}
+          onClick={() => closeModal()}
         >
           Cancel
         </button>

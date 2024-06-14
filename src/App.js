@@ -13,9 +13,9 @@ import SetupLayout from './Components/SetupWizard/SetupLayout';
 import Login from './Components/SetupWizard/Login';
 import Modules from './Screens/Modules';
 import Builder from './Screens/Builder';
+import NavigationComponents from './Screens/Components/LandingPageComponents/NavigationComponents';
 
 function App() {
-  // dfdsfsdfdfsd
   return (
     <div className="App">
       <GlobalProvider>
@@ -39,6 +39,7 @@ function App() {
                 </LayoutChild>
               }
             />
+            <Route path="/landingPage/*" element={<NavigationComponents />} />
             <Route
               path="/kanban"
               element={

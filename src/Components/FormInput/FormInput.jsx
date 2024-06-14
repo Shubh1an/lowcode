@@ -25,12 +25,17 @@ const FormInput = ({
     labelClass = '',
     index,
   } = field;
+
   const [file, setFile] = useState(null);
   const [tempOptions, setTempOptions] = useState(options);
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [name, seteName] = useState();
+
+  useEffect(() => {
+    console.log('propertyValues:', propertyValues);
+  }, [propertyValues]);
 
   const clearSelection = () => {
     setTempOptions([...tempOptions, ...selectedOptions]);
@@ -142,6 +147,7 @@ const InputByType = ({
   handleFileChange,
   handleUpload,
 }) => {
+  console.log('check ---->', options);
   switch (type) {
     case 'Single Line1':
       return (
@@ -155,7 +161,7 @@ const InputByType = ({
     case 'Multi Line':
       return (
         <textarea
-          className="border border-[#BDD7CF] rounded-lg bg-[#E9F2EF] w-full py-2 px-4"
+          className="border border-[#BDD7CF] rounded-lg w-full py-2 px-4 bg-white"
           id={id}
           rows={rows}
           placeholder={defaultValue}

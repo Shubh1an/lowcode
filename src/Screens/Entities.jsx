@@ -4,9 +4,7 @@ import { getEntities, saveEntity } from '../Requests/entity.js';
 import TableView from './Components/MiniComponents/Grid';
 import { createPage } from '../Requests/page';
 import { type } from '@testing-library/user-event/dist/type';
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Toast from './Components/Toaster';
 
 const Entities = () => {
   let module_id = location.search.split('module_id=')[1];
@@ -20,10 +18,15 @@ const Entities = () => {
   const handleSearch = (value) => {};
   const [view, setView] = useState(true);
   const [cells, setCells] = useState([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
   const handleSubmit = async () => {
     console.log(modalForm);
+    debugger;
     try {
       const data = await saveEntity(modalForm);
+      debugger;
       console.log(data);
       await createPage({
         name: modalForm.name,
@@ -51,11 +54,13 @@ const Entities = () => {
       });
       setShowModal(false);
       console.log('Successfully saved!');
-      toast.success('Successfully saved!');
+      setToastMessage('Entity saved successfully.');
+      setShowToast(true);
       fetchEntities();
     } catch (error) {
-      console.error(error);
-      toast.error(`Error: ${error.message}`);
+      console.error('Error saving module:', error);
+      setToastMessage('Failed to save module.');
+      setShowToast(true);
     }
   };
 
@@ -115,7 +120,11 @@ const Entities = () => {
           linkto={`/builder/pages?module_id=${module_id}&entity_id`}
         />
       </div>
-      <ToastContainer />
+      <Toast
+        message={toastMessage}
+        showToast={showToast}
+        setShowToast={setShowToast}
+      />
     </div>
   );
 };
@@ -126,7 +135,38 @@ const ModalComponent = ({
   setModalForm,
   handleSubmit,
 }) => {
+  const [errors, setErrors] = useState({
+    name: '',
+  });
+
+  const validateForm = () => {
+    const newErrors = { name: '' };
+    let isValid = true;
+
+    if (!modalForm.name) {
+      newErrors.name = 'Entity name is required!';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+  // const handleSave = async () => {
+  //   try {
+  //     console.log('handleSave called');
+  //     await handleSubmit();
+  //     console.log('handleSubmit resolved');
+  //     closeModal();
+  //   } catch (error) {
+  //     console.log('handleSubmit error:', error);
+  //     toast.error(`Error: ${error.message}`);
+  //   }
+  // };
+
   const handleSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
     try {
       console.log('handleSave called');
       await handleSubmit();
@@ -134,7 +174,6 @@ const ModalComponent = ({
       closeModal();
     } catch (error) {
       console.log('handleSubmit error:', error);
-      toast.error(`Error: ${error.message}`);
     }
   };
 
@@ -151,6 +190,7 @@ const ModalComponent = ({
           value={modalForm.name}
           onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
         />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
       </div>
       <div className="w-full mt-5">
         <p className="mb-2 text-lg font-bold">Description</p>
@@ -164,10 +204,11 @@ const ModalComponent = ({
           }
         />
       </div>
-      <div className="flex justify-start items-center mt-5">
+      <div className="flex justify-start items-center mt-5 space-x-2">
         <button
           className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
-          onClick={closeModal}
+          // onClick={closeModal}
+          onClick={() => closeModal()}
         >
           Cancel
         </button>

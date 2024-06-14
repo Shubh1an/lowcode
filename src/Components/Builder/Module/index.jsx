@@ -24,6 +24,7 @@ const Module = () => {
   const fetchModules = async () => {
     const modules = await getModules();
     let data = modules?.data;
+    console.log(data, 'data');
     if (data) {
       let headers_gen = Object.keys(data?.[0] || {});
       headers_gen.forEach((header, index) => {

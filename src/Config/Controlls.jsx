@@ -39,6 +39,7 @@ const controlls = (internal_name, children) => {
       return {
         properties: {
           displayName: { type: 'string', label: 'Display Name' },
+          placeholder: { type: 'string', label: 'Placeholder' },
           required: { type: 'boolean', label: 'Required' },
           defaultValue: { type: 'number', label: 'Default Value' },
           // max: { type: 'number', label: 'Max Length' },
@@ -50,6 +51,7 @@ const controlls = (internal_name, children) => {
       return {
         properties: {
           displayName: { type: 'string', label: 'Display Name' },
+          placeholder: { type: 'string', label: 'Placeholder' },
           required: { type: 'boolean', label: 'Required' },
           defaultValue: { type: 'string', label: 'Default Value' },
           options: { type: 'options', label: 'Options' },
@@ -159,7 +161,7 @@ const controlls = (internal_name, children) => {
         properties: {
           displayName: { type: 'string', label: 'Display Name' },
           required: { type: 'boolean', label: 'Required' },
-          defaultValue: { type: 'string', label: 'defaultValue' },
+          //defaultValue: { type: 'string', label: 'defaultValue' },
           placeholder: { type: 'string', label: 'Placeholder' },
         },
       };
@@ -248,10 +250,10 @@ const controlls = (internal_name, children) => {
           displayName: { type: 'string', label: 'Display Name' },
           required: { type: 'boolean', label: 'Required' },
           placeholder: { type: 'string', label: 'Placeholder' },
-          link: { type: 'string', label: 'Link' },
-          pattern: { type: 'string', label: 'Pattern' },
-          max: { type: 'number', label: 'Max Length' },
-          min: { type: 'number', label: 'Min Length' },
+          // link: { type: 'string', label: 'Link type' },
+          // pattern: { type: 'string', label: 'Pattern' },
+          // max: { type: 'number', label: 'Max Length' },
+          // min: { type: 'number', label: 'Min Length' },
         },
       };
     case 'Link List':
