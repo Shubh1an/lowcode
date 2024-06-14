@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import CustomSelect from './CustomSelect';
+import { useEffect, useState } from 'react';
 
 const Control = ({ label, value, setValue, index, options, links }) => {
   const handleValue = (field) => {

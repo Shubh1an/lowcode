@@ -1,8 +1,16 @@
 import { useEffect, useState } from 'react';
 import TopBar from './Components/TopBar';
-import { saveModule } from '../Graphql/moduleMutation';
-import { getModules } from '../Graphql/modelQuery';
+//import { PAGINATED_MODELS_QUERY } from '../Requests/module';
+import {
+  getModules,
+  saveModule,
+  getPaginatedModules,
+} from '../Requests/module';
 import TableView from './Components/MiniComponents/Grid';
+import CustomHide from './Components/MiniComponents/CustomHide';
+import { isNullableType } from 'graphql';
+import { empty } from '@apollo/client';
+
 const Modules = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalForm, setModalForm] = useState({
@@ -10,38 +18,113 @@ const Modules = () => {
     description: '',
   });
   const [headers, setHeaders] = useState([]);
-  const handleSearch = (value) => {};
+  const [loading, setLoading] = useState(false);
+  const [cachedData, setCachedData] = useState(null);
+  const [SearchableHeaders, setSearchableHeaders] = useState(headers);
+  const [hiddenHeaders, setHiddenHeaders] = useState([]);
+
+  // Modify handleSearch function to properly pass searchCriteria
+  const handleSearch = async (searchCriteria) => {
+    try {
+      console.log('searchCriteria:', searchCriteria);
+      // Call fetchModules with searchCriteria and currentPage
+      await fetchModules(searchCriteria, currentPage);
+    } catch (error) {
+      console.error('Error searching modules:', error);
+    }
+  };
   const [view, setView] = useState(true);
   const [cells, setCells] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const handleSubmit = () => {
-    // @ts-ignore
-    saveModule(modalForm).then(() => {
-      fetchModules();
-    });
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      await saveModule(modalForm);
+      setShowModal(false);
+      fetchModules({}, currentPage); // Fetch current page after save
+    } catch (error) {
+      console.error('Error saving module:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const fetchModules = async () => {
+  const fetchModules = async (
+    search = {},
+    page = 1,
+    limit = 4,
+    sort = { field: 'name', order: 'asc' },
+  ) => {
     try {
-      console.log('Loading modules at:', Date.now());
-      //setLoading(true);
-      const modulesData = await getModules();
-
+      //return console.log("Loading", search);
+      setLoading(true);
+      const variables = {
+        page,
+        limit,
+        sort,
+        search,
+        filter: {},
+      };
+      console.log('vvvv', variables);
+      const modulesData = await getPaginatedModules(variables);
+      console.log('modulesData', modulesData);
       const data = modulesData.modules;
       if (data) {
         const headers_gen = Object.keys(data?.[0] || {}).filter(
-          (header) => header !== 'id' && header !== '__v',
+          (header) =>
+            header !== 'id' && header !== '__v' && header !== '__typename',
         );
+        console.log('headers_gen', headers_gen);
         setHeaders(headers_gen);
         setCells(data);
+        setTotalPages(Math.ceil(modulesData.totalmodules / limit));
       }
     } catch (error) {
       console.error('Error fetching modules:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // const fetchModules = async () => {
+  //   try {
+
+  //     setLoading(true);
+  //     const modulesData = await getModules();
+
+  //     const data = modulesData.modules;
+  //     if (data) {
+  //       const headers_gen = Object.keys(data?.[0] || {}).filter(
+  //         (header) => header !== 'id' && header !== '__v'
+  //       );
+  //       setHeaders(headers_gen);
+  //       setCells(data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching modules:", error);
+  //   } finally {
+  //     setLoading(false); // Set loading state to false after fetching
+  //   }
+  // };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      fetchModules({}, newPage);
     }
   };
 
   useEffect(() => {
     fetchModules();
+  }, []);
+
+  useEffect(() => {
+    console.log('Modules loaded', SearchableHeaders);
+  }, [SearchableHeaders]);
+  useEffect(() => {
+    console.log('M1', modalForm);
+    console.log('M1', view);
   }, []);
 
   return (
@@ -55,11 +138,17 @@ const Modules = () => {
           modalForm={modalForm}
           setModalForm={setModalForm}
           headers={headers}
+          // handleSearch={() => {}}
           handleSearch={handleSearch}
-          searchableHeaders={headers}
+          // searchableHeaders={headers}
+          SearchableHeaders={SearchableHeaders}
+          setSearchableHeaders={setSearchableHeaders}
           setView={setView}
           view={view}
           handleSubmit={handleSubmit}
+          fetchModules={fetchModules}
+          setHiddenHeaders={setHiddenHeaders}
+          hiddenHeaders={hiddenHeaders}
           modalComponent={
             <ModalComponent
               closeModal={setShowModal}
@@ -69,10 +158,21 @@ const Modules = () => {
             />
           }
         />
-        <TableView
-          data={{ headers, cells }}
-          linkto={'/builder/entity?module_id'}
-        />
+        {loading ? (
+          <div className="w-full h-full flex items-center justify-center">
+            <p>Loading...</p>
+          </div>
+        ) : (
+          <>
+            <TableView
+              data={{ headers, cells }}
+              linkto={'/builder/entity?module_id'}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </>
+        )}
       </div>
     </div>
   );
@@ -115,14 +215,13 @@ const ModalComponent = ({
           className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
           onClick={() => {
             handleSubmit();
-            closeModal();
           }}
         >
           Save
         </button>
         <button
           className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
-          onClick={closeModal}
+          onClick={() => closeModal(false)}
         >
           Cancel
         </button>

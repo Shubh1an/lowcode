@@ -15,14 +15,26 @@ const CustomSearch = ({
   headers = [],
   handleHeaderSelect = () => {},
 }) => {
-  const [text, setText] = useState('Hello');
+  const [text, setText] = useState('');
   const [value] = useDebounce(text, 300);
 
   const [showModal, setShowModal] = useState(false);
-  // title, handleHeaderSelect, checked
+  console.log('text: ' + text);
+  console.log('setText: ' + setText);
   useEffect(() => {
-    handleSearch(value);
+    if (value) {
+      console.log('handleSearch value', value);
+      const searchCriteria = {};
+      searchHeaders.forEach((header) => {
+        searchCriteria[header] = value;
+      });
+      handleSearch(searchCriteria);
+    } else {
+      console.log('handleSearch value', value);
+      handleSearch({});
+    }
   }, [value]);
+
   return !searchActive ? (
     initialComponent
   ) : (

@@ -35,9 +35,9 @@ const config = {
     'lookup',
     // "gender",
 
-    // "video",
+    'video',
 
-    // "url",
+    'url',
   ],
 };
 

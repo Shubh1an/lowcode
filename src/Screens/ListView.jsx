@@ -11,46 +11,6 @@ import CustomSearch from './Components/MiniComponents/CustomSearch';
 import ListHeaderButton from './Components/MiniComponents/ListHeaderButton';
 import ShortModal from './Components/MiniComponents/ShortModal';
 import { getFilledData } from '../Graphql/modelQuery';
-// import { getFilledData } from '../Graphql/modelQuery';
-
-function preprocessSearchData(searchData, searchableHeaders) {
-  const hashTable = {};
-  // Initialize hash table with empty arrays for each searchable header
-  searchableHeaders.forEach((header) => {
-    hashTable[header] = [];
-  });
-
-  // Populate hash table with search data
-  searchData.forEach((item) => {
-    searchableHeaders.forEach((header) => {
-      if (item.hasOwnProperty(header) && typeof item[header] === 'string') {
-        // Convert header value to lowercase for case-insensitive search
-        const value = item[header].toLowerCase();
-        hashTable[header].push({ item, value });
-      }
-    });
-  });
-
-  return hashTable;
-}
-
-function search(searchValue, searchableHeaders, hashTable) {
-  const results = [];
-
-  // Convert search value to lowercase for case-insensitive search
-  const searchTerm = searchValue.toLowerCase();
-
-  // Search through hash table for matches
-  searchableHeaders.forEach((header) => {
-    hashTable?.[header]?.forEach(({ item, value }) => {
-      if (value.includes(searchTerm)) {
-        results.push(item);
-      }
-    });
-  });
-
-  return results;
-}
 
 const ListView = () => {
   let page_id = location.search.split('=')[1];
@@ -75,6 +35,7 @@ const ListView = () => {
   const getviewPage = async (page_id) => {
     try {
       const res = await getFilledData(page_id);
+      console.log('dhvh', res);
       let high_index = 0;
       let high_length = 0;
       let form_data = res.getFilledData;
@@ -131,13 +92,13 @@ const ListView = () => {
 
   useEffect(() => {
     setFormsToRender(forms);
-    setHashTable(preprocessSearchData(forms, searchableHeaders));
+    //setHashTable(preprocessSearchData(forms, searchableHeaders));
   }, [forms, searchableHeaders]);
 
   const handleSearch = (value) => {
     if (value) {
-      const results = search(value, searchableHeaders, hashTable);
-      setFormsToRender(results);
+      //const results = search(value, searchableHeaders, hashTable);
+      /// setFormsToRender(results);
     } else {
       setFormsToRender(forms);
     }

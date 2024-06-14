@@ -1,21 +1,29 @@
 import { useEffect, useState } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import { Link, useLocation } from 'react-router-dom';
 import Icons from '../Components/Utility/Icons';
 import controlls from '../Config/Controlls.jsx';
 import config from '../Config/config.js';
-import Control from './Components/MiniComponents/Control';
-import SubTab from './Components/MiniComponents/SubTab';
-
-import { Link } from 'react-router-dom';
-import { getPage } from '../Graphql/modelQuery';
-import { updatePage } from '../Graphql/moduleMutation';
 import { getEntities } from '../Requests/entity';
+import { UpdatePage, getNewPage } from '../Requests/page';
+import Control from './Components/MiniComponents/Control';
 import CustomSelect from './Components/MiniComponents/CustomSelect';
+import SubTab from './Components/MiniComponents/SubTab';
+import { useDrag, useDrop } from 'react-dnd';
 
+//editor_id == page_id
 const Editor = () => {
-  let page_id = location.search.split('page_id=')[1];
-  let module_id = location.search.split('module_id=')[1].split('&')[0];
-  let entity_id = location.search.split('entity_id=')[1].split('&')[0];
+  //let editor_id1 = location.search.split('editor_id=')[1];
+  // let module_id = location.search.split('module_id=')[1].split('&')[0];
+  // let entity_id = location.search.split('entity_id=')[1].split('&')[0];
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const module_id = params.get('module_id');
+  const params1 = new URLSearchParams(location.search);
+  const editor_id = params1.get('page_id');
+  const params2 = new URLSearchParams(location.search);
+  const entity_id = params2.get('entity_id');
+
   const [active, setActive] = useState(0);
   const [selectedControl, setSelectedControl] = useState(null);
 
@@ -28,45 +36,57 @@ const Editor = () => {
 
   const [pageData, setPageData] = useState([]);
 
-  const fetchPagebyID = async () => {
-    try {
-      const pageDetails = await getPage(page_id);
-      const data = pageDetails?.getPage;
-      if (data) {
-        setPageData(data.form_schema);
-        data?.form_schema?.forEach((item, index) => {
-          let pageControl = {
-            label: item.control,
-            properties: controlls(item.control).properties,
-            child: [],
-          };
-          setPage((prev) => [...prev, pageControl]);
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching enity:', error);
-    }
+  useEffect(() => {
+    console.log('editor_id', editor_id);
+    console.log('module_id', module_id);
+    console.log('entity_id', entity_id);
+  }, []);
+  const fetchPage = async () => {
+    debugger;
+    getNewPage(editor_id).then((res) => {
+      // setPage(res.data.form_schema)
+      // setPageData(res.data.page_data)
+      console.log('111', res);
+
+      debugger;
+      setPageData(res.form_schema);
+      res.form_schema.forEach((item, index) => {
+        debugger;
+        console.log('000', item);
+        // { label, properties: controlls(label)?.properties, child: [] }
+        let pageControl = {
+          label: item.control,
+          properties: controlls(item.control).properties,
+          child: [],
+        };
+        debugger;
+        setPage((prev) => [...prev, pageControl]);
+      });
+    });
   };
 
   useEffect(() => {
-    fetchPagebyID();
+    fetchPage();
   }, []);
 
-  const handleSubmit = async () => {
-    // let payload = {
-    //   form_schema: pageData,
-    // };
-    console.log('page_id', page_id);
-    const res = await updatePage(page_id, pageData);
-    console.log('obj', res);
-    fetchPagebyID();
-    //   .then((res) => {
-    //     console.log(res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // console.log('Page Data: ', page);
+  const handleSubmit = () => {
+    debugger;
+    let payload = {
+      id: editor_id,
+      input: {
+        form_schema: pageData,
+      },
+    };
+
+    const res = UpdatePage(payload)
+      .then((res) => {
+        debugger;
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    console.log('Page Data: ', page);
   };
 
   // use
@@ -104,10 +124,9 @@ const Editor = () => {
       <div className="w-1/4 h-full bg-[#FFF] rounded-2xl overflow-auto">
         <SubTab active={active} setActive={setActive} tabs={tabs} />
         <div className="w-full p-4 grid grid-cols-2 gap-x-4">
-          {CONTROLLS.map((control, index) => {
+          {CONTROLLS?.map((control, index) => {
             return (
               <ControlCard
-                key={index}
                 label={control}
                 icon={<Icons name={control} />}
                 index={index}
@@ -119,7 +138,7 @@ const Editor = () => {
 
       <div className="w-2/4 h-full bg-[#FFF] rounded-2xl overflow-auto mx-4">
         <EditorComponent
-          editorId={page_id}
+          editorId={editor_id}
           handleDrop={handleDrop}
           page={page}
           setPage={setPage}

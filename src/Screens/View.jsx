@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getPage } from '../Graphql/modelQuery';
+import { getPagebyid } from '../Graphql/modelQuery';
 import { createFilledData } from '../Graphql/moduleMutation';
 import Control from './Components/MiniComponents/Control';
 
@@ -12,8 +12,8 @@ const View = () => {
 
   const fetchPagebyID = async () => {
     try {
-      const pageDetails = await getPage(page_id);
-      const data = pageDetails?.getPage;
+      const pageDetails = await getPagebyid(page_id);
+      const data = pageDetails?.getPagebyid;
       if (data) {
         setPage(data);
       }

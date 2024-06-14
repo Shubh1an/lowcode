@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatValue } from '../../Utility/utility';
-import { Pages, PagesFilleddata } from '../service/service';
-import { getPage } from '../../Graphql/modelQuery';
-import Control from '../../Screens/Components/MiniComponents/Control';
+// import { getPage } from '../../Graphql/modelQuery';
 import { createFilledData } from '../../Graphql/moduleMutation';
+import Control from '../../Screens/Components/MiniComponents/Control';
+import { formatValue } from '../../Utility/utility';
 import { setNewform } from '../../redux/userslice';
+import { Pages, PagesFilleddata } from '../service/service';
+import { getPagebyid } from '../../Graphql/modelQuery';
 
 const Raw = () => {
   const dispatch = useDispatch();
@@ -54,8 +55,8 @@ const Raw = () => {
   };
 
   const getForm = async (pageId) => {
-    const addnewform = await getPage(pageId);
-    dispatch(setNewform(addnewform?.getPage));
+    const addnewform = await getPagebyid(pageId);
+    dispatch(setNewform(addnewform?.getPagebyid));
   };
 
   useEffect(() => {

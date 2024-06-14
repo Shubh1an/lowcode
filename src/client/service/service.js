@@ -2,8 +2,7 @@ import {
   entities,
   getFilledData,
   getModules,
-  getPage,
-  pages,
+  getPagebyid,
 } from '../../Graphql/modelQuery';
 import {
   setEntity,
@@ -25,8 +24,8 @@ export const Entity = async (dispatch, moduleId) => {
   return dispatch(setEntity(res?.entities));
 };
 export const Pages = async (dispatch, entityId) => {
-  const res = await pages(entityId);
-  dispatch(setPages(res.pages));
+  const res = await getPagebyid(entityId);
+  dispatch(setPages(res.getPagebyid));
   return res.pages;
 };
 export const PagesFilleddata = async (dispatch, pageId) => {
