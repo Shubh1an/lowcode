@@ -1,6 +1,6 @@
 const config = {
-  BASE_URL: 'http://localhost:3001/api',
-  // BASE_URL: 'http://192.168.1.50:9966/api',
+  // BASE_URL: 'http://localhost:3001/api',
+  BASE_URL: 'http://192.168.1.50:9966/api',
 
   CONTROLLS: [
     'single_line',
