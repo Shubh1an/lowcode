@@ -6,7 +6,7 @@ import config from '../Config/config.js';
 import Icons from '../Components/Utility/Icons';
 import { useDrag, useDrop } from 'react-dnd';
 import Control from './Components/MiniComponents/Control';
-import { getPageDetails, updatePage, getNewPage } from '../Requests/page';
+import { getPageDetails, getNewPage, UpdatePage } from '../Requests/page';
 import { Link } from 'react-router-dom';
 import { getEntities } from '../Requests/entity';
 import CustomSelect from './Components/MiniComponents/CustomSelect';
@@ -44,20 +44,24 @@ const Editor = () => {
     console.log('entity_id', entity_id);
   }, []);
   const fetchPage = async () => {
-    getNewPage('666a827c038150c555d321d6').then((res) => {
+    debugger;
+    getNewPage(editor_id).then((res) => {
       // setPage(res.data.form_schema)
       // setPageData(res.data.page_data)
       console.log('111', res);
-      console.log('222', res.data.form_schema);
+
+      debugger;
       setPageData(res.form_schema);
       res.form_schema.forEach((item, index) => {
+        debugger;
         console.log('000', item);
         // { label, properties: controlls(label)?.properties, child: [] }
         let pageControl = {
-          label: item,
+          label: item.control,
           properties: controlls(item.control).properties,
           child: [],
         };
+        debugger;
         setPage((prev) => [...prev, pageControl]);
       });
     });
@@ -68,12 +72,18 @@ const Editor = () => {
   }, []);
 
   const handleSubmit = () => {
+    debugger;
     let payload = {
-      form_schema: pageData,
+      id: editor_id,
+      input: {
+        form_schema: pageData,
+      },
     };
-    updatePage(editor_id, payload)
+
+    const res = UpdatePage(payload)
       .then((res) => {
-        console.log(res.data);
+        debugger;
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);

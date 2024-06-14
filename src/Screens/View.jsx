@@ -8,8 +8,10 @@ const View = () => {
   let page_id = location.search.split('=')[1];
   const [page, setPage] = useState({});
   const fetchPage = async () => {
+    debugger;
     getPageDetails(page_id).then((res) => {
-      setPage(res?.data);
+      debugger;
+      setPage(res?.getPagebyid);
     });
   };
 

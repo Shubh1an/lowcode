@@ -453,13 +453,12 @@
 
 // export default Entities;
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import TopBar from './Components/TopBar';
 import { getPaginatedEntities, saveEntity } from '../Requests/entity';
+import { createPage } from '../Requests/page';
 import TableView from './Components/MiniComponents/Grid';
-import { GET_PAGE_DETAILS } from '../Requests/page';
-import { savePage } from '../Requests/page';
+import TopBar from './Components/TopBar';
 
 const Entities = () => {
   const location = useLocation();
@@ -498,30 +497,26 @@ const Entities = () => {
     try {
       debugger;
       const data = await saveEntity(modalForm);
-      debugger;
-      await savePage({
+      await createPage({
         name: modalForm.name,
         entity_id: data.id,
         description: 'This is the default page for this entity',
         form_schema: [],
-        form_data: {},
         type: 'default_add',
       });
 
-      await savePage({
+      await createPage({
         name: modalForm.name,
         entity_id: data.id,
         description: 'This is the default page for this entity',
         form_schema: [],
-        form_data: {},
         type: 'default_edit',
       });
-      await savePage({
+      await createPage({
         name: modalForm.name,
         entity_id: data.id,
         description: 'This is the default page for this entity',
         form_schema: [],
-        form_data: {},
         type: 'default_view',
       });
       setShowModal(false);
@@ -604,7 +599,7 @@ const Entities = () => {
         ) : (
           <TableView
             data={{ headers, cells }}
-            linkto={`/builder/pages?module_id=${module_id}&&entity_id`}
+            linkto={`/builder/pages?module_id=${module_id}&entity_id`}
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}

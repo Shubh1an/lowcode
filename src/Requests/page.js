@@ -1,87 +1,9 @@
-// const { default: apiInstance } = require('./instance');
-
-// export const getPages = async (entity_id) => {
-//   let data = await apiInstance.get('/pages?entity_id=' + entity_id);
-//   return data;
-// };
-
-// export const getPageDetails = async (page_id) => {
-//   let data = await apiInstance.get('/pages/page?id=' + page_id);
-//   return data;
-// };
-// export const createPage = async (data) => {
-//   let response = await apiInstance.post('/pages', data);
-//   return response;
-// };
-
-// export const updatePage = async (page_id, data) => {
-//   let response = await apiInstance.put('/pages?id=' + page_id, data);
-//   return response;
-// };
-// src/Requests/page.js
 import { gql } from '@apollo/client';
 import client from '../ApolloClient.js';
 
 export const GET_PAGES = gql`
   query GetPages($entity_id: ID!) {
     pages(entity_id: $entity_id) {
-      id
-      name
-      entity_id
-      description
-      form_schema
-      form_data
-      type
-    }
-  }
-`;
-
-// export const CREATE_PAGE = gql`
-//   mutation CreatePage(
-//     $name: String!,
-//     $entity_id: ID,
-//     $description: String,
-//     $form_schema: [String],
-//     $form_data: JSON,
-//     $type: String
-//   ) {
-//     createPage(
-//       name: $name,
-//       entity_id: $entity_id,
-//       description: $description,
-//       form_schema: $form_schema,
-//       form_data: $form_data,
-//       type: $type
-//     ) {
-//       id
-//       name
-//       entity_id
-//       description
-//       form_schema
-//       form_data
-//       type
-//     }
-//   }
-// `;
-export const UPDATE_PAGE = gql`
-  mutation UpdatePage(
-    $id: ID!
-    $name: String
-    $entity_id: ID
-    $description: String
-    $form_schema: [String]
-    $form_data: JSON
-    $type: String
-  ) {
-    updatePage(
-      id: $id
-      name: $name
-      entity_id: $entity_id
-      description: $description
-      form_schema: $form_schema
-      form_data: $form_data
-      type: $type
-    ) {
       id
       name
       entity_id
@@ -101,18 +23,21 @@ export const getPages = async (entity_id) => {
   return data.pages;
 };
 
-// export const savePage = async (pageData) => {
-//   debugger;
-//   const { data } = await client.mutate({
-//     mutation: CREATE_PAGE,
-//     variables: pageData,
-//   });
-//   console.log("data.createPage", data)
-//   return data.createPage;
+export const UPDATE_PAGE = gql`
+  mutation UpdatePage($id: ID!, $input: NewPageInput!) {
+    updatePage(id: $id, input: $input) {
+      id
+      name
+      entity_id
+      description
+      form_schema
+      type
+    }
+  }
+`;
 
-// };
-
-export const updatePage = async (pageData) => {
+export const UpdatePage = async (pageData) => {
+  debugger;
   const { data } = await client.mutate({
     mutation: UPDATE_PAGE,
     variables: pageData,
@@ -120,66 +45,28 @@ export const updatePage = async (pageData) => {
   return data.updatePage;
 };
 
-// export const PAGINATED_PAGES = gql`
-//   query PaginatedPages(
-//  $page: Int, $limit: Int, $sort: SortInput, $search: SearchInput, $filter: FilterInput
-
-//   ) {
-//     paginatedPages(
-//      page: $page, limit: $limit, sort: $sort, search: $search, filter: $filter
-//     ) {
-//       pages {
-//       id
-//       name
-//       entity_id
-//       description
-//       form_schema
-//       form_data
-//       type
-//       }
-//       totalPages
-//       hasNextPage
-//       hasPreviousPage
-//     }
-//   }
-// `;
 export const CREATE_PAGE = gql`
-  mutation CreatePage(
-    $name: String!
-    $entity_id: ID
-    $description: String
-    $form_schema: [String]
-    $form_data: JSON
-    $type: String
-  ) {
-    createPage(
-      name: $name
-      entity_id: $entity_id
-      description: $description
-      form_schema: $form_schema
-      form_data: $form_data
-      type: $type
-    ) {
+  mutation CreatePage($input: NewPageInput!) {
+    createPage(input: $input) {
       id
       name
       entity_id
       description
       form_schema
-      form_data
       type
     }
   }
 `;
 
 // Function to call the mutation
-export const savePage = async (pageData) => {
+export const createPage = async (pageData) => {
   debugger;
   try {
     const { data } = await client.mutate({
       mutation: CREATE_PAGE,
-      variables: pageData,
+      variables: { input: pageData },
     });
-    debugger;
+
     console.log('data.createPage', CREATE_PAGE);
     return data.createPage;
   } catch {
@@ -187,10 +74,11 @@ export const savePage = async (pageData) => {
     console.log('error');
   }
 };
-export const PAGINATED_PAGES = gql`
+
+export const PAGINATED_NEW_PAGES = gql`
   query PaginatedPages(
-    $page: Int
-    $limit: Int
+    $page: Int!
+    $limit: Int!
     $sort: SortInput
     $search: SearchInput
     $filter: FilterInput
@@ -208,7 +96,6 @@ export const PAGINATED_PAGES = gql`
         entity_id
         description
         form_schema
-        form_data
         type
       }
       totalPages
@@ -218,114 +105,37 @@ export const PAGINATED_PAGES = gql`
   }
 `;
 
-export const PaginatedPages = async (pagedata) => {
-  const { data } = await client.query({
-    query: PAGINATED_PAGES,
-    variables: pagedata,
-    fetchPolicy: 'no-cache',
+export const PaginatedPages = async ({ page, limit, sort, search, filter }) => {
+  console.log('Fetching with parameters:', {
+    page,
+    limit,
+    sort,
+    search,
+    filter,
   });
-  return data.paginatedPages;
-};
-export const PAGINATED_NEW_PAGES = gql`
-  query PaginatedNewPages(
-    $page: Int
-    $limit: Int
-    $sort: SortInput
-    $search: SearchInput
-    $filter: FilterInput
-  ) {
-    paginatedNewPages(
-      page: $page
-      limit: $limit
-      sort: $sort
-      search: $search
-      filter: $filter
-    ) {
-      pages {
-        id
-        name
-        entity_id
-        description
-        form_schema {
-          control
-          properties {
-            displayName {
-              value
-              options
-            }
-            placeholder {
-              value
-              options
-            }
-            required {
-              value
-              label
-            }
-            defaultValue {
-              value
-              options
-            }
-            pattern {
-              value
-              options
-            }
-            value
-          }
-        }
-        type
-      }
-      totalPages
-      hasNextPage
-      hasPreviousPage
-    }
+  try {
+    const { data } = await client.query({
+      query: PAGINATED_NEW_PAGES,
+      variables: { page, limit, sort, search, filter },
+      fetchPolicy: 'no-cache',
+    });
+    console.log('Data fetched:', data);
+    return data.paginatedPages;
+  } catch (error) {
+    console.error('Error in query:', error);
+    throw error;
   }
-`;
-
-export const getPaginatedNewPages = async ({
-  page,
-  limit,
-  sort,
-  search,
-  filter,
-}) => {
-  const { data } = await client.query({
-    query: PAGINATED_NEW_PAGES,
-    variables: { page, limit, sort, search, filter },
-    fetchPolicy: 'no-cache',
-  });
-  return data.paginatedNewPages;
 };
-// export const PaginatedPages = async (
-// pagedata
-// ) => {
-//   debugger;
-//    console.log('PaginatedPages ?????????????',  pagedata)
-
-//   const { data } = await client.query({
-//     query: PAGINATED_PAGES,
-//     variables: {
-//       "page": pagedata?.page,
-//       "limit": pagedata?.limit,
-//       "sort": pagedata?.sort,
-//       "search": pagedata?.search,
-//       "filter":pagedata?.filter
-//       },
-//     fetchPolicy: 'no-cache',
-//   });
-//   console.log('PaginatedPages>>>>>>>>',data.paginatedPages)
-//   return data.paginatedPages;
-// };
 
 // GraphQL query to fetch page details
 export const GET_PAGE_DETAILS = gql`
-  query GetPageDetails($id: ID!) {
-    getPageDetails(id: $id) {
+  query GetPageById($id: ID!) {
+    getPagebyid(id: $id) {
       id
       name
       entity_id
       description
       form_schema
-      form_data
       type
     }
   }
@@ -334,50 +144,27 @@ export const GET_PAGE_DETAILS = gql`
 // Function to fetch page details
 export const getPageDetails = async (pageId) => {
   try {
+    debugger;
     const { data } = await client.query({
       query: GET_PAGE_DETAILS,
       variables: { id: pageId },
     });
-    return data.getPageDetails;
+    return data;
   } catch (error) {
+    debugger;
     console.error('Error fetching page details:', error);
     throw error;
   }
 };
 
 export const GET_NEW_PAGE = gql`
-  query GetNewPage($id: ID!) {
-    getNewPage(id: $id) {
+  query GetPageById($id: ID!) {
+    getPagebyid(id: $id) {
       id
       name
       entity_id
       description
-      form_schema {
-        control
-        properties {
-          displayName {
-            value
-            options
-          }
-          placeholder {
-            value
-            options
-          }
-          required {
-            value
-            label
-          }
-          defaultValue {
-            value
-            options
-          }
-          pattern {
-            value
-            options
-          }
-          value
-        }
-      }
+      form_schema
       type
     }
   }
@@ -385,13 +172,14 @@ export const GET_NEW_PAGE = gql`
 
 export const getNewPage = async (pageId) => {
   try {
+    debugger;
     const { data } = await client.query({
       query: GET_NEW_PAGE,
       variables: { id: pageId },
     });
-    return data.getNewPage;
+    return data.getPagebyid; // Corrected query name
   } catch (error) {
     console.error('Error fetching new page:', error);
-    throw error;
+    throw new Error('Error fetching new page');
   }
 };

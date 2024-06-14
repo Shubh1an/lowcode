@@ -40,8 +40,6 @@ const Modules = () => {
 
   const handleSubmit = async () => {
     try {
-      debugger;
-
       setLoading(true);
       await saveModule(modalForm);
       setShowModal(false);

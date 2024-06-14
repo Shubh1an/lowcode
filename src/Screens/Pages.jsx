@@ -1,92 +1,9 @@
-// import React, { useEffect, useState } from 'react';
-// import TopBar from './Components/TopBar';
-// import { getPages } from '../Requests/page';
-// import TableView from './Components/MiniComponents/Grid';
-
-// const Pages = () => {
-//   const [forms, setForms] = useState([]);
-//   const [formsToRender, setFormsToRender] = useState([]);
-//   const [headers, setHeaders] = useState([]);
-//   const [renderHeaders, setRenderHeaders] = useState([]);
-//   const [hideColumns, setHideColumns] = useState([]);
-//   const [showModal, setShowModal] = useState(false);
-//   const [modalForm, setModalForm] = useState(null);
-//   const [searchableHeaders, setSearchableHeaders] = useState([
-//     'name',
-//     'category',
-//     'description',
-//   ]);
-//   const [cells, setCells] = useState([]);
-//   const [people, setPeoples] = useState({});
-//   let entity_id = location.search.split('entity_id=')[1];
-//   let module_id = location.search.split('module_id=')[1];
-//   const handleHide = (column, checked) => {};
-//   const handleSearch = (value) => {};
-
-//   const handleHeaderSelect = (value, checked) => {};
-
-//   const handleAddNewPage = (id, type) => {};
-
-//   const addPage = (data) => {
-//     console.log('Clicked: ', data);
-//   };
-
-//   const fetchPages = () => {
-//     getPages(entity_id).then((res) => {
-//       let { data } = res;
-//       let headers_gen = Object.keys(data?.[0] || {});
-//       headers_gen.forEach((header, index) => {
-//         if (header === '_id' || header === '__v') {
-//           headers_gen.splice(index, 1);
-//         }
-//       });
-//       setHeaders(headers_gen);
-//       setCells(data);
-//     });
-//   };
-
-//   useEffect(() => {
-//     fetchPages();
-//   }, []);
-
-//   return (
-//     <div className="w-full h-full bg-[#FCF9EE] flex flex-col p-4">
-//       <div className="w-full h-full bg-[#FFF] rounded overflow-auto">
-//         <TopBar
-//           label="Pages"
-//           showModal={showModal}
-//           setShowModal={setShowModal}
-//           modalForm={modalForm}
-//           setModalForm={setModalForm}
-//           headers={headers}
-//           hideColumns={hideColumns}
-//           setHideColumns={setHideColumns}
-//           handleHide={handleHide}
-//           handleSearch={handleSearch}
-//           searchableHeaders={searchableHeaders}
-//           handleHeaderSelect={handleHeaderSelect}
-//           people={people}
-//           onNewPage={handleAddNewPage}
-//           entity_id={entity_id}
-//           isDropDownButton={true}
-//           onclick={addPage}
-//         />
-//         <TableView
-//           data={{ headers: headers, cells: cells }}
-//           linkto={`/builder/editor?module_id=${module_id}&editor_id`}
-//         />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Pages;
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
+  PaginatedNewPages,
   PaginatedPages,
-  savePage,
-  getPaginatedNewPages,
+  // savePage
 } from '../Requests/page';
 import TableView from './Components/MiniComponents/Grid';
 import TopBar from './Components/TopBar';
@@ -97,7 +14,7 @@ const Pages = () => {
   const entity_id = params.get('entity_id');
   const module_id = params.get('module_id');
   const page_id = params.get('page_id');
-  // console.log(entity_id , "entity_id", module_id, "module",page_id, "page");
+  console.log(entity_id, 'entity_id', module_id, 'module', page_id, 'page');
 
   const [showModal, setShowModal] = useState(false);
   const [modalForm, setModalForm] = useState({
@@ -105,8 +22,8 @@ const Pages = () => {
     name: '',
     description: '',
     entity_id: entity_id,
-    form_schema: [],
-    form_data: {},
+    form_schema: {},
+
     type: '',
   });
   const [headers, setHeaders] = useState([]);
@@ -120,13 +37,17 @@ const Pages = () => {
     'description',
   ]);
 
+  useEffect(() => {
+    fetchPages();
+  }, []);
+
   const handleSubmit = async () => {
     try {
       setLoading(true);
       if (modalForm.id) {
         //await updatePage(modalForm);
       } else {
-        await savePage(modalForm);
+        //  await savePage(modalForm);
       }
       setShowModal(false);
       fetchPages();
@@ -144,6 +65,7 @@ const Pages = () => {
     search = { field: '', value: '' },
     filter = { field: 'entity_id', value: entity_id },
   ) => {
+    console.log('Fetching pages', page);
     try {
       console.log('Fetching with parameters:', {
         page,
@@ -152,8 +74,10 @@ const Pages = () => {
         search,
         filter,
       });
+      debugger;
       const variables = { page, limit, sort, search, filter };
-      const { pages, totalPages } = await getPaginatedNewPages(variables);
+      console.log('Fetching', variables);
+      const { pages, totalPages } = await PaginatedPages(variables);
 
       if (pages) {
         const headers_gen = Object.keys(pages?.[0] || {}).filter(
@@ -215,7 +139,7 @@ const Pages = () => {
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
-      fetchPages({}, newPage);
+      fetchPages(newPage);
     }
   };
 
@@ -226,15 +150,12 @@ const Pages = () => {
       description: page.description,
       entity_id: page.entity_id,
       form_schema: page.form_schema,
-      form_data: page.form_data,
+
       type: page.type,
     });
+
     setShowModal(true);
   };
-
-  useEffect(() => {
-    fetchPages();
-  }, []);
 
   useEffect(() => {
     // console.log("entity_id1 :" entity_id);
@@ -253,7 +174,7 @@ const Pages = () => {
           hideColumns={[]}
           setHideColumns={() => {}}
           handleHide={() => {}}
-          handleSearch={(value) => fetchPages({ name: value }, currentPage)}
+          handleSearch={(value) => fetchPages(currentPage)}
           searchableHeaders={searchableHeaders}
           handleHeaderSelect={() => {}}
           people={{}}
