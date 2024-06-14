@@ -10,6 +10,8 @@ import Kanban from './Pages/Board/Kanban';
 import Templates from './Pages/Templates';
 import Builder from './Screens/Builder';
 import { Route, Routes } from 'react-router-dom';
+// @ts-ignore
+import Profile from './Pages/Profile';
 
 function App() {
   // dfdsfsdfdfsd
@@ -40,6 +42,14 @@ function App() {
               element={
                 <LayoutChild>
                   <Kanban />
+                </LayoutChild>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <LayoutChild>
+                  <Profile />
                 </LayoutChild>
               }
             />
