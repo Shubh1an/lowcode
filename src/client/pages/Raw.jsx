@@ -27,7 +27,6 @@ const Raw = () => {
   useEffect(() => {
     getFilledDataTable();
     if (pageId) {
-      debugger;
       console.log('useffect', pageId);
       getviewPage();
       getForm(pageId);

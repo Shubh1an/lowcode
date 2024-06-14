@@ -37,7 +37,6 @@ export const UPDATE_PAGE = gql`
 `;
 
 export const UpdatePage = async (pageData) => {
-  debugger;
   const { data } = await client.mutate({
     mutation: UPDATE_PAGE,
     variables: pageData,
@@ -60,7 +59,6 @@ export const CREATE_PAGE = gql`
 
 // Function to call the mutation
 export const createPage = async (pageData) => {
-  debugger;
   try {
     const { data } = await client.mutate({
       mutation: CREATE_PAGE,
@@ -144,14 +142,12 @@ export const GET_PAGE_DETAILS = gql`
 // Function to fetch page details
 export const getPageDetails = async (pageId) => {
   try {
-    debugger;
     const { data } = await client.query({
       query: GET_PAGE_DETAILS,
       variables: { id: pageId },
     });
     return data;
   } catch (error) {
-    debugger;
     console.error('Error fetching page details:', error);
     throw error;
   }
@@ -173,7 +169,6 @@ export const GET_NEW_PAGE = gql`
 export const getNewPage = async (pageId) => {
   console.log('pageId', pageId);
   try {
-    debugger;
     const { data } = await client.query({
       query: GET_NEW_PAGE,
       variables: { id: pageId },

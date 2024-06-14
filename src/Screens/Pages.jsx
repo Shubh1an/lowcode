@@ -70,7 +70,7 @@ const Pages = () => {
         search,
         filter,
       });
-      debugger;
+
       const variables = { page, limit, sort, search, filter };
       console.log('Fetching', variables);
       const { pages, totalPages } = await PaginatedPages(variables);

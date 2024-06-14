@@ -42,16 +42,13 @@ const Editor = () => {
     console.log('entity_id', entity_id);
   }, []);
   const fetchPage = async () => {
-    debugger;
     getNewPage(editor_id).then((res) => {
       // setPage(res.data.form_schema)
       // setPageData(res.data.page_data)
       console.log('111', res);
 
-      debugger;
       setPageData(res.form_schema);
       res.form_schema.forEach((item, index) => {
-        debugger;
         console.log('000', item);
         // { label, properties: controlls(label)?.properties, child: [] }
         let pageControl = {
@@ -59,7 +56,7 @@ const Editor = () => {
           properties: controlls(item.control).properties,
           child: [],
         };
-        debugger;
+
         setPage((prev) => [...prev, pageControl]);
       });
     });
@@ -70,7 +67,6 @@ const Editor = () => {
   }, []);
 
   const handleSubmit = () => {
-    debugger;
     let payload = {
       id: editor_id,
       input: {
@@ -80,7 +76,6 @@ const Editor = () => {
 
     const res = UpdatePage(payload)
       .then((res) => {
-        debugger;
         console.log(res);
       })
       .catch((err) => {

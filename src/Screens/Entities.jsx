@@ -495,7 +495,6 @@ const Entities = () => {
 
   const handleSubmit = async () => {
     try {
-      debugger;
       const data = await saveEntity(modalForm);
       await createPage({
         name: modalForm.name,
