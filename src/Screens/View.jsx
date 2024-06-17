@@ -16,6 +16,8 @@ const View = () => {
     try {
       const pageDetails = await getPagebyid(page_id);
       const data = pageDetails?.getPagebyid;
+      pageDetails?.getPagebyid?.form_schema.find((elm) => elm);
+
       if (data) {
         setPage(data);
       }

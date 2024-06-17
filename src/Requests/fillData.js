@@ -1,14 +1,14 @@
 const { default: apiInstance } = require('./instance');
 
-export const fillData = async (data) => {
-  let response = await apiInstance.post('/filledData', data);
-  return response;
-};
+// export const fillData = async (data) => {
+//   let response = await apiInstance.post('/filledData', data);
+//   return response;
+// };
 
-export const getFillData = async (id) => {
-  let response = await apiInstance.get('/filledData');
-  return response;
-};
+// export const getFillData = async (id) => {
+//   let response = await apiInstance.get('/filledData');
+//   return response;
+// };
 import { gql } from '@apollo/client';
 import client from '../ApolloClient.js';
 

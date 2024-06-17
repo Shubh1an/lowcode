@@ -6,9 +6,9 @@ const CustomSelect = ({ options, setValue }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
+    debugger;
     if (setValue) {
       setValue(selectedOption?.value);
-      console.log('Setting ', selectedOption);
     }
   }, [selectedOption]);
   const toggleDropdown = () => {
@@ -50,7 +50,7 @@ const CustomSelect = ({ options, setValue }) => {
             />
           </div>
           <div className="py-1">
-            {filteredOptions.map((option) => (
+            {filteredOptions?.map((option) => (
               <div
                 key={option.value}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"

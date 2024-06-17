@@ -123,7 +123,7 @@ export const getFilledData = async (pageId) => {
         variables: { pageId },
       })
       .then((res) => {
-        // console.log('Res', res);
+        console.log('Res', res);
         return res.data;
       });
   } catch (error) {

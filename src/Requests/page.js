@@ -15,11 +15,13 @@ export const GET_PAGES = gql`
   }
 `;
 export const getPages = async (entity_id) => {
+  console.log('object', entity_id);
   const { data } = await client.query({
     query: GET_PAGES,
     variables: { entity_id },
     fetchPolicy: 'no-cache',
   });
+  console.log(' data.pages', data.pages);
   return data.pages;
 };
 

@@ -4,8 +4,9 @@ import { Link, useLocation } from 'react-router-dom';
 import Icons from '../Components/Utility/Icons';
 import controlls from '../Config/Controlls.jsx';
 import config from '../Config/config.js';
+import { getPagebyEntityid } from '../Graphql/modelQuery';
 import { getEntities } from '../Requests/entity';
-import { UpdatePage, getNewPage, getPages } from '../Requests/page';
+import { UpdatePage, getNewPage } from '../Requests/page';
 import Control from './Components/MiniComponents/Control';
 import CustomSelect from './Components/MiniComponents/CustomSelect';
 import SubTab from './Components/MiniComponents/SubTab';
@@ -65,9 +66,6 @@ const Editor = () => {
   useEffect(() => {
     fetchPage();
   }, []);
-  useEffect(() => {
-    fetchPage();
-  }, []);
 
   const handleSubmit = () => {
     let payload = {
@@ -86,25 +84,6 @@ const Editor = () => {
       });
     console.log('Page Data: ', page);
   };
-
-  // use
-  // const handleDrop = ({ label }) => {
-  //   if (!isChildHovering) {
-  //     setPage([
-  //       ...page,
-  //       { label, properties: controlls(label)?.properties, child: [] },
-  //     ]);
-  //     setPageData((prev) => {
-  //       return [
-  //         ...prev,
-  //         {
-  //           control: label,
-  //         },
-  //       ];
-  //     });
-  //   }
-  //   setIsChildHovering(false);
-  // };
 
   const handleDrop = ({ label }) => {
     if (!isChildHovering) {
@@ -146,7 +125,6 @@ const Editor = () => {
   }, [page]);
 
   useEffect(() => {}, [pageData]);
-  useEffect(() => {}, [pageData]);
 
   return (
     <div className="w-full h-[94%] bg-[#FCF9EE] flex flex-row p-4">
@@ -179,6 +157,7 @@ const Editor = () => {
           handleRemove={handleRemove}
         />
       </div>
+
       <div className="w-1/4 h-full bg-[#FFF] rounded-2xl overflow-auto">
         <PropertyWindow
           page={page}
@@ -308,8 +287,8 @@ const PropertyWindow = ({
   entity_id,
   editor_id,
 }) => {
-  // console.log("selectControl 1 ----->",selectedControl)
-  // console.log("selectControl 2----->",  pageData)
+  console.log('selectControl 1 ----->', selectedControl);
+  console.log('selectControl 2----->', pageData);
   // console.log("selectControl 3 ----->",selectedControl)
   let properties = page[selectedControl]?.properties;
 
@@ -345,33 +324,17 @@ const PropertyInput = ({
   entity_id,
   editor_id,
 }) => {
-  // console.log("Property key------->",property_key)
-  // console.log("PropertyInput selectedControl----->",selectedControl)
-  console.log('PropertyInput PageData------>', pageData);
   let key = property_key;
   const [options, setOptions] = useState([]);
   const [option, setOption] = useState('');
 
   const [inputValue, setInputValue] = useState('');
 
+  const [lookupentityId, setlookupentityId] = useState('');
+
   useEffect(() => {
-    console.log(
-      'page data editor KEY---->',
-      pageData[selectedControl]?.properties?.[key],
-    );
-    console.log(
-      'page data editor---->',
-      pageData[selectedControl]?.properties?.[key]?.options,
-    );
     let inputValue = pageData[selectedControl]?.properties?.[key]?.value;
-    // let inputValue;
-    // if (pageData[selectedControl]?.properties?.[key]?.options) {
-    //   inputValue = pageData[selectedControl]?.properties?.[key]?.options;
-    // } else {
-    //   inputValue = pageData[selectedControl]?.properties?.[key]?.value;
-    // }
     setInputValue(inputValue);
-    console.log('data-->', inputValue);
   }, [pageData, selectedControl]);
 
   const addOption = () => {
@@ -380,8 +343,6 @@ const PropertyInput = ({
     setOption('');
   };
   useEffect(() => {
-    console.log('Editor options---->', options);
-
     if (inputValue || options.length > 0) {
       console.log('Editor options111 ---->', options); // Log options
       console.log('Editor inputValue ---->', inputValue); // Log inputValue
@@ -513,7 +474,6 @@ const PropertyInput = ({
         <div className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm">
           <LookupComponent
             module_id={module_id}
-            entity_id={entity_id}
             setInputValue={setInputValue}
           />
         </div>
@@ -587,27 +547,21 @@ const EditorTopBar = ({ editorId }) => {
   );
 };
 
-const LookupComponent = ({ module_id, entity_id, setInputValue }) => {
+const LookupComponent = ({ module_id, setInputValue }) => {
   const [entities, setEntities] = useState([]);
   useEffect(() => {
     getEntities(module_id).then((data) => {
-      let entities = data?.data;
-      // console.log("data---------------",data)
-      entities.forEach((entity, index) => {
-        if (entity_id === entity._id) {
-          // Remove the entity from the array
-          entities.splice(index, 1);
-        }
-      });
+      let entities = data;
       setEntities(entities);
     });
   }, []);
+
   return (
     <CustomSelect
-      options={entities.map((entity) => {
+      options={entities?.map((entity) => {
         return {
           label: entity.name,
-          value: entity._id,
+          value: entity.id,
         };
       })}
       setValue={setInputValue}
@@ -621,19 +575,19 @@ const LookupColumnComponent = ({
   selectedControl,
 }) => {
   const [page, setPage] = useState([]);
+
   useEffect(() => {
     let pageDetailId = pageData[selectedControl]?.properties?.entity?.value;
     if (pageDetailId) {
-      getPages(pageDetailId).then((data) => {
-        let form_schema = data?.data?.find((page) => {
-          if (page?.type === 'default_add') {
-            return page;
-          }
-        })?.form_schema;
+      getPagebyEntityid(pageDetailId).then((data) => {
+        let form_schema = data?.getPagebyEntityid?.find(
+          (elm) => elm.type === 'default_add',
+        )?.form_schema;
         setPage(form_schema || []);
       });
     }
   }, [pageData]);
+
   return (
     <CustomSelect
       options={page.map((entity) => {

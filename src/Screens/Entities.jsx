@@ -591,8 +591,8 @@ const Entities = () => {
           headers={headers}
           handleSearch={(value) => fetchEntities({ name: value }, currentPage)}
           searchableHeaders={headers}
-          setView={setView}
-          view={view}
+          // setView={setView}
+          // view={view}
           handleSubmit={handleSubmit}
           modalComponent={
             <ModalComponent

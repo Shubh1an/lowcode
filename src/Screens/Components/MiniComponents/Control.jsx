@@ -1,26 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
-import SignatureCanvas from 'react-signature-canvas';
-import { MdFileDownload, MdDelete } from 'react-icons/md';
+import { useEffect, useRef, useState } from 'react';
 import { CgProfile } from 'react-icons/cg';
 import { FaStar } from 'react-icons/fa';
+import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { LuFolderSearch } from 'react-icons/lu';
+import { MdDelete, MdFileDownload } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
-import { IoIosArrowDown } from 'react-icons/io';
-import { IoIosArrowForward } from 'react-icons/io';
+import SignatureCanvas from 'react-signature-canvas';
 import Switch from 'react-switch';
 
-import { MdEdit } from 'react-icons/md';
-import {
-  FaMicrophone,
-  FaStop,
-  FaPlay,
-  FaTrash,
-  FaVolumeUp,
-  FaPause,
-} from 'react-icons/fa';
+import { FaMicrophone, FaPlay, FaStop, FaVolumeUp } from 'react-icons/fa';
+import { getFilledData, getPagebyEntityid } from '../../../Graphql/modelQuery';
 import CustomSelect from './CustomSelect';
-import { getPageDetails, getPages } from '../../../Requests/page';
-import { getFillData } from '../../../Requests/fillData';
 
 const Control = ({
   label,
@@ -36,16 +26,12 @@ const Control = ({
   setIsError = () => {},
   name,
 }) => {
-  console.log('values of Control----->', value);
   const regex = field?.properties?.pattern?.value;
   let maxLength = field?.properties?.maxLength?.value || 1000;
   let minLength = field?.properties?.minLength?.value || 0;
   const dropdownOptions = field?.properties?.options?.options || [];
-  console.log('Control -------> ', field?.properties);
-  console.log('Dropdown options:', field?.properties?.options?.options);
 
   const handleValue = (field) => {
-    console.log('Field value:', field);
     setValue((prev) => {
       let newValue = [...prev];
 
@@ -57,6 +43,7 @@ const Control = ({
       return newValue;
     });
   };
+
   const [inputValue, setInputValue] = useState('');
   const [isToggled, setIsToggled] = useState(false);
 
@@ -87,8 +74,10 @@ const Control = ({
   }, [inputValue]);
 
   useEffect(() => {
+    console.log('value 000000000000', value);
     setInputValue(value[index]?.value);
   }, [value]);
+
   // const options = [
   //   { value: 'opt', label: 'Option 1' },
   //   { value: 'opt', label: 'Option 2' },
@@ -309,8 +298,6 @@ const Control = ({
         <div className="w-full min-h-[100px] border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF]"></div>
       );
     case 'single_line':
-      console.log('Placeholder:', field?.properties?.placeholder?.value);
-      console.log('vaue:', { inputValue });
       return (
         <input
           type="text"
@@ -1202,7 +1189,6 @@ const Control = ({
       );
 
     case 'lookup':
-      debugger;
       let entityType = field?.properties?.entityType?.value;
       let entity = field?.properties?.entity?.value;
       let entityColumn = field?.properties?.entityColumn?.value;
@@ -1210,43 +1196,28 @@ const Control = ({
       if (entityType === undefined) {
         entityType = 'onetoone';
       }
-
       const [entityData, setEntityData] = useState([]);
-      console.log('entityData---->', entityData);
       useEffect(() => {
         if (entity) {
-          getPages(entity)
+          getPagebyEntityid(entity)
             .then((res) => {
-              let default_add = res?.data?.find((page) => {
-                if (page?.type === 'default_add') {
-                  return page;
-                }
-              })?._id;
-              getFillData(default_add).then((data) => {
-                // setEntityData(data?.data.map((entity) => {
-                //   return entity?.form_data.map((data) => {
-                //     if (data?.key === entityColumn) {
-                //       return {
-                //         label: data?.value, value: entity._id
-                //       }
-                //     }
-                //   })
-                // }))
-
+              let filledlookupId = res?.getPagebyEntityid?.find(
+                (elm) => elm.type === 'default_add',
+              )?.id;
+              getFilledData(filledlookupId).then((response) => {
                 let entityData = [];
-
-                data?.data?.map((entity) => {
-                  console.log('Finial data1111------>', entity);
-                  entity?.form_data?.map((data) => {
-                    if (data?.key === entityColumn) {
+                response?.getFilledData.map((em) => {
+                  em?.form_data.map((formdata) => {
+                    if (formdata?.key == entityColumn) {
                       entityData.push({
-                        label: data?.value,
-                        value: entity._id,
+                        label: formdata?.value,
+                        value: em.id,
                       });
                     }
                   });
+
+                  setEntityData(entityData);
                 });
-                setEntityData(entityData);
               });
             })
             .catch((err) => {
@@ -1255,7 +1226,11 @@ const Control = ({
         }
       }, []);
 
-      useEffect(() => {}, [entityData]);
+      const selectedlookup = (data) => {
+        let valuelookup = entityData.find((em) => em?.value == data)?.label;
+        handleValue(valuelookup);
+      };
+      useEffect(() => {}, [entityData, inputValue]);
 
       if (!entity) {
         return (
@@ -1264,13 +1239,13 @@ const Control = ({
           </div>
         );
       }
-      debugger;
-      console.log(entityType, entity, entityColumn);
-
       return (
         <div>
           {entityType && entity && (
-            <CustomSelect options={entityData} setValue={setInputValue} />
+            <CustomSelect
+              options={entityData}
+              setValue={(data) => selectedlookup(data)}
+            />
           )}
         </div>
       );

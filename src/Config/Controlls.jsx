@@ -17,8 +17,6 @@ const controlls = (internal_name, children) => {
           placeholder: { type: 'string', label: 'Placeholder' },
           required: { type: 'boolean', label: 'Required' },
           defaultValue: { type: 'string', label: 'Default Value' },
-          // maxLength: { type: 'number', label: 'Max Length' },
-          // minLength: { type: 'number', label: 'Min Length' },
           pattern: { type: 'string', label: 'Pattern' },
         },
       };
