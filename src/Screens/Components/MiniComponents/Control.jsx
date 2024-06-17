@@ -1202,9 +1202,14 @@ const Control = ({
       );
 
     case 'lookup':
+      debugger;
       let entityType = field?.properties?.entityType?.value;
       let entity = field?.properties?.entity?.value;
       let entityColumn = field?.properties?.entityColumn?.value;
+
+      if (entityType === undefined) {
+        entityType = 'onetoone';
+      }
 
       const [entityData, setEntityData] = useState([]);
       console.log('entityData---->', entityData);

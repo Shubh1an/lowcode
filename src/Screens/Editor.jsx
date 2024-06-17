@@ -156,9 +156,7 @@ const ControlCard = ({ label, icon, index }) => {
     }),
     item: { label, index },
   }));
-  // Remove underscore from label
   label = label.replace('_', ' ');
-  // Capitalize
   label = label.charAt(0).toUpperCase() + label.slice(1);
   return (
     <div
