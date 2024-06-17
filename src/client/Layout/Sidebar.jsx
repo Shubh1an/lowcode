@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 // @ts-ignore
 import { BsGraphUpArrow } from 'react-icons/bs';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import GlobalContext from '../../Context/Context';
 import { Sidebaricon } from '../svg';
 import { useSelector } from 'react-redux';
@@ -12,11 +12,11 @@ const Sidebar = () => {
 
   const menuData =
     modulesdata?.entity &&
-    modulesdata?.entity?.map((em) => {
+    modulesdata?.entity?.map((em, index) => {
       return {
         ...em,
         icon: <BsGraphUpArrow />,
-        url: '/page/raw',
+        url: index == 0 ? '/page/raw' : '/page/lead',
         subMenu: [],
       };
     });
@@ -90,7 +90,7 @@ const Sidebar = () => {
   const { setSelectedMenu, setSelectedSubMenu } = useContext(GlobalContext);
   const [active, setActive] = useState(0);
   const [activeSub, setActiveSub] = useState(0);
-
+  const navigate = useNavigate();
   useEffect(() => {
     setSelectedMenu(menuData[active]);
   }, [active]);
@@ -103,10 +103,17 @@ const Sidebar = () => {
     setActive(0);
     setActiveSub(0);
   }, []);
+
+  const redirectto = () => {
+    navigate('/dashboard');
+  };
+
   return (
     <div className="h-full w-[100px] bg-[#FFFFFF]">
       <div className="flex flex-col items-center py-4">
-        <Sidebaricon />
+        <span onClick={redirectto}>
+          <Sidebaricon />
+        </span>
       </div>
       <div className="flex flex-row w-full">
         <div className="flex flex-col">

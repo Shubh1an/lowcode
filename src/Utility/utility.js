@@ -45,11 +45,9 @@ export const formatValue = (value, header) => {
     return moment(value).format('DD/MM/YYYY');
   } else if (header === 'page_type') {
     return <TypePill type={value} />;
-  }
-  // else if (header === 'PAN Card Id') {
-  //   return <UserPills type={value} />;
-  // }
-  else {
+  } else if (header === 'contact') {
+    return <UserPills type={value} />;
+  } else {
     if (value?.length > 20) {
       return value.slice(0, 10) + '...' + value.slice(-5);
     } else {

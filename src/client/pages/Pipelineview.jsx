@@ -24,14 +24,17 @@ import { useNavigate } from 'react-router-dom';
 
 const Pipelineview = () => {
   const navigate = useNavigate();
+  const data = history.state;
+
   const tabs = [{ title: 'Basic Details' }, { title: 'Extra Details' }];
+  console.log(data?.usr?.data[1]?.value);
   const activityTabs = [
-    { name: 'All Activity' },
-    { name: 'Notes' },
-    { name: 'Email' },
-    { name: 'Calls' },
-    { name: 'Reminders' },
-    { name: 'Meetings' },
+    { name: data?.usr?.data[2]?.value },
+    // { name: 'Notes' },
+    // { name: 'Email' },
+    // { name: 'Calls' },
+    // { name: 'Reminders' },
+    // { name: 'Meetings' },
   ];
   const breadcrumbItems = [
     { text: 'Home', href: '#' },
@@ -111,10 +114,17 @@ const Pipelineview = () => {
       <div className="flex justify-between bg-[#FFFFFF] p-1">
         <div className="flex items-center">
           <div className="mr-2">
-            {/* <AiOutlineLeft fontSize={18} onClick={()=>navigate('../page/raw')}/> */}
-            <AiOutlineLeft fontSize={18} />
+            <AiOutlineLeft
+              fontSize={18}
+              onClick={() =>
+                navigate('../page/raw?+entityId=' + data?.usr?.entityId)
+              }
+            />
+            {/* <AiOutlineLeft fontSize={18} /> */}
           </div>
-          <div className="font-semibold text-2xl">Daisy Wilson</div>
+          <div className="font-semibold text-2xl">
+            {data?.usr?.data[0]?.value}
+          </div>
         </div>
         <div className="hidden w-full md:block md:w-auto">
           <ul className="flex flex-col font-medium mt-4 rounded-lg  rtl:space-x-reverse md:flex-row md:mt-0  md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
@@ -189,7 +199,7 @@ const Pipelineview = () => {
                 </div>
               </div>
               <h1 className="mt-6 text-xl font-bold text-slate-800 dark:text-white">
-                Daisy Wilson
+                {data?.usr?.data[0]?.value}
               </h1>
               <p>XYZ Company</p>
               <div className="mt-6 flex flex-row justify-center gap-4">

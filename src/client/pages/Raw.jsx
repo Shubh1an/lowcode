@@ -84,14 +84,7 @@ const Raw = () => {
     });
   }, [formsToRender]);
 
-  useEffect(() => {
-    // let formvalue = [];
-    // forms?.form_schema?.map(() => {
-    //   let value = '';
-    //   formvalue.push({ value });
-    // });
-    // setPageData([{ ...formvalue }]);
-  }, [pageData]);
+  useEffect(() => {}, [pageData]);
 
   console.log('after use effect', forms);
   const handleSubmit = async () => {
@@ -112,14 +105,15 @@ const Raw = () => {
   };
 
   const getFormByRow = (data) => {
-    navigate('../page/contactview');
-    // let formvalue = [];
-    // forms?.form_schema?.map((item, index) => {
-    //   let value = data?.[index]?.value ? data?.[index]?.value : '';
-    //   formvalue.push({ value });
-    // });
-    // setPageData({ ...formvalue });
-    // document.getElementById('my-drawer').click();
+    let formvalue = [];
+    forms?.form_schema?.map((item, index) => {
+      let key = item?.properties?.displayName?.value;
+      let value = data?.[index]?.value ? data?.[index]?.value : '';
+      formvalue.push({ key, value });
+    });
+    navigate('../page/contactview', {
+      state: { data: formvalue, entityId: entityId },
+    });
   };
 
   const openDrawer = () => {
