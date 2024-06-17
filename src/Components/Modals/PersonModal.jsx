@@ -3,7 +3,7 @@ import React from 'react';
 const PersonModal = ({ people }) => {
   // Object to array
   people = Object.values(people);
-  console.log('People at modal', people);
+
   return (
     <div className="w-[300px]">
       <div className="">Filter the board by people</div>

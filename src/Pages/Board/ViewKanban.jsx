@@ -30,9 +30,7 @@ function ViewKanban({
   };
 
   const updateColumnname = (value, key) => {
-    console.log('first', value, key);
     const column = newColumn.filter((elm, index) => index === key);
-    console.log('first', column);
   };
   return (
     <div className="w-1/3 h-full bg-[#fff] rounded-2xl flex flex-col">

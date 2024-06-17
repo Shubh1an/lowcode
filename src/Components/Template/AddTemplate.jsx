@@ -60,7 +60,6 @@ const AddTemplate = ({ onClickSave = () => {}, onClickCancel = () => {} }) => {
 
   const onupload = (file) => {
     // Handle file upload logic here
-    console.log('File uploaded:', file);
   };
 
   return (

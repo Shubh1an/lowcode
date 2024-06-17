@@ -1,53 +1,52 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { getPageDetails } from '../Requests/page';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getPagebyid } from '../Graphql/modelQuery';
+import { createFilledData } from '../Graphql/moduleMutation';
 import Control from './Components/MiniComponents/Control';
-import { fillData } from '../Requests/fillData';
 
 const View = () => {
   let page_id = location.search.split('=')[1];
   const [page, setPage] = useState({});
-  const fetchPage = async () => {
-    getPageDetails(page_id).then((res) => {
-      setPage(res?.data);
-    });
+  const navigate = useNavigate();
+  const [pageData, setPageData] = useState([]);
+  const [isValid, setIsValid] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  const fetchPagebyID = async () => {
+    try {
+      const pageDetails = await getPagebyid(page_id);
+      const data = pageDetails?.getPagebyid;
+      if (data) {
+        setPage(data);
+      }
+    } catch (error) {
+      console.error('Error fetching enity:', error);
+    }
   };
 
-  const [pageData, setPageData] = useState([]);
   useEffect(() => {
-    // console.log(page?.form_schema)
-  }, [page]);
-  useEffect(() => {
-    fetchPage();
+    fetchPagebyID();
   }, []);
 
-  useEffect(() => {
-    console.log('pageData', pageData);
-  }, [pageData]);
+  useEffect(() => {}, [page]);
 
-  const handleSubmit = () => {
+  useEffect(() => {}, [pageData]);
+
+  const handleSubmit = async () => {
     let payload = {
       page_id: page_id,
       form_data: [],
     };
     pageData.map((item, index) => {
-      console.log('item:', item);
-      console.log('index:', index);
       let key = page?.form_schema?.[index]?.properties?.displayName?.value;
-      console.log('key:', key);
       let value = item?.value;
-      console.log('value:', value);
 
       payload.form_data.push({ key, value });
     });
-
-    fillData(payload).then((res) => {
-      console.log(res);
-    });
+    const res = await createFilledData(payload);
+    console.log('filled data', res);
+    navigate(`/builder/listview?id=` + page_id);
   };
-
-  const [isValid, setIsValid] = useState(true);
-  const [isError, setIsError] = useState(false);
 
   return (
     <div className="w-full h-[94%] bg-[#FCF9EE] flex flex-col p-4">

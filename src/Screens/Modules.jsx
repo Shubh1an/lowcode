@@ -1,54 +1,118 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import TopBar from './Components/TopBar';
-import { getModules, saveModule } from '../Requests/module';
+//import { PAGINATED_MODELS_QUERY } from '../Requests/module';
+import { getPaginatedModules, saveModule } from '../Requests/module';
 import TableView from './Components/MiniComponents/Grid';
 import Toast from './Components/Toaster';
+
 const Modules = () => {
   const [showModal, setShowModal] = useState(false);
+
   const [modalForm, setModalForm] = useState({
     name: '',
     description: '',
   });
   const [headers, setHeaders] = useState([]);
-  const handleSearch = (value) => {};
-  const [view, setView] = useState(true);
-  const [cells, setCells] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [cachedData, setCachedData] = useState(null);
+  const [SearchableHeaders, setSearchableHeaders] = useState(headers);
+  const [hiddenHeaders, setHiddenHeaders] = useState([]);
+
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // const handleSubmit = () => {
-  //   console.log(modalForm);
-  //   saveModule(modalForm)
-  // };
+  // Modify handleSearch function to properly pass searchCriteria
+  const handleSearch = async (searchCriteria) => {
+    try {
+      console.log('searchCriteria:', searchCriteria);
+      // Call fetchModules with searchCriteria and currentPage
+      await fetchModules(searchCriteria, currentPage);
+    } catch (error) {
+      console.error('Error searching modules:', error);
+    }
+  };
+  const [view, setView] = useState(true);
+  const [cells, setCells] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handleSubmit = async () => {
-    console.log(modalForm);
     try {
+      setLoading(true);
       await saveModule(modalForm);
-      setToastMessage('Module saved successfully.');
-      setShowToast(true);
-      fetchModules(); // Fetch modules after saving
+      setShowModal(false);
+      fetchModules({}, currentPage); // Fetch current page after save
     } catch (error) {
       console.error('Error saving module:', error);
-      setToastMessage('Failed to save module.');
-      setShowToast(true);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const fetchModules = async () => {
-    const modules = await getModules();
-    let data = modules?.data;
-    if (data) {
-      let headers_gen = Object.keys(data?.[0] || {});
-      headers_gen.forEach((header, index) => {
-        if (header === '_id' || header === '__v') {
-          headers_gen.splice(index, 1);
-        }
-      });
-      setHeaders(headers_gen);
-      setCells(data);
+  const fetchModules = async (
+    search = {},
+    page = 1,
+    limit = 4,
+    sort = { field: 'name', order: 'asc' },
+  ) => {
+    try {
+      //return console.log("Loading", search);
+      setLoading(true);
+      const variables = {
+        page,
+        limit,
+        sort,
+        search,
+        filter: {},
+      };
+      console.log('vvvv', variables);
+      const modulesData = await getPaginatedModules(variables);
+      console.log('modulesData', modulesData);
+      const data = modulesData.modules;
+      if (data) {
+        const headers_gen = Object.keys(data?.[0] || {}).filter(
+          (header) =>
+            header !== 'id' && header !== '__v' && header !== '__typename',
+        );
+        console.log('headers_gen', headers_gen);
+        setHeaders(headers_gen);
+        setCells(data);
+        setTotalPages(Math.ceil(modulesData.totalmodules / limit));
+      }
+    } catch (error) {
+      console.error('Error fetching modules:', error);
+    } finally {
+      setLoading(false);
     }
   };
+  // const fetchModules = async () => {
+  //   try {
+
+  //     setLoading(true);
+  //     const modulesData = await getModules();
+
+  //     const data = modulesData.modules;
+  //     if (data) {
+  //       const headers_gen = Object.keys(data?.[0] || {}).filter(
+  //         (header) => header !== 'id' && header !== '__v'
+  //       );
+  //       setHeaders(headers_gen);
+  //       setCells(data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching modules:", error);
+  //   } finally {
+  //     setLoading(false); // Set loading state to false after fetching
+  //   }
+  // };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      fetchModules({}, newPage);
+    }
+  };
+
   useEffect(() => {
     fetchModules();
   }, []);
@@ -61,10 +125,19 @@ const Modules = () => {
     setShowModal(true);
   };
 
+  useEffect(() => {
+    console.log('Modules loaded', SearchableHeaders);
+  }, [SearchableHeaders]);
+  useEffect(() => {
+    console.log('M1', modalForm);
+    console.log('M1', view);
+  }, []);
+
   return (
     <div className="w-full h-full bg-[#FCF9EE] flex flex-col p-4">
       <div className="w-full h-full bg-[#FFF] rounded overflow-auto">
         <TopBar
+          // @ts-ignore
           label={'Modules'}
           showModal={showModal}
           setShowModal={setShowModal}
@@ -72,11 +145,17 @@ const Modules = () => {
           setModalForm={setModalForm}
           resetModalState={resetModalState}
           headers={headers}
+          // handleSearch={() => {}}
           handleSearch={handleSearch}
-          searchableHeaders={headers}
+          // searchableHeaders={headers}
+          SearchableHeaders={SearchableHeaders}
+          setSearchableHeaders={setSearchableHeaders}
           setView={setView}
           view={view}
           handleSubmit={handleSubmit}
+          fetchModules={fetchModules}
+          setHiddenHeaders={setHiddenHeaders}
+          hiddenHeaders={hiddenHeaders}
           modalComponent={
             <ModalComponent
               closeModal={setShowModal}
@@ -86,10 +165,21 @@ const Modules = () => {
             />
           }
         />
-        <TableView
-          data={{ headers, cells }}
-          linkto={'/builder/entity?module_id'}
-        />
+        {loading ? (
+          <div className="w-full h-full flex items-center justify-center">
+            <p>Loading...</p>
+          </div>
+        ) : (
+          <>
+            <TableView
+              data={{ headers, cells }}
+              linkto={'/builder/entity?module_id'}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </>
+        )}
       </div>
       {/* <ToastContainer
         //  toastClassName="bg-[#F0F9FA] border-2 border-[#3A9EA5] rounded-full"

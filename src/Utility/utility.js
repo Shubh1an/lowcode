@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { BiUserCircle } from 'react-icons/bi';
 import { BsTable, BsViewList } from 'react-icons/bs';
+import { UserPills } from '../client/utils';
 
 export const checkValidDate = (date) => {
   // 2024-05-13T12:21:48.200+00:00
@@ -12,7 +13,6 @@ export const checkValidDate = (date) => {
 };
 
 export const UserPill = ({ user }) => {
-  console.log('User', user);
   let profile = user?.profile_image;
   return (
     <div className="flex items-center gap-2 rounded-full bg-[#66CCFF] p-2 text-[#fff]">
@@ -45,7 +45,11 @@ export const formatValue = (value, header) => {
     return moment(value).format('DD/MM/YYYY');
   } else if (header === 'page_type') {
     return <TypePill type={value} />;
-  } else {
+  }
+  // else if (header === 'PAN Card Id') {
+  //   return <UserPills type={value} />;
+  // }
+  else {
     if (value?.length > 20) {
       return value.slice(0, 10) + '...' + value.slice(-5);
     } else {

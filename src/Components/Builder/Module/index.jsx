@@ -8,13 +8,56 @@ import { ChangeViewBtn } from '../../Buttons/ChangeViewBtn';
 import { getModules, saveModule } from '../../../Requests/module';
 import { formatValue } from '../../../Utility/utility';
 import { Link } from 'react-router-dom';
+import HideModal from '../../Modals/Hide';
+import PersonModal from '../../Modals/PersonModal';
+
+function preprocessSearchData(searchData, searchableHeaders) {
+  const hashTable = {};
+  // Initialize hash table with empty arrays for each searchable header
+  searchableHeaders.forEach((header) => {
+    hashTable[header] = [];
+  });
+
+  // Populate hash table with search data
+  searchData.forEach((item) => {
+    searchableHeaders.forEach((header) => {
+      if (item.hasOwnProperty(header) && typeof item[header] === 'string') {
+        // Convert header value to lowercase for case-insensitive search
+        const value = item[header].toLowerCase();
+        hashTable[header].push({ item, value });
+      }
+    });
+  });
+
+  return hashTable;
+}
+function search(searchValue, searchableHeaders, hashTable) {
+  const results = [];
+
+  // Convert search value to lowercase for case-insensitive search
+  const searchTerm = searchValue.toLowerCase();
+
+  // Search through hash table for matches
+  searchableHeaders.forEach((header) => {
+    hashTable?.[header]?.forEach(({ item, value }) => {
+      if (value.includes(searchTerm)) {
+        results.push(item);
+      }
+    });
+  });
+
+  return results;
+}
 
 const Module = () => {
   const [showModal, setShowModal] = useState(false);
+  const [forms, setForms] = useState([]);
+  const [formsToRender, setFormsToRender] = useState([]);
+  const [searchableHeaders, setSearchableHeaders] = useState([]);
   const [modalForm, setModalForm] = useState({
     name: '',
     description: '',
-    ownerId: 'erfgjhw',
+    moduleId: '',
   });
   const [headers, setHeaders] = useState([]);
   const [view, setView] = useState(true);
@@ -39,10 +82,28 @@ const Module = () => {
   };
 
   useEffect(() => {
-    fetchModules();
-  }, []);
+    formsToRender.forEach((form, index) => {
+      let header = Object.keys(form);
+      header.forEach((header) => {
+        if (header == 'created_by') {
+          let user_id = form[header]?.user_id;
+          if (!people[user_id]) {
+            setPeoples((prev) => {
+              return { ...prev, [user_id]: form[header] };
+            });
+          }
+        }
+      });
+    });
+  }, [formsToRender]);
 
-  const handleSearch = (value) => {};
+  const handleHeaderSelect = (value, checked) => {
+    if (checked) {
+      setSearchableHeaders((prev) => [...prev, value]);
+    } else {
+      setSearchableHeaders((prev) => prev.filter((header) => header !== value));
+    }
+  };
 
   const handleSubmit = () => {
     saveModule(modalForm).then(() => {
@@ -50,30 +111,6 @@ const Module = () => {
     });
   };
 
-  // const handleSubmit = async () => {
-  //   try {
-  //     const response = await saveModule(modalForm);
-  //     console.log("save data module---->", response);
-
-  //     // Trigger a reload of the module data
-  //     fetchModules();
-  //   } catch (error) {
-  //     console.error("Error saving module:", error);
-  //   }
-  // };
-
-  // const handleAddNew = () => {
-  //   console.log("Before resetting modalForm:", modalForm);
-  //   // Reset modalForm to its initial blank state
-  //   setModalForm({
-  //     name: '',
-  //     description: '',
-  //     ownerId: 'erfgjhw', // Assuming this is the default ownerId
-  //   });
-  //   console.log("After resetting modalForm:", modalForm);
-  //   // Show modal
-  //   setShowModal(true);
-  // };
   return (
     <div className="w-full h-full bg-[#FCF9EE] flex justify-center items-center px-6 py-6 ">
       <div className="w-full h-full bg-[#FFF] rounded-2xl">
@@ -84,13 +121,17 @@ const Module = () => {
           setModalForm={setModalForm}
           headers={headers}
           handleSearch={handleSearch}
-          searchableHeaders={headers}
+          searchableHeaders={searchableHeaders}
+          handleHeaderSelect={handleHeaderSelect}
           setView={setView}
+          handleHide={handleHide}
           view={view}
           handleSubmit={handleSubmit}
-          // handleAddNew={handleAddNew}
+          hideColumns={hideColumns}
+          people={people}
+          setHideColumns={setHideColumns}
         />
-        <TableView data={{ headers, cells }} />
+        <TableView headers={renderHeaders} data={formsToRender} />
       </div>
     </div>
   );
@@ -104,14 +145,20 @@ const TopBar = ({
   headers,
   handleSearch,
   searchableHeaders,
+  handleHeaderSelect,
   setView,
   view,
   handleSubmit,
   handleAddNew,
+  handleHide,
+  hideColumns,
+  setHideColumns,
+  people,
 }) => {
   console.log('setModelForm----->', setModalForm);
   console.log('setShowModal-->', setShowModal);
   const [showSearch, setShowSearch] = useState(false);
+
   return (
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
@@ -145,6 +192,9 @@ const TopBar = ({
             setShowSearch={setShowSearch}
             customClass={''}
             handleSearch={handleSearch}
+            handleHeaderSelect={(header_label, checked) => {
+              handleHeaderSelect(header_label, checked);
+            }}
           />
           <ChangeViewBtn
             onclick={() => {
@@ -172,8 +222,8 @@ const TopBar = ({
   );
 };
 
-const TableView = ({ data }) => {
-  const { headers, cells } = data;
+const TableView = ({ headers, data }) => {
+  const cells = data;
   return (
     <div className="w-full h-full flex flex-col overflow-auto px-4">
       <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]">
@@ -188,24 +238,32 @@ const TableView = ({ data }) => {
           );
         })}
       </div>
-      {cells.map((row, index) => {
-        return (
-          <Link to={`/builder/entity?module_id=${row?._id}`}>
-            <div className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer">
-              {headers.map((header, index) => {
-                return (
-                  <div
-                    className="w-full flex justify-center items-center text-base font-medium py-2 border border-[#E9E9E9]"
-                    key={index + '_cell'}
-                  >
-                    {formatValue(row[header], header)}
-                  </div>
-                );
-              })}
-            </div>
-          </Link>
-        );
-      })}
+      {cells.length > 0 ? (
+        cells.map((row, index) => {
+          return (
+            <Link to={`/builder/entity?module_id=${row?._id}`}>
+              <div className="w-full flex flex-row px-[2px] hover:bg-[#E9E9E9] cursor-pointer">
+                {headers.map((header, index) => {
+                  return (
+                    <div
+                      className="w-full flex justify-center items-center text-base font-medium py-2 border border-[#E9E9E9]"
+                      key={index + '_cell'}
+                    >
+                      {formatValue(row[header], header)}
+                    </div>
+                  );
+                })}
+              </div>
+            </Link>
+          );
+        })
+      ) : (
+        <div className="w-full flex flex-row px-[2px] py-[1px]">
+          <div className="w-full flex justify-center items-center text-base	font-medium	mx-[2px] py-2 bg-[#E9F2EF]">
+            No Records Found
+          </div>
+        </div>
+      )}
     </div>
   );
 };

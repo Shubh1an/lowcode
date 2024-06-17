@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import AddNewButton from '../../inputs/AddNewButton.jsx';
+import { useEffect, useState } from 'react';
+import { BiHide } from 'react-icons/bi';
+import { CiFilter } from 'react-icons/ci';
 import { IoSearch } from 'react-icons/io5';
 import { LiaUserCircle } from 'react-icons/lia';
-import { CiFilter } from 'react-icons/ci';
 import { MdOutlineSwapVert } from 'react-icons/md';
-import { BiHide } from 'react-icons/bi';
-import ListHeaderButton from '../../inputs/ListHeaderButton.jsx';
 import {
   createPage,
   createPageDetail,
   getPages,
 } from '../../../Requests/form.js';
-import moment from 'moment';
-import ShortModal from '../../ShortModal/ShortModal.jsx';
-import HideModal from '../../Modals/Hide.jsx';
-import CustomSearch from '../../CustomSearch/CustomSearch.jsx';
-import PersonModal from '../../Modals/PersonModal.jsx';
 import { formatValue } from '../../../Utility/utility.js';
+import CustomSearch from '../../CustomSearch/CustomSearch.jsx';
+import HideModal from '../../Modals/Hide.jsx';
+import PersonModal from '../../Modals/PersonModal.jsx';
+import ShortModal from '../../ShortModal/ShortModal.jsx';
+import AddNewButton from '../../inputs/AddNewButton.jsx';
+import ListHeaderButton from '../../inputs/ListHeaderButton.jsx';
 
 function preprocessSearchData(searchData, searchableHeaders) {
   const hashTable = {};
@@ -253,14 +252,12 @@ const TopBar = ({
               page_type: type,
             }).then((res) => {
               // onNewPage(res?.data?.data?.id, type)
-              console.log('create PAge ', res?.data?.data);
               let page_id = res?.data?.data?._id;
               createPageDetail({
                 page_id: page_id,
                 page_data: [],
                 type: type,
               }).then((res) => {
-                console.log(res);
                 onNewPage(page_id, type);
               });
             });

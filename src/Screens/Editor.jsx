@@ -1,20 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import TopBar from './Components/TopBar';
-import SubTab from './Components/MiniComponents/SubTab';
+import { useEffect, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import { Link, useLocation } from 'react-router-dom';
+import Icons from '../Components/Utility/Icons';
 import controlls from '../Config/Controlls.jsx';
 import config from '../Config/config.js';
-import Icons from '../Components/Utility/Icons';
-import { useDrag, useDrop } from 'react-dnd';
-import Control from './Components/MiniComponents/Control';
-import { getPageDetails, getPages, updatePage } from '../Requests/page';
-import { Link } from 'react-router-dom';
 import { getEntities } from '../Requests/entity';
+import { UpdatePage, getNewPage, getPages } from '../Requests/page';
+import Control from './Components/MiniComponents/Control';
 import CustomSelect from './Components/MiniComponents/CustomSelect';
+import SubTab from './Components/MiniComponents/SubTab';
 
+//editor_id == page_id
 const Editor = () => {
-  let editor_id = location.search.split('editor_id=')[1];
-  let module_id = location.search.split('module_id=')[1].split('&')[0];
-  let entity_id = location.search.split('entity_id=')[1].split('&')[0];
+  //let editor_id1 = location.search.split('editor_id=')[1];
+  // let module_id = location.search.split('module_id=')[1].split('&')[0];
+  // let entity_id = location.search.split('entity_id=')[1].split('&')[0];
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const module_id = params.get('module_id');
+  const params1 = new URLSearchParams(location.search);
+  const editor_id = params1.get('page_id');
+  const params2 = new URLSearchParams(location.search);
+  const entity_id = params2.get('entity_id');
+
   const [active, setActive] = useState(0);
   const [selectedControl, setSelectedControl] = useState(null);
 
@@ -27,18 +36,27 @@ const Editor = () => {
 
   const [pageData, setPageData] = useState([]);
 
+  useEffect(() => {
+    console.log('editor_id', editor_id);
+    console.log('module_id', module_id);
+    console.log('entity_id', entity_id);
+  }, []);
   const fetchPage = async () => {
-    getPageDetails(editor_id).then((res) => {
+    getNewPage(editor_id).then((res) => {
       // setPage(res.data.form_schema)
       // setPageData(res.data.page_data)
-      setPageData(res?.data?.form_schema);
-      res?.data?.form_schema?.forEach((item, index) => {
+      console.log('111', res);
+
+      setPageData(res.form_schema);
+      res.form_schema.forEach((item, index) => {
+        console.log('000', item);
         // { label, properties: controlls(label)?.properties, child: [] }
         let pageControl = {
-          label: item?.control,
-          properties: controlls(item?.control)?.properties,
+          label: item.control,
+          properties: controlls(item.control).properties,
           child: [],
         };
+
         setPage((prev) => [...prev, pageControl]);
       });
     });
@@ -47,14 +65,21 @@ const Editor = () => {
   useEffect(() => {
     fetchPage();
   }, []);
+  useEffect(() => {
+    fetchPage();
+  }, []);
 
   const handleSubmit = () => {
     let payload = {
-      form_schema: pageData,
+      id: editor_id,
+      input: {
+        form_schema: pageData,
+      },
     };
-    updatePage(editor_id, payload)
+
+    const res = UpdatePage(payload)
       .then((res) => {
-        console.log('data change -----> ', res.data);
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -63,6 +88,24 @@ const Editor = () => {
   };
 
   // use
+  // const handleDrop = ({ label }) => {
+  //   if (!isChildHovering) {
+  //     setPage([
+  //       ...page,
+  //       { label, properties: controlls(label)?.properties, child: [] },
+  //     ]);
+  //     setPageData((prev) => {
+  //       return [
+  //         ...prev,
+  //         {
+  //           control: label,
+  //         },
+  //       ];
+  //     });
+  //   }
+  //   setIsChildHovering(false);
+  // };
+
   const handleDrop = ({ label }) => {
     if (!isChildHovering) {
       console.log('Properties-----> ', controlls(label)?.properties);
@@ -98,7 +141,11 @@ const Editor = () => {
   useEffect(() => {
     setSelectedControl(page.length > 0 ? page.length - 1 : null);
   }, [page]);
+  useEffect(() => {
+    setSelectedControl(page.length > 0 ? page.length - 1 : null);
+  }, [page]);
 
+  useEffect(() => {}, [pageData]);
   useEffect(() => {}, [pageData]);
 
   return (
@@ -106,8 +153,7 @@ const Editor = () => {
       <div className="w-1/4 h-full bg-[#FFF] rounded-2xl overflow-auto">
         <SubTab active={active} setActive={setActive} tabs={tabs} />
         <div className="w-full p-4 grid grid-cols-2 gap-x-4">
-          {CONTROLLS.map((control, index) => {
-            // console.log("controlls in editor-->")
+          {CONTROLLS?.map((control, index) => {
             return (
               <ControlCard
                 label={control}
