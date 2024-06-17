@@ -20,7 +20,7 @@ const CustomSelect = ({ options, setValue }) => {
     setIsOpen(false);
   };
 
-  const filteredOptions = options.filter((option) =>
+  const filteredOptions = options?.filter((option) =>
     option?.label?.toLowerCase()?.includes(searchTerm.toLowerCase()),
   );
 
