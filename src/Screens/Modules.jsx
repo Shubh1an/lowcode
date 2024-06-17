@@ -119,7 +119,7 @@ const ModalComponent = ({
     const newErrors = { name: '' };
     let isValid = true;
 
-    if (!modalForm.name) {
+    if (!modalForm.name.trim()) {
       newErrors.name = 'Module name is required!';
       isValid = false;
     }
@@ -143,6 +143,13 @@ const ModalComponent = ({
     }
   };
 
+  const handleNameChange = (e) => {
+    setModalForm({ ...modalForm, name: e.target.value });
+    if (errors.name) {
+      setErrors({ ...errors, name: '' });
+    }
+  };
+
   return (
     <div className="w-[400px]">
       <div className="text-2xl font-bold text-[#000]">Add Modules</div>
@@ -154,7 +161,8 @@ const ModalComponent = ({
           className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none"
           placeholder="Enter Module Name"
           value={modalForm.name}
-          onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
+          // onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
+          onChange={handleNameChange}
         />
         {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
       </div>

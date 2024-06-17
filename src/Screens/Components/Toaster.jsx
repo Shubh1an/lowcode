@@ -17,8 +17,13 @@ const Toast = ({ message, showToast, setShowToast }) => {
     <>
       {isVisible && (
         <div
-          style={{ backgroundColor: '#DDF2DD', borderRadius: '20px' }}
-          className="fixed top-10 left-1/2 transform -translate-x-1/2 w-350 h-53 bg-DDF2DD border-2 border-green-500 rounded-md flex items-center justify-between p-4"
+          style={{
+            backgroundColor: '#DDF2DD',
+            borderRadius: '20px',
+            width: '306px',
+            height: '50px',
+          }}
+          className="fixed top-1 left-1/2 transform -translate-x-1/2 bg-DDF2DD border-2 border-green-500 rounded-md flex items-center justify-between p-4"
         >
           <img src={tickCircle} alt="tick icon" className="h-35 w-35 mr-2" />{' '}
           {/* Image */}
