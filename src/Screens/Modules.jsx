@@ -158,6 +158,7 @@ const Modules = () => {
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
+              hiddenHeaders={hiddenHeaders}
             />
           </>
         )}

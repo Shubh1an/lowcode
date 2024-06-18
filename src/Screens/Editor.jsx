@@ -88,6 +88,7 @@ const Editor = () => {
   };
 
   const handleDrop = ({ label }) => {
+    debugger;
     if (!isChildHovering) {
       console.log('Properties-----> ', controlls(label)?.properties);
 
@@ -113,6 +114,7 @@ const Editor = () => {
     }
     setIsChildHovering(false);
   };
+  console.log('pageData', pageData);
 
   const handleRemove = (index) => {
     setPage(page.filter((item, i) => i !== index));

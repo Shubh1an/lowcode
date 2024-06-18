@@ -10,17 +10,22 @@ import { formatValue } from '../Utility/utility';
 import CustomSearch from './Components/MiniComponents/CustomSearch';
 import ListHeaderButton from './Components/MiniComponents/ListHeaderButton';
 import ShortModal from './Components/MiniComponents/ShortModal';
-import { getFilledData } from '../Graphql/modelQuery';
-
+import { getFilledData, getPaginatedFilledData } from '../Graphql/modelQuery';
+import { useLocation } from 'react-router-dom';
+import TableView from './Components/MiniComponents/Grid';
 const ListView = () => {
   let page_id = location.search.split('=')[1];
-
+  // const location = useLocation();
+  // const params = new URLSearchParams(location.search);
+  // debugger;
+  // const page_id = params.get('id');
   const [forms, setForms] = useState([]);
   const [formsToRender, setFormsToRender] = useState([]);
   const [renderHeaders, setRenderHeaders] = useState([]);
   const [hideColumns, setHideColumns] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalForm, setModalForm] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchableHeaders, setSearchableHeaders] = useState([
     'name',
     'category',
@@ -31,33 +36,99 @@ const ListView = () => {
   const [page_detail_id, setPage_detail_id] = useState('');
   const [headers, setHeaders] = useState([]);
   const [data, setData] = useState([]);
-
-  const getviewPage = async (page_id) => {
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  // const getviewPage = async (page_id) => {
+  //   try {
+  //     debugger;
+  //     const res = await getFilledData(page_id);
+  //     console.log('dhvh', res);
+  //     let high_index = 0;
+  //     let high_length = 0;
+  //     let form_data = res.getFilledData;
+  //     let data_array = form_data.map((data, index) => {
+  //       if (data?.form_data?.length > high_length) {
+  //         high_index = index;
+  //         high_length = data?.form_data?.length;
+  //       }
+  //       return data.form_data;
+  //     });
+  //     setHeaders(form_data[high_index || 0]?.form_data.map((dt) => dt.key));
+  //     setRenderHeaders(
+  //       form_data[high_index || 0]?.form_data.map((dt) => dt.key),
+  //     );
+  //     setData(data_array);
+  //     setForms(data_array);
+  //     setFormsToRender(data_array);
+  //   } catch (err) {
+  //     console.log('object', err);
+  //   }
+  // };
+  const getviewPage = async (
+    page_id,
+    search = { field: '', value: '' },
+    page = 1,
+    limit = 4,
+    sort = { field: 'page_id', order: 'asc' },
+  ) => {
     try {
-      const res = await getFilledData(page_id);
-      console.log('dhvh', res);
-      let high_index = 0;
-      let high_length = 0;
-      let form_data = res.getFilledData;
-      let data_array = form_data.map((data, index) => {
-        if (data?.form_data?.length > high_length) {
-          high_index = index;
-          high_length = data?.form_data?.length;
-        }
-        return data.form_data;
-      });
-      setHeaders(form_data[high_index || 0]?.form_data.map((dt) => dt.key));
-      setRenderHeaders(
-        form_data[high_index || 0]?.form_data.map((dt) => dt.key),
+      const variables = {
+        page,
+        limit,
+        sort,
+        search,
+        filter: { field: 'page_id', value: page_id },
+      };
+      debugger;
+      console.log('Fetching data with variables:', variables);
+      const res = await getPaginatedFilledData(variables);
+      console.log('Fetched data:', res);
+
+      const filledData = res.filledData;
+      const high_index = filledData.reduce(
+        (maxIdx, curr, idx, arr) =>
+          curr.form_data.length > arr[maxIdx].form_data.length ? idx : maxIdx,
+        0,
       );
+
+      const headers =
+        filledData[high_index]?.form_data.map((dt) => dt.key) || [];
+      //const data_array = filledData.map((data) => data.form_data);
+      const data_array = filledData.map((data) => {
+        const row = {};
+        data.form_data.forEach((item) => {
+          row[item.key] = item.value;
+        });
+        return row;
+      });
+      debugger;
+      setHeaders(headers);
+      setRenderHeaders(headers);
       setData(data_array);
       setForms(data_array);
       setFormsToRender(data_array);
+      setTotalPages(res.totalPages);
+      setCurrentPage(page);
     } catch (err) {
-      console.log('object', err);
+      console.log('Error fetching data:', err);
+    } finally {
+      setLoading(false);
     }
   };
+  // const handlePageChange = (newPage) => {
+  //   // Ensure the new page is within the valid range
+  //   if (newPage < 1 || newPage > totalPages) return;
 
+  //   // Call the getviewPage function with the new page number
+  //   getviewPage('your_page_id', { field: 'name', value: 'searchValue' }, newPage, 10, { field: 'page_id', order: 'asc' });
+  // };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      getviewPage(page_id, {}, newPage, 4, { field: 'page_id', order: 'asc' });
+    }
+  };
   useEffect(() => {
     getviewPage(page_id);
   }, [page_id]);
@@ -76,7 +147,7 @@ const ListView = () => {
     // Add unhidden columns
   }, [hideColumns, forms]);
 
-  useEffect(() => {}, [renderHeaders]);
+  //useEffect(() => { }, [renderHeaders]);
 
   const handleHide = (column, checked) => {
     setHideColumns((prev) => {
@@ -145,7 +216,14 @@ const ListView = () => {
           handleHeaderSelect={handleHeaderSelect}
           people={people}
         />
-        <Table headers={renderHeaders} data={formsToRender} />
+        <TableView
+          data={{ headers: renderHeaders, cells: formsToRender }}
+          linkto={'/builder/listview?id'}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+        {/* <Table headers={renderHeaders} data={formsToRender} /> */}
       </div>
     </div>
   );
