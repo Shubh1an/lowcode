@@ -37,15 +37,16 @@ const Modules = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const handleSubmit = async () => {
+    console.log(modalForm);
     try {
-      setLoading(true);
       await saveModule(modalForm);
-      setShowModal(false);
-      fetchModules({}, currentPage); // Fetch current page after save
+      setToastMessage('Module saved successfully.');
+      setShowToast(true);
+      fetchModules(); // Fetch modules after saving
     } catch (error) {
       console.error('Error saving module:', error);
-    } finally {
-      setLoading(false);
+      setToastMessage('Failed to save module.');
+      setShowToast(true);
     }
   };
 
@@ -85,26 +86,6 @@ const Modules = () => {
       setLoading(false);
     }
   };
-  // const fetchModules = async () => {
-  //   try {
-
-  //     setLoading(true);
-  //     const modulesData = await getModules();
-
-  //     const data = modulesData.modules;
-  //     if (data) {
-  //       const headers_gen = Object.keys(data?.[0] || {}).filter(
-  //         (header) => header !== 'id' && header !== '__v'
-  //       );
-  //       setHeaders(headers_gen);
-  //       setCells(data);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching modules:", error);
-  //   } finally {
-  //     setLoading(false); // Set loading state to false after fetching
-  //   }
-  // };
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {

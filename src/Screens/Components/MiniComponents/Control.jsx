@@ -7,10 +7,10 @@ import { MdDelete, MdFileDownload } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
 import SignatureCanvas from 'react-signature-canvas';
 import Switch from 'react-switch';
-
 import { FaMicrophone, FaPlay, FaStop, FaVolumeUp } from 'react-icons/fa';
 import { getFilledData, getPagebyEntityid } from '../../../Graphql/modelQuery';
 import CustomSelect from './CustomSelect';
+import MultiSelectComponent from './MultiSelect';
 
 const Control = ({
   label,
@@ -280,6 +280,42 @@ const Control = ({
       }, 500);
     }
   };
+  const [entityData, setEntityData] = useState([]);
+  let entityType = field?.properties?.entityType?.value;
+  let entity = field?.properties?.entity?.value;
+  let entityColumn = field?.properties?.entityColumn?.value;
+
+  if (entityType === undefined) {
+    entityType = 'onetoone';
+  }
+  useEffect(() => {
+    if (entity) {
+      getPagebyEntityid(entity)
+        .then((res) => {
+          let filledlookupId = res?.getPagebyEntityid?.find(
+            (elm) => elm.type === 'default_add',
+          )?.id;
+          getFilledData(filledlookupId).then((response) => {
+            let entityData = [];
+            response?.getFilledData.map((em) => {
+              em?.form_data.map((formdata) => {
+                if (formdata?.key == entityColumn) {
+                  entityData.push({
+                    label: formdata?.value,
+                    value: em.id,
+                  });
+                }
+              });
+
+              setEntityData(entityData);
+            });
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, []);
 
   const handleDeleteMessage = (id) => {
     setMessages(messages.filter((message) => message.id !== id));
@@ -514,35 +550,6 @@ const Control = ({
           value={inputValue}
         />
       );
-    // case 'Star Rating':
-    //   let max = 5;
-    //   let defaultValue = 0;
-    //   return (
-    //     <div className="flex flex-row space-x-4 border border-[#BDD7CF] rounded-lg	bg-[#E9F2EF] w-full py-2 px-4">
-    //       {[...Array(max)].map((star, i) => {
-    //         return (
-    //           <label key={i}>
-    //             <input
-    //               type="radio"
-    //               name="rating"
-    //               value={i + 1}
-    //               style={{ display: 'none' }}
-    //             />
-    //             <FaStar
-    //               color={i < defaultValue ? '#ffc107' : '#e4e5e9'}
-    //               // color={rating >= star ? 'gold' : 'gray'}
-    //               size={24}
-    //               style={{ cursor: 'pointer' }} // Change cursor to pointer to
-    //               indicate
-    //               clickability
-    //               className="star"
-    //               onClick={() => onchange({ target: { value: i + 1 } })}
-    //             />
-    //           </label>
-    //         );
-    //       })}
-    //     </div>
-    //   );
     case 'Star-Rating': {
       let max = 5;
       let defaultValue = 0;
@@ -571,7 +578,6 @@ const Control = ({
                 setHoveredRating(0); // Reset hovered rating state
               }}
               onClick={() => {
-                // setRating(index + 1);
                 handleRatingClick(index + 1);
               }}
             >
@@ -1189,49 +1195,22 @@ const Control = ({
       );
 
     case 'lookup':
-      let entityType = field?.properties?.entityType?.value;
-      let entity = field?.properties?.entity?.value;
-      let entityColumn = field?.properties?.entityColumn?.value;
-
-      if (entityType === undefined) {
-        entityType = 'onetoone';
-      }
-      const [entityData, setEntityData] = useState([]);
-      useEffect(() => {
-        if (entity) {
-          getPagebyEntityid(entity)
-            .then((res) => {
-              let filledlookupId = res?.getPagebyEntityid?.find(
-                (elm) => elm.type === 'default_add',
-              )?.id;
-              getFilledData(filledlookupId).then((response) => {
-                let entityData = [];
-                response?.getFilledData.map((em) => {
-                  em?.form_data.map((formdata) => {
-                    if (formdata?.key == entityColumn) {
-                      entityData.push({
-                        label: formdata?.value,
-                        value: em.id,
-                      });
-                    }
-                  });
-
-                  setEntityData(entityData);
-                });
-              });
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      }, []);
-
       const selectedlookup = (data) => {
-        let valuelookup = entityData.find((em) => em?.value == data)?.label;
-        handleValue(valuelookup);
+        console.log('data----->', data);
+        if (Array.isArray(data)) {
+          const valuelookup = data.map((item) => {
+            const entity = entityData.find((em) => em?.value === item);
+            return entity ? entity.label : null;
+          });
+          const filteredLabels = valuelookup.filter((label) => label !== null);
+          handleValue(filteredLabels.join(', '));
+        } else {
+          const valuelookup = entityData.find(
+            (em) => em?.value === data,
+          )?.label;
+          handleValue(valuelookup);
+        }
       };
-      useEffect(() => {}, [entityData, inputValue]);
-
       if (!entity) {
         return (
           <div className="border border-[#E9E9E9] rounded-lg bg-[#FFFFFF] w-full py-2 px-4">
@@ -1240,8 +1219,22 @@ const Control = ({
         );
       }
       return (
+        // <div>
+        //   {entityType && entity && (
+        //     <CustomSelect
+        //       options={entityData}
+        //       setValue={(data) => selectedlookup(data)}
+        //     />
+        //   )}
+        // </div>
+
         <div>
-          {entityType && entity && (
+          {entityType === 'onetomany' ? (
+            <MultiSelectComponent
+              options={entityData}
+              setValue={(data) => selectedlookup(data)}
+            />
+          ) : (
             <CustomSelect
               options={entityData}
               setValue={(data) => selectedlookup(data)}

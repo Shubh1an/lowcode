@@ -522,9 +522,14 @@ const Entities = () => {
         type: 'default_view',
       });
       setShowModal(false);
+      console.log('Successfully saved!');
+      setToastMessage('Entity saved successfully.');
+      setShowToast(true);
       fetchEntities();
     } catch (error) {
-      console.error('Error saving entity:', error);
+      console.error('Error saving module:', error);
+      setToastMessage('Failed to save module.');
+      setShowToast(true);
     }
   };
 
@@ -547,7 +552,7 @@ const Entities = () => {
             header !== 'id' &&
             header !== '__typename',
         );
-        console.log('headers_gen1', headers_gen);
+        console.log('headers_gen111----->', headers_gen);
         setHeaders(headers_gen);
         setCells(entities);
         setTotalPages(Math.ceil(totalEntities / limit));
@@ -692,7 +697,7 @@ const ModalComponent = ({
         <p className="mb-2 text-lg font-bold">Description</p>
         <textarea
           className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none"
-          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none"
+          //className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none"
           placeholder="Enter Description"
           rows={3}
           value={modalForm.description}
