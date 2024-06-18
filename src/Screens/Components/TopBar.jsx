@@ -134,15 +134,16 @@ const TopBar = ({
             }
             headers={headers}
             hiddenHeaders={hiddenHeaders}
-            handleHideSelect={(header, isHidden) => {
-              if (isHidden) {
-                setHiddenHeaders((prev) => [...prev, header]);
-              } else {
-                setHiddenHeaders((prev) =>
-                  prev.filter((item) => item !== header),
-                );
-              }
-            }}
+            setHiddenHeaders={setHiddenHeaders}
+            // handleHideSelect={(header, isHidden) => {
+            //   if (isHidden) {
+            //     setHiddenHeaders((prev) => [...prev, header]);
+            //   } else {
+            //     setHiddenHeaders((prev) =>
+            //       prev.filter((item) => item !== header),
+            //     );
+            //   }
+            // }}
           />
           <ChangeViewBtn
             onclick={() => {
