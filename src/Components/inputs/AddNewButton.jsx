@@ -10,11 +10,12 @@ const AddNewButton = ({ onclick, isDropDown }) => {
       <button
         className="bg-[#000] text-[#fff] px-1 py-1 rounded-md mx-4 font-bold flex"
         onClick={() => {
-          if (!isDropDown) {
-            onclick('add');
-          } else {
-            setIsDropDownOpen((prev) => !prev);
-          }
+          console.log('gdgfgdgfsdgsadgdg');
+          // if (!isDropDown) {
+          //   onclick('add');
+          // } else {
+          //   setIsDropDownOpen((prev) => !prev);
+          // }
         }}
       >
         <IoIosAddCircle className="text-2xl ml-1 text-[#fff]" />

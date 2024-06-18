@@ -33,11 +33,19 @@ const TopBar = ({
   modalComponent = () => {},
   isDropDownButton = false,
   onclick = () => setShowModal(!showModal),
+  resetModalState = () => {},
   setSearchableHeaders,
   SearchableHeaders,
   fetchModules, // Add fetchModules as a prop
   FilterHeaders,
 }) => {
+  const handleAddNewButtonClick = () => {
+    resetModalState(); // Call resetModalState function
+    handlePatch(); // Toggle showModal
+  };
+  const handlePatch = () => {
+    setShowModal(true);
+  };
   const [showSearch, setShowSearch] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [showSort, setShowSort] = useState(false);
@@ -75,7 +83,10 @@ const TopBar = ({
     <div className="h-[60px] mx-6 border-b justify-center">
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold">{label}</p>
-        <AddNewButton onclick={onclick} isDropDown={isDropDownButton} />
+        <AddNewButton
+          onclick={handleAddNewButtonClick}
+          isDropDown={isDropDownButton}
+        />
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={

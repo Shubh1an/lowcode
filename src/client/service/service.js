@@ -2,13 +2,12 @@ import {
   entities,
   getFilledData,
   getModules,
-  getPagebyid,
+  getPagebyEntityid,
 } from '../../Graphql/modelQuery';
 import {
   setEntity,
   setFilledData,
   setModule,
-  setNewform,
   setPages,
 } from '../../redux/userslice';
 
@@ -24,9 +23,9 @@ export const Entity = async (dispatch, moduleId) => {
   return dispatch(setEntity(res?.entities));
 };
 export const Pages = async (dispatch, entityId) => {
-  const res = await getPagebyid(entityId);
-  dispatch(setPages(res.getPagebyid));
-  return res.pages;
+  const res = await getPagebyEntityid(entityId);
+  dispatch(setPages(res));
+  return res;
 };
 export const PagesFilleddata = async (dispatch, pageId) => {
   const res = await getFilledData(pageId);

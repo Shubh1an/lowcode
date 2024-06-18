@@ -4,6 +4,7 @@ import { getPaginatedEntities, saveEntity } from '../Requests/entity';
 import { createPage } from '../Requests/page';
 import TableView from './Components/MiniComponents/Grid';
 import TopBar from './Components/TopBar';
+import Toast from './Components/Toaster';
 
 const Entities = () => {
   const location = useLocation();
@@ -24,6 +25,9 @@ const Entities = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchCriteria, setSearchCriteria] = useState('');
   const [SearchableHeaders, setSearchableHeaders] = useState([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
   // const handleSubmit = async () => {
   //   try {
   //     setLoading(true);
@@ -41,7 +45,6 @@ const Entities = () => {
 
   const handleSubmit = async () => {
     try {
-      debugger;
       const data = await saveEntity(modalForm);
       await createPage({
         name: modalForm.name,
@@ -127,6 +130,14 @@ const Entities = () => {
     fetchEntities();
   }, []);
 
+  const resetModalState = () => {
+    setModalForm({
+      name: '',
+      description: '',
+      module_id: module_id,
+    });
+    setShowModal(true);
+  };
   return (
     <div className="w-full h-full bg-[#FCF9EE] flex flex-col p-4">
       <div className="w-full h-full bg-[#FFF] rounded overflow-auto">
@@ -134,6 +145,7 @@ const Entities = () => {
           label={'Entities'}
           showModal={showModal}
           setShowModal={setShowModal}
+          resetModalState={resetModalState}
           modalForm={modalForm}
           setModalForm={setModalForm}
           headers={headers}
@@ -152,20 +164,16 @@ const Entities = () => {
             />
           }
         />
-        {loading ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <p>Loading...</p>
-          </div>
-        ) : (
-          <TableView
-            data={{ headers, cells }}
-            linkto={`/builder/pages?module_id=${module_id}&entity_id`}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        )}
+        <TableView
+          data={{ headers, cells }}
+          linkto={`/builder/pages?module_id=${module_id}&entity_id`}
+        />
       </div>
+      <Toast
+        message={toastMessage}
+        showToast={showToast}
+        setShowToast={setShowToast}
+      />
     </div>
   );
 };
@@ -176,6 +184,55 @@ const ModalComponent = ({
   setModalForm,
   handleSubmit,
 }) => {
+  const [errors, setErrors] = useState({
+    name: '',
+  });
+
+  const validateForm = () => {
+    const newErrors = { name: '' };
+    let isValid = true;
+
+    if (!modalForm.name.trim()) {
+      newErrors.name = 'Entity name is required!';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+  // const handleSave = async () => {
+  //   try {
+  //     console.log('handleSave called');
+  //     await handleSubmit();
+  //     console.log('handleSubmit resolved');
+  //     closeModal();
+  //   } catch (error) {
+  //     console.log('handleSubmit error:', error);
+  //     toast.error(`Error: ${error.message}`);
+  //   }
+  // };
+
+  const handleSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
+    try {
+      console.log('handleSave called');
+      await handleSubmit();
+      console.log('handleSubmit resolved');
+      closeModal();
+    } catch (error) {
+      console.log('handleSubmit error:', error);
+    }
+  };
+
+  const handleNameChange = (e) => {
+    setModalForm({ ...modalForm, name: e.target.value });
+    if (errors.name) {
+      setErrors({ ...errors, name: '' });
+    }
+  };
+
   return (
     <div className="w-[400px]">
       <div className="text-2xl font-bold text-[#000]">Add Entities</div>
@@ -187,12 +244,15 @@ const ModalComponent = ({
           className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none"
           placeholder="Enter Entity Name"
           value={modalForm.name}
-          onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
+          onChange={handleNameChange}
+          // onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
         />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
       </div>
       <div className="w-full mt-5">
         <p className="mb-2 text-lg font-bold">Description</p>
         <textarea
+          className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none"
           className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none"
           placeholder="Enter Description"
           rows={3}
@@ -202,21 +262,19 @@ const ModalComponent = ({
           }
         />
       </div>
-      <div className="flex justify-start items-center mt-5">
-        <button
-          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
-          onClick={() => {
-            handleSubmit();
-            closeModal(false);
-          }}
-        >
-          Save
-        </button>
+      <div className="flex justify-start items-center mt-5 space-x-2">
         <button
           className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
-          onClick={() => closeModal(false)}
+          // onClick={closeModal}
+          onClick={() => closeModal()}
         >
           Cancel
+        </button>
+        <button
+          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
+          onClick={handleSave}
+        >
+          Save
         </button>
       </div>
     </div>

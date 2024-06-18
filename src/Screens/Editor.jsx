@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
 import { Link, useLocation } from 'react-router-dom';
 import Icons from '../Components/Utility/Icons';
 import controlls from '../Config/Controlls.jsx';
 import config from '../Config/config.js';
+import { getPagebyEntityid } from '../Graphql/modelQuery';
 import { getEntities } from '../Requests/entity';
 import { UpdatePage, getNewPage } from '../Requests/page';
 import Control from './Components/MiniComponents/Control';
 import CustomSelect from './Components/MiniComponents/CustomSelect';
 import SubTab from './Components/MiniComponents/SubTab';
-import { useDrag, useDrop } from 'react-dnd';
 
 //editor_id == page_id
 const Editor = () => {
@@ -42,16 +43,13 @@ const Editor = () => {
     console.log('entity_id', entity_id);
   }, []);
   const fetchPage = async () => {
-    debugger;
     getNewPage(editor_id).then((res) => {
       // setPage(res.data.form_schema)
       // setPageData(res.data.page_data)
       console.log('111', res);
 
-      debugger;
       setPageData(res.form_schema);
       res.form_schema.forEach((item, index) => {
-        debugger;
         console.log('000', item);
         // { label, properties: controlls(label)?.properties, child: [] }
         let pageControl = {
@@ -59,7 +57,7 @@ const Editor = () => {
           properties: controlls(item.control).properties,
           child: [],
         };
-        debugger;
+
         setPage((prev) => [...prev, pageControl]);
       });
     });
@@ -70,7 +68,6 @@ const Editor = () => {
   }, []);
 
   const handleSubmit = () => {
-    debugger;
     let payload = {
       id: editor_id,
       input: {
@@ -80,7 +77,6 @@ const Editor = () => {
 
     const res = UpdatePage(payload)
       .then((res) => {
-        debugger;
         console.log(res);
       })
       .catch((err) => {
@@ -89,10 +85,11 @@ const Editor = () => {
     console.log('Page Data: ', page);
   };
 
-  // use
   const handleDrop = ({ label }) => {
     debugger;
     if (!isChildHovering) {
+      console.log('Properties-----> ', controlls(label)?.properties);
+
       setPage([
         ...page,
         { label, properties: controlls(label)?.properties, child: [] },
@@ -102,6 +99,13 @@ const Editor = () => {
           ...prev,
           {
             control: label,
+            properties: {
+              ...controlls(label)?.properties,
+              displayName: {
+                value: 'Display Name ' + (prev.length + 1),
+                options: [],
+              },
+            },
           },
         ];
       });
@@ -115,6 +119,9 @@ const Editor = () => {
     setPageData(pageData.filter((item, i) => i !== index));
   };
 
+  useEffect(() => {
+    setSelectedControl(page.length > 0 ? page.length - 1 : null);
+  }, [page]);
   useEffect(() => {
     setSelectedControl(page.length > 0 ? page.length - 1 : null);
   }, [page]);
@@ -152,6 +159,7 @@ const Editor = () => {
           handleRemove={handleRemove}
         />
       </div>
+
       <div className="w-1/4 h-full bg-[#FFF] rounded-2xl overflow-auto">
         <PropertyWindow
           page={page}
@@ -160,6 +168,7 @@ const Editor = () => {
           setPageData={setPageData}
           module_id={module_id}
           entity_id={entity_id}
+          editor_id={editor_id}
         />
       </div>
     </div>
@@ -174,9 +183,7 @@ const ControlCard = ({ label, icon, index }) => {
     }),
     item: { label, index },
   }));
-  // Remove underscore from label
   label = label.replace('_', ' ');
-  // Capitalize
   label = label.charAt(0).toUpperCase() + label.slice(1);
   return (
     <div
@@ -202,6 +209,7 @@ const EditorComponent = ({
   editorId,
   handleRemove,
 }) => {
+  // console.log("Editor Component setSelectedControl ----> ",setSelectedControl)
   const [hover, setHover] = useState(false);
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'FIELD',
@@ -279,7 +287,11 @@ const PropertyWindow = ({
   setPageData,
   module_id,
   entity_id,
+  editor_id,
 }) => {
+  console.log('selectControl 1 ----->', selectedControl);
+  console.log('selectControl 2----->', pageData);
+  // console.log("selectControl 3 ----->",selectedControl)
   let properties = page[selectedControl]?.properties;
 
   if (!properties) return null;
@@ -296,6 +308,7 @@ const PropertyWindow = ({
             selectedControl={selectedControl}
             module_id={module_id}
             entity_id={entity_id}
+            editor_id={editor_id}
           />
         );
       })}
@@ -311,12 +324,20 @@ const PropertyInput = ({
   property,
   module_id,
   entity_id,
+  editor_id,
 }) => {
   let key = property_key;
   const [options, setOptions] = useState([]);
   const [option, setOption] = useState('');
 
   const [inputValue, setInputValue] = useState('');
+
+  const [lookupentityId, setlookupentityId] = useState('');
+
+  useEffect(() => {
+    let inputValue = pageData[selectedControl]?.properties?.[key]?.value;
+    setInputValue(inputValue);
+  }, [pageData, selectedControl]);
 
   const addOption = () => {
     if (option === '') return;
@@ -325,6 +346,8 @@ const PropertyInput = ({
   };
   useEffect(() => {
     if (inputValue || options.length > 0) {
+      console.log('Editor options111 ---->', options); // Log options
+      console.log('Editor inputValue ---->', inputValue); // Log inputValue
       if (!pageData[selectedControl]?.properties) {
         setPageData((prev) => {
           let newPageData = [...prev];
@@ -368,7 +391,10 @@ const PropertyInput = ({
           type="text"
           className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            console.log(e.target.value); // Log the value
+            setInputValue(e.target.value);
+          }}
         />
       );
     case 'number':
@@ -380,7 +406,6 @@ const PropertyInput = ({
           onChange={(e) => setInputValue(e.target.value)}
         />
       );
-
     case 'boolean':
       return (
         <select
@@ -392,8 +417,8 @@ const PropertyInput = ({
           <option value="false">False</option>
         </select>
       );
-
     case 'options':
+      console.log('Option Enter ---->', options);
       return (
         <div className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm">
           {options.map((option, index) => {
@@ -445,13 +470,23 @@ const PropertyInput = ({
           </div>
         </div>
       );
+
     case 'lookup':
       return (
         <div className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm">
           <LookupComponent
             module_id={module_id}
-            entity_id={entity_id}
             setInputValue={setInputValue}
+          />
+        </div>
+      );
+    case 'lookupcolumn':
+      return (
+        <div className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm">
+          <LookupColumnComponent
+            pageData={pageData}
+            setInputValue={setInputValue}
+            selectedControl={selectedControl}
           />
         </div>
       );
@@ -476,7 +511,9 @@ const Property = ({
   property_key,
   module_id,
   entity_id,
+  editor_id,
 }) => {
+  console.log('Property123 ------>', pageData);
   return (
     <div className="w-full bg-[#FCF9EE] rounded p-4 my-4 flex-col items-center justify-between border border-[#F9EFDE]">
       <div className="">{property?.label}</div>
@@ -490,6 +527,7 @@ const Property = ({
           selectedControl={selectedControl}
           module_id={module_id}
           entity_id={entity_id}
+          editor_id={editor_id}
         />
       </div>
     </div>
@@ -511,26 +549,53 @@ const EditorTopBar = ({ editorId }) => {
   );
 };
 
-const LookupComponent = ({ module_id, entity_id, setInputValue }) => {
+const LookupComponent = ({ module_id, setInputValue }) => {
   const [entities, setEntities] = useState([]);
   useEffect(() => {
     getEntities(module_id).then((data) => {
-      let entities = data?.data;
-      entities.forEach((entity, index) => {
-        if (entity_id === entity._id) {
-          // Remove the entity from the array
-          entities.splice(index, 1);
-        }
-      });
+      let entities = data;
       setEntities(entities);
     });
   }, []);
+
   return (
     <CustomSelect
-      options={entities.map((entity) => {
+      options={entities?.map((entity) => {
         return {
           label: entity.name,
-          value: entity._id,
+          value: entity.id,
+        };
+      })}
+      setValue={setInputValue}
+    />
+  );
+};
+
+const LookupColumnComponent = ({
+  pageData,
+  setInputValue,
+  selectedControl,
+}) => {
+  const [page, setPage] = useState([]);
+
+  useEffect(() => {
+    let pageDetailId = pageData[selectedControl]?.properties?.entity?.value;
+    if (pageDetailId) {
+      getPagebyEntityid(pageDetailId).then((data) => {
+        let form_schema = data?.getPagebyEntityid?.find(
+          (elm) => elm.type === 'default_add',
+        )?.form_schema;
+        setPage(form_schema || []);
+      });
+    }
+  }, [pageData]);
+
+  return (
+    <CustomSelect
+      options={page.map((entity) => {
+        return {
+          label: entity?.properties?.displayName?.value,
+          value: entity?.properties?.displayName?.value,
         };
       })}
       setValue={setInputValue}

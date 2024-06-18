@@ -1,18 +1,13 @@
 import { useEffect, useState } from 'react';
 import TopBar from './Components/TopBar';
 //import { PAGINATED_MODELS_QUERY } from '../Requests/module';
-import {
-  getModules,
-  saveModule,
-  getPaginatedModules,
-} from '../Requests/module';
+import { getPaginatedModules, saveModule } from '../Requests/module';
 import TableView from './Components/MiniComponents/Grid';
-import CustomHide from './Components/MiniComponents/CustomHide';
-import { isNullableType } from 'graphql';
-import { empty } from '@apollo/client';
+import Toast from './Components/Toaster';
 
 const Modules = () => {
   const [showModal, setShowModal] = useState(false);
+
   const [modalForm, setModalForm] = useState({
     name: '',
     description: '',
@@ -22,6 +17,9 @@ const Modules = () => {
   const [cachedData, setCachedData] = useState(null);
   const [SearchableHeaders, setSearchableHeaders] = useState(headers);
   const [hiddenHeaders, setHiddenHeaders] = useState([]);
+
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   // Modify handleSearch function to properly pass searchCriteria
   const handleSearch = async (searchCriteria) => {
@@ -119,6 +117,14 @@ const Modules = () => {
     fetchModules();
   }, []);
 
+  const resetModalState = () => {
+    setModalForm({
+      name: '',
+      description: '',
+    });
+    setShowModal(true);
+  };
+
   useEffect(() => {
     console.log('Modules loaded', SearchableHeaders);
   }, [SearchableHeaders]);
@@ -137,6 +143,7 @@ const Modules = () => {
           setShowModal={setShowModal}
           modalForm={modalForm}
           setModalForm={setModalForm}
+          resetModalState={resetModalState}
           headers={headers}
           // handleSearch={() => {}}
           handleSearch={handleSearch}
@@ -175,6 +182,16 @@ const Modules = () => {
           </>
         )}
       </div>
+      {/* <ToastContainer
+        //  toastClassName="bg-[#F0F9FA] border-2 border-[#3A9EA5] rounded-full"
+        toastClassName="bg-green-100 border-2 border-green-500 rounded-lg p-4"
+      /> */}
+
+      <Toast
+        message={toastMessage}
+        showToast={showToast}
+        setShowToast={setShowToast}
+      />
     </div>
   );
 };
@@ -185,6 +202,45 @@ const ModalComponent = ({
   setModalForm,
   handleSubmit,
 }) => {
+  const [errors, setErrors] = useState({
+    name: '',
+  });
+
+  const validateForm = () => {
+    const newErrors = { name: '' };
+    let isValid = true;
+
+    if (!modalForm.name.trim()) {
+      newErrors.name = 'Module name is required!';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
+    try {
+      console.log('handleSave called');
+      await handleSubmit();
+      console.log('handleSubmit resolved');
+      closeModal();
+    } catch (error) {
+      console.log('handleSubmit error:', error);
+      toast.error(`Error: ${error.message}`);
+    }
+  };
+
+  const handleNameChange = (e) => {
+    setModalForm({ ...modalForm, name: e.target.value });
+    if (errors.name) {
+      setErrors({ ...errors, name: '' });
+    }
+  };
+
   return (
     <div className="w-[400px]">
       <div className="text-2xl font-bold text-[#000]">Add Modules</div>
@@ -196,8 +252,10 @@ const ModalComponent = ({
           className="border border-[#E9E9E9] rounded-lg w-full py-2 px-4 placeholder-text-[#000] focus:border-[#000] focus:outline-none"
           placeholder="Enter Module Name"
           value={modalForm.name}
-          onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
+          // onChange={(e) => setModalForm({ ...modalForm, name: e.target.value })}
+          onChange={handleNameChange}
         />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
       </div>
       <div className="w-full mt-5">
         <p className="mb-2 text-lg font-bold">Description</p>
@@ -211,20 +269,19 @@ const ModalComponent = ({
           }
         />
       </div>
-      <div className="flex justify-start items-center mt-5">
-        <button
-          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
-          onClick={() => {
-            handleSubmit();
-          }}
-        >
-          Save
-        </button>
+      <div className="flex justify-start items-center mt-5 space-x-2">
         <button
           className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
-          onClick={() => closeModal(false)}
+          onClick={() => closeModal()}
         >
           Cancel
+        </button>
+
+        <button
+          className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
+          onClick={handleSave}
+        >
+          Save
         </button>
       </div>
     </div>

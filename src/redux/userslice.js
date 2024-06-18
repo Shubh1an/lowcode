@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const userSlice = createSlice({
   name: 'modules',
   initialState: {
-    permissionapp: 'Raw',
+    permissionapp: 'pipeline',
     module: [],
     entity: [],
     pages: [],

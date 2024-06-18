@@ -9,11 +9,6 @@ export const savePage = async (data) => {
     .catch((err) => {});
 };
 
-export const getPages = async (entity_id) => {
-  let data = await apiInstance.get('/pages?entity_id=' + entity_id);
-  return data;
-};
-
 export const editPages = async (id, data) => {
   let response = await apiInstance.put('/pages?id=' + id, data);
   return response;

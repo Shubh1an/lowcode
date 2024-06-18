@@ -6,8 +6,9 @@ const CustomSelect = ({ options, setValue }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
+    debugger;
     if (setValue) {
-      setValue(selectedOption);
+      setValue(selectedOption?.value);
     }
   }, [selectedOption]);
   const toggleDropdown = () => {
@@ -19,14 +20,14 @@ const CustomSelect = ({ options, setValue }) => {
     setIsOpen(false);
   };
 
-  const filteredOptions = options.filter((option) =>
+  const filteredOptions = options?.filter((option) =>
     option?.label?.toLowerCase()?.includes(searchTerm.toLowerCase()),
   );
 
   return (
-    <div className="relative inline-block text-left w-full">
+    <div className="relative inline-block text-left w-full ">
       <div>
-        <span className="rounded-md shadow-sm">
+        <span className="rounded-md shadow-sm z-[1]">
           <input
             type="text"
             placeholder="Select..."
@@ -38,7 +39,7 @@ const CustomSelect = ({ options, setValue }) => {
         </span>
       </div>
       {isOpen && (
-        <div className="origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+        <div className="origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-10">
           <div className="py-1">
             <input
               type="text"
@@ -49,7 +50,7 @@ const CustomSelect = ({ options, setValue }) => {
             />
           </div>
           <div className="py-1">
-            {filteredOptions.map((option) => (
+            {filteredOptions?.map((option) => (
               <div
                 key={option.value}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"

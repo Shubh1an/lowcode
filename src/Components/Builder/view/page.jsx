@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import FormInput from '../../FormInput/FormInput';
-import { FaTrash } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 import {
   getAllControls,
   getPageData,
   getPageDetails,
 } from '../../../Requests/form';
-import { BiText } from 'react-icons/bi';
-import Icons from '../../Utility/Icons';
 import { fillPage } from '../../../Requests/pade_data';
+import FormInput from '../../FormInput/FormInput';
+import Icons from '../../Utility/Icons';
 
 const View = ({ newPageData }) => {
   const [formFields, setFormFields] = useState([]);

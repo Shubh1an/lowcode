@@ -67,6 +67,7 @@ const Module = () => {
   const fetchModules = async () => {
     const modules = await getModules();
     let data = modules?.data;
+    console.log(data, 'data');
     if (data) {
       let headers_gen = Object.keys(data?.[0] || {});
       headers_gen.forEach((header, index) => {
@@ -76,8 +77,10 @@ const Module = () => {
       });
       setHeaders(headers_gen);
       setCells(data);
+      console.log('data ----------->', data);
     }
   };
+
   useEffect(() => {
     formsToRender.forEach((form, index) => {
       let header = Object.keys(form);
@@ -146,11 +149,14 @@ const TopBar = ({
   setView,
   view,
   handleSubmit,
+  handleAddNew,
   handleHide,
   hideColumns,
   setHideColumns,
   people,
 }) => {
+  console.log('setModelForm----->', setModalForm);
+  console.log('setShowModal-->', setShowModal);
   const [showSearch, setShowSearch] = useState(false);
 
   return (
@@ -158,9 +164,17 @@ const TopBar = ({
       <div className="flex items-center h-full">
         <p className="text-2xl font-bold">Modules</p>
         <AddNewButton
-          onclick={() => setShowModal(!showModal)}
+          // onclick={() => setShowModal(!showModal)}
+
+          onclick={onclick}
           isDropDown={false}
         />
+        {/* <AddNewButton
+         
+          onclick={handleAddNew} // Call handleAddNew function here
+          isDropDown={false}
+        /> */}
+
         <div className="flex items-center h-full ml-auto">
           <CustomSearch
             initialComponent={
@@ -259,6 +273,7 @@ const ModalComponent = ({
   setModalForm,
   handleSubmit,
 }) => {
+  console.log('ModalComponent rendered with modalForm:', modalForm);
   return (
     <div className="w-[400px]">
       <div className="text-2xl font-bold text-[#000]">Add Modules</div>
@@ -287,6 +302,13 @@ const ModalComponent = ({
       </div>
       <div className="flex justify-start items-center mt-5">
         <button
+          className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
+          onClick={closeModal}
+        >
+          Cancel
+        </button>
+
+        <button
           className="bg-[#000] text-[#fff] px-4 py-1 rounded-md mr-4 font-bold"
           onClick={() => {
             handleSubmit();
@@ -294,12 +316,6 @@ const ModalComponent = ({
           }}
         >
           Save
-        </button>
-        <button
-          className="text-[#000] px-4 py-1 rounded-md border border-[#000] font-bold"
-          onClick={closeModal}
-        >
-          Cancel
         </button>
       </div>
     </div>

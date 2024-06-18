@@ -1,14 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 // @ts-ignore
-import LCNC from '../assets/LCNC.svg';
-import { IoHomeOutline } from 'react-icons/io5';
-import { RiStackLine } from 'react-icons/ri';
 import { AiOutlineAppstoreAdd } from 'react-icons/ai';
-import { PiGraphLight } from 'react-icons/pi';
-import { GoWorkflow } from 'react-icons/go';
-import GlobalContext from '../Context/Context';
-import { Link, BrowserRouter as router } from 'react-router-dom';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import { GoWorkflow } from 'react-icons/go';
+import { IoHomeOutline } from 'react-icons/io5';
+import { PiGraphLight } from 'react-icons/pi';
+import { RiStackLine } from 'react-icons/ri';
+import { Link } from 'react-router-dom';
+import GlobalContext from '../Context/Context';
 const Sidebar = () => {
   const menuData = [
     {

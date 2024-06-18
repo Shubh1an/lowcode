@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import CustomTopLoader from './Components/Loader/CustomTopLoader';
@@ -8,14 +10,14 @@ import Layout from './Layout/Layout';
 import Kanban from './Pages/Board/Kanban';
 import Templates from './Pages/Templates';
 import Builder from './Screens/Builder';
+import NavigationComponents from './Screens/Components/LandingPageComponents/NavigationComponents';
 import ClientLayout from './client/ClientLayout';
 import Dashboard from './client/Dashboard';
-import Raw from './client/pages/Raw';
-import Lead from './client/pages/Lead';
 import Deal from './client/pages/Deal';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Entity, moduleselected } from './client/service/service';
+import Lead from './client/pages/Lead';
+import Pipelineview from './client/pages/Pipelineview';
+import Raw from './client/pages/Raw';
+import { moduleselected } from './client/service/service';
 function App() {
   const dispatch = useDispatch();
   const [modules, setmoules] = useState();
@@ -54,6 +56,7 @@ function App() {
                 </LayoutChild>
               }
             />
+            <Route path="/landingPage/*" element={<NavigationComponents />} />
             <Route
               path="/kanban"
               element={
@@ -70,6 +73,10 @@ function App() {
                     <Routes>
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/page/raw" element={<Raw />} />
+                      <Route
+                        path="/page/contactview"
+                        element={<Pipelineview />}
+                      />
                       <Route path="/page/lead" element={<Lead />} />
                       <Route path="/page/deal" element={<Deal />} />
                     </Routes>
@@ -77,10 +84,6 @@ function App() {
                 </ClientLayout>
               }
             />
-            {/* <Route
-              path="/*"
-              element={<SetupLayout> {<Login />} </SetupLayout>}
-            /> */}
           </Routes>
         </DndProvider>
       </GlobalProvider>
