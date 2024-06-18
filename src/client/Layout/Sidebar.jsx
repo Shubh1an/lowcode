@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 const Sidebar = () => {
   const modulesdata = useSelector((state) => state['modules']);
 
+  const routes = ['/page/pipeline', '/page/contact', '/page/activity'];
+
   useEffect(() => {}, []);
 
   const menuData =
@@ -16,7 +18,7 @@ const Sidebar = () => {
       return {
         ...em,
         icon: <BsGraphUpArrow />,
-        url: index == 0 ? '/page/raw' : '/page/lead',
+        url: routes[index],
         subMenu: [],
       };
     });

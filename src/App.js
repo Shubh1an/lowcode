@@ -72,13 +72,13 @@ function App() {
                   {
                     <Routes>
                       <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/page/raw" element={<Raw />} />
+                      <Route path="/page/pipeline" element={<Raw />} />
                       <Route
                         path="/page/contactview"
                         element={<Pipelineview />}
                       />
-                      <Route path="/page/lead" element={<Lead />} />
-                      <Route path="/page/deal" element={<Deal />} />
+                      <Route path="/page/contact" element={<Lead />} />
+                      <Route path="/page/activity" element={<Deal />} />
                     </Routes>
                   }
                 </ClientLayout>

@@ -587,7 +587,7 @@ const LookupComponent = ({
         <MultiSelectComponent
           options={entities.map((entity) => ({
             label: entity.name,
-            value: entity._id,
+            value: entity.id,
           }))}
           setValue={setInputValue}
         />
@@ -595,7 +595,7 @@ const LookupComponent = ({
         <CustomSelect
           options={entities.map((entity) => ({
             label: entity.name,
-            value: entity._id,
+            value: entity.id,
           }))}
           setValue={setInputValue}
         />
@@ -612,6 +612,7 @@ const LookupColumnComponent = ({
   const [page, setPage] = useState([]);
 
   useEffect(() => {
+    debugger;
     let pageDetailId = pageData[selectedControl]?.properties?.entity?.value;
     if (pageDetailId) {
       getPagebyEntityid(pageDetailId).then((data) => {

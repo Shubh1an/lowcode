@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlineLeft, AiOutlineMail } from 'react-icons/ai';
 import { BsThreeDots } from 'react-icons/bs';
 import { CiEdit, CiSearch } from 'react-icons/ci';
@@ -9,13 +9,10 @@ import {
 } from 'react-icons/io';
 import { IoCallOutline } from 'react-icons/io5';
 import MainTab from '../../Components/Tab/MainTab.jsx';
-
 import { LuFilter } from 'react-icons/lu';
 import ActivityCard from '../../Components/Card/ActivityCard.jsx';
 import ActivityTab from '../../Components/Tab/ActivityTab.jsx';
-
 import { SlArrowRight } from 'react-icons/sl';
-
 import Avatar from '../../assets/Avatar.svg';
 import Deal from '../../assets/deal.svg';
 import NewLead from '../../assets/newlead.svg';
@@ -25,29 +22,29 @@ import { useNavigate } from 'react-router-dom';
 const Pipelineview = () => {
   const navigate = useNavigate();
   const data = history.state;
+  console.log('data >>>>>>>>>>>>>>>>>>>>>>', data);
 
   const tabs = [{ title: 'Basic Details' }, { title: 'Extra Details' }];
-  console.log(data?.usr?.data[1]?.value);
-  const activityTabs = [
-    { name: data?.usr?.data[2]?.value },
-    // { name: 'Notes' },
-    // { name: 'Email' },
-    // { name: 'Calls' },
-    // { name: 'Reminders' },
-    // { name: 'Meetings' },
-  ];
+
+  const activityTabs = [];
   const breadcrumbItems = [
     { text: 'Home', href: '#' },
     { text: 'Projects', href: '#' },
     { text: 'Flowbite', href: '#' },
   ];
 
+  const [Details, setDetails] = useState(data.usr);
   const [activeTab, setActiveTab] = useState(0);
   const [showBasic, setShowBasic] = useState(false);
   const [showExtra, setshowExtra] = useState(false);
   const [view, setView] = useState('list');
   const [showMore, setShowMore] = useState(false);
   const [activeView, setActiveView] = useState('');
+
+  useEffect(() => {
+    console.log('Detail', Details);
+  }, []);
+
   const toggleShowMore = () => {
     setShowMore(!showMore);
   };
@@ -117,14 +114,12 @@ const Pipelineview = () => {
             <AiOutlineLeft
               fontSize={18}
               onClick={() =>
-                navigate('../page/raw?+entityId=' + data?.usr?.entityId)
+                navigate('../page/raw?+entityId=' + Details?.entityId)
               }
             />
             {/* <AiOutlineLeft fontSize={18} /> */}
           </div>
-          <div className="font-semibold text-2xl">
-            {data?.usr?.data[0]?.value}
-          </div>
+          <div className="font-semibold text-2xl"></div>
         </div>
         <div className="hidden w-full md:block md:w-auto">
           <ul className="flex flex-col font-medium mt-4 rounded-lg  rtl:space-x-reverse md:flex-row md:mt-0  md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
@@ -198,9 +193,7 @@ const Pipelineview = () => {
                   <p className="p-4 text-3xl">DW</p>
                 </div>
               </div>
-              <h1 className="mt-6 text-xl font-bold text-slate-800 dark:text-white">
-                {data?.usr?.data[0]?.value}
-              </h1>
+              <h1 className="mt-6 text-xl font-bold text-slate-800 dark:text-white"></h1>
               <p>XYZ Company</p>
               <div className="mt-6 flex flex-row justify-center gap-4">
                 <button>

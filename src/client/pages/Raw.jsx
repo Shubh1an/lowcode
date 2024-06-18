@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { getPage } from '../../Graphql/modelQuery';
-import { createFilledData } from '../../Graphql/moduleMutation';
-import Control from '../../Screens/Components/MiniComponents/Control';
-import { formatValue } from '../../Utility/utility';
-import { setNewform } from '../../redux/userslice';
-import { Pages, PagesFilleddata } from '../service/service';
-import { getNewPage } from '../../Requests/page';
 import { useNavigate } from 'react-router-dom';
+import { createFilledData } from '../../Graphql/moduleMutation';
+import { getNewPage } from '../../Requests/page';
+import Control from '../../Screens/Components/MiniComponents/Control';
+import { setNewform } from '../../redux/userslice';
+import Table from '../components/Grid';
+import { Pages, PagesFilleddata } from '../service/service';
 
 const Raw = () => {
   const dispatch = useDispatch();
@@ -27,10 +27,8 @@ const Raw = () => {
   useEffect(() => {
     getFilledDataTable();
     if (pageId) {
-      console.log('useffect', pageId);
       getviewPage();
       getForm(pageId);
-      // setForms(modulesdata?.newForm);
     }
   }, [entityId, pageId]);
 
@@ -63,7 +61,6 @@ const Raw = () => {
 
   const getForm = async (pageId) => {
     const addnewform = await getNewPage(pageId);
-    console.log('addnewform', addnewform);
     setForms(addnewform);
     dispatch(setNewform(addnewform));
   };
@@ -86,7 +83,6 @@ const Raw = () => {
 
   useEffect(() => {}, [pageData]);
 
-  console.log('after use effect', forms);
   const handleSubmit = async () => {
     let payload = {
       page_id: forms?.id,
@@ -112,18 +108,16 @@ const Raw = () => {
       formvalue.push({ key, value });
     });
     navigate('../page/contactview', {
-      state: { data: formvalue, entityId: entityId },
+      state: { entityId: entityId, formvalue: formvalue },
     });
   };
 
   const openDrawer = () => {
-    console.log('object', forms);
     let formvalue = [];
     forms?.form_schema?.map(() => {
       let value = '';
       formvalue.push({ value });
     });
-    console.log('formvalue', formvalue);
     setPageData([{ ...formvalue }]);
 
     if (formvalue) document.getElementById('my-drawer').click();
@@ -231,60 +225,4 @@ const Raw = () => {
   );
 };
 
-const Table = ({ headers, data, onClick }) => {
-  return (
-    <table className="min-w-full bg-white text-sm text-left rtl:text-right text-[#212121] dark:text-gray-400 ">
-      <thead className="min-w-full bg-white">
-        <tr className="border-b">
-          <td className="px-2 py-3">
-            <input type="checkbox" />
-          </td>
-          {headers?.map((header, index) => {
-            return (
-              <th className="p-2" key={index + '_heading'}>
-                {header}
-              </th>
-            );
-          })}
-        </tr>
-      </thead>
-      <tbody>
-        {data?.length > 0 ? (
-          data?.map((row, index) => {
-            if (row.length == 0) return null;
-            return (
-              <tr
-                key={index + '_cell'}
-                className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
-                onClick={() => {
-                  console.log('object', row);
-                  onClick(row);
-                }}
-              >
-                <td className="px-2 py-3">
-                  <input type="checkbox" />
-                </td>
-                {headers.map((header, index) => {
-                  return (
-                    <>
-                      <td className="px-2 py-3 " key={index + '_cell'}>
-                        {formatValue(row[index]?.value || '--', header)}
-                      </td>
-                    </>
-                  );
-                })}
-              </tr>
-            );
-          })
-        ) : (
-          <div className="w-full flex flex-row px-[2px] py-[1px]">
-            <div className="w-full flex justify-center items-center text-base	font-medium	mx-[2px] py-2 bg-[#FCF9EE]">
-              No Records Found
-            </div>
-          </div>
-        )}
-      </tbody>
-    </table>
-  );
-};
 export default Raw;

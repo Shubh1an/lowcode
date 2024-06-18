@@ -14,8 +14,7 @@
 // export default ApolloClientProvider;
 
 // src/apolloClient.js
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import config from './Config/config.js';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 const client = new ApolloClient({
   // uri: config.BASE_URL, // Update this to your GraphQL endpoint
