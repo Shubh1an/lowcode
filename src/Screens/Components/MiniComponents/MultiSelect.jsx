@@ -1,22 +1,30 @@
 import React, { useEffect, useState } from 'react';
 
-const CustomSelect = ({ options, setValue }) => {
+const MultiSelectComponent = ({ options, setValue }) => {
+  console.log('options--->', options);
+  console.log('setValue------>', setValue);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (setValue) {
-      setValue(selectedOption?.value);
+      setValue(selectedOptions.map((option) => option.value));
     }
-  }, [selectedOption]);
+  }, [selectedOptions]);
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleOptionClick = (option) => {
-    setSelectedOption(option);
-    setIsOpen(false);
+    if (selectedOptions.some((selected) => selected.value === option.value)) {
+      setSelectedOptions(
+        selectedOptions.filter((selected) => selected.value !== option.value),
+      );
+    } else {
+      setSelectedOptions([...selectedOptions, option]);
+    }
   };
 
   const filteredOptions = options?.filter((option) =>
@@ -24,13 +32,13 @@ const CustomSelect = ({ options, setValue }) => {
   );
 
   return (
-    <div className="relative inline-block text-left w-full ">
+    <div className="relative inline-block text-left w-full">
       <div>
         <span className="rounded-md shadow-sm z-[1]">
           <input
             type="text"
             placeholder="Select..."
-            value={selectedOption ? selectedOption.label : ''}
+            value={selectedOptions.map((option) => option.label).join(', ')}
             readOnly
             className="cursor-pointer block w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             onClick={toggleDropdown}
@@ -48,11 +56,11 @@ const CustomSelect = ({ options, setValue }) => {
               className="w-full px-4 py-2 text-sm border-b border-gray-200"
             />
           </div>
-          <div className="py-1">
+          <div className="py-1 max-h-60 overflow-y-auto">
             {filteredOptions?.map((option) => (
               <div
                 key={option.value}
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                className={`block px-4 py-2 text-sm cursor-pointer ${selectedOptions.some((selected) => selected.value === option.value) ? 'bg-gray-200' : 'text-gray-700 hover:bg-gray-100'}`}
                 onClick={() => handleOptionClick(option)}
               >
                 {option.label}
@@ -65,4 +73,4 @@ const CustomSelect = ({ options, setValue }) => {
   );
 };
 
-export default CustomSelect;
+export default MultiSelectComponent;

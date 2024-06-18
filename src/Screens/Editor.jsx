@@ -9,7 +9,9 @@ import { getEntities } from '../Requests/entity';
 import { UpdatePage, getNewPage } from '../Requests/page';
 import Control from './Components/MiniComponents/Control';
 import CustomSelect from './Components/MiniComponents/CustomSelect';
+import MultiSelectComponent from './Components/MiniComponents/MultiSelect';
 import SubTab from './Components/MiniComponents/SubTab';
+import { isInputType } from 'graphql';
 
 //editor_id == page_id
 const Editor = () => {
@@ -327,7 +329,7 @@ const PropertyInput = ({
   let key = property_key;
   const [options, setOptions] = useState([]);
   const [option, setOption] = useState('');
-
+  const [lookupType, setLookupType] = useState('');
   const [inputValue, setInputValue] = useState('');
 
   const [lookupentityId, setlookupentityId] = useState('');
@@ -470,10 +472,14 @@ const PropertyInput = ({
       );
 
     case 'lookup':
+      console.log('property------------------------------------->', property);
+      console.log('lookup Data----->', property);
       return (
         <div className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm">
           <LookupComponent
             module_id={module_id}
+            entity_id={entity_id}
+            lookupType={inputValue}
             setInputValue={setInputValue}
           />
         </div>
@@ -493,7 +499,12 @@ const PropertyInput = ({
         <select
           className="w-full border border-[#E9E9E9] rounded my-2 bg-[#FFFFFF] p-2 text-sm"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          // onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setInputValue(value);
+            setLookupType(value);
+          }}
         >
           <option value="onetoone">One to One</option>
           <option value="onetomany">One to Many</option>
@@ -547,25 +558,47 @@ const EditorTopBar = ({ editorId }) => {
   );
 };
 
-const LookupComponent = ({ module_id, setInputValue }) => {
+const LookupComponent = ({
+  module_id,
+  entity_id,
+  setInputValue,
+  lookupType,
+}) => {
   const [entities, setEntities] = useState([]);
   useEffect(() => {
-    getEntities(module_id).then((data) => {
-      let entities = data;
-      setEntities(entities);
-    });
-  }, []);
-
+    console.log('Calling get entities:', module_id);
+    if (module_id) {
+      getEntities(module_id).then((data) => {
+        let entities = data;
+        entities.forEach((entity, index) => {
+          if (entity_id === entity.id) {
+            entities.splice(index, 1);
+          }
+        });
+        setEntities(entities);
+      });
+    }
+  }, [module_id, entity_id]);
   return (
-    <CustomSelect
-      options={entities?.map((entity) => {
-        return {
-          label: entity.name,
-          value: entity.id,
-        };
-      })}
-      setValue={setInputValue}
-    />
+    <div>
+      {lookupType === 'onetomany' ? (
+        <MultiSelectComponent
+          options={entities.map((entity) => ({
+            label: entity.name,
+            value: entity._id,
+          }))}
+          setValue={setInputValue}
+        />
+      ) : (
+        <CustomSelect
+          options={entities.map((entity) => ({
+            label: entity.name,
+            value: entity._id,
+          }))}
+          setValue={setInputValue}
+        />
+      )}
+    </div>
   );
 };
 
