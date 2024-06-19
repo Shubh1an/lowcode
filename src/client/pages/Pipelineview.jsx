@@ -114,7 +114,7 @@ const Pipelineview = () => {
             <AiOutlineLeft
               fontSize={18}
               onClick={() =>
-                navigate(`../page/raw?+entityId=${Details?.entityId} `)
+                navigate(`../page/raw?entityId=${Details?.entityId} `)
               }
             />
             {/* <AiOutlineLeft fontSize={18} /> */}
@@ -207,7 +207,7 @@ const Pipelineview = () => {
                   <span className=" flex items-center justify-center  h-12 w-12 rounded-full bg-[#F8F8F8]">
                     <AiOutlineMail fontSize={24} />
                   </span>
-                  <p className="text-sm">Email</p>
+                  <p className="text-sm"> Email</p>
                 </button>
 
                 <button>
