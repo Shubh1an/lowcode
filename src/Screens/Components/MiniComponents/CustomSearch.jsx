@@ -28,6 +28,8 @@ const CustomSearch = ({
       searchHeaders.forEach((header) => {
         searchCriteria[header] = value;
       });
+
+      console.log('handleSearch searchCriteria>>>>>>>>>>>>>>', searchHeaders);
       handleSearch(searchCriteria);
     } else {
       console.log('handleSearch value', value);

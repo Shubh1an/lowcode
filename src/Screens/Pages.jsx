@@ -11,7 +11,7 @@ const Pages = () => {
   const module_id = params.get('module_id');
   const page_id = params.get('page_id');
   console.log(entity_id, 'entity_id', module_id, 'module', page_id, 'page');
-
+  const [hiddenHeaders, setHiddenHeaders] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalForm, setModalForm] = useState({
     id: '',
@@ -19,7 +19,6 @@ const Pages = () => {
     description: '',
     entity_id: entity_id,
     form_schema: {},
-
     type: '',
   });
   const [headers, setHeaders] = useState([]);
@@ -27,12 +26,15 @@ const Pages = () => {
   const [cells, setCells] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [searchableHeaders, setSearchableHeaders] = useState([
-    'name',
-    'category',
-    'description',
-  ]);
-
+  const [sortField, setSortField] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [searchCriteria, setSearchCriteria] = useState('');
+  // const [searchableHeaders, setSearchableHeaders] = useState([
+  //   'name',
+  //   'category',
+  //   'description',
+  // ]);
+  const [SearchableHeaders, setSearchableHeaders] = useState(headers);
   useEffect(() => {
     fetchPages();
   }, []);
@@ -54,13 +56,54 @@ const Pages = () => {
     }
   };
 
+  // const fetchPages = async (
+  //   page = 1,
+  //   limit = 4,
+  //   sort = { field: 'name', order: 'asc' },
+  //   search = { field: '', value: '' },
+  //   filter = { field: 'entity_id', value: entity_id },
+  // ) => {
+  //   console.log('Fetching pages', page);
+  //   try {
+  //     console.log('Fetching with parameters:', {
+  //       page,
+  //       limit,
+  //       sort,
+  //       search,
+  //       filter,
+  //     });
+
+  //     const variables = { page, limit, sort, search, filter };
+  //     console.log('Fetching', variables);
+  //     const { pages, totalPages } = await PaginatedPages(variables);
+
+  //     if (pages) {
+  //       const headers_gen = Object.keys(pages?.[0] || {}).filter(
+  //         (header) =>
+  //           header !== '_id' &&
+  //           header !== '__v' &&
+  //           header !== 'id' &&
+  //           header !== 'form_data' &&
+  //           header !== '__typename',
+  //       );
+  //       setHeaders(headers_gen);
+  //       setCells(pages);
+  //       setTotalPages(Math.ceil(totalPages / variables.limit));
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching pages:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const fetchPages = async (
     page = 1,
-    limit = 10,
+    limit = 4,
     sort = { field: 'name', order: 'asc' },
     search = { field: '', value: '' },
     filter = { field: 'entity_id', value: entity_id },
   ) => {
+    debugger;
     console.log('Fetching pages', page);
     try {
       console.log('Fetching with parameters:', {
@@ -70,7 +113,7 @@ const Pages = () => {
         search,
         filter,
       });
-
+      debugger;
       const variables = { page, limit, sort, search, filter };
       console.log('Fetching', variables);
       const { pages, totalPages } = await PaginatedPages(variables);
@@ -95,47 +138,40 @@ const Pages = () => {
     }
   };
 
-  // const fetchPages = async () => {
-  //    try {
-  //       console.log('Fetchinentity_id', entity_id);
-  //     const variables = {
-  //       "page": 1,
-  //         "limit": 10,
-  //         "sort": {
-  //           "field": "name",
-  //           "order": "asc"
-  //         },
-  //         "search": {
-  //           "field": "",
-  //           "value": ""
-  //         },
-  //         "filter": {
-  //           "field": "entity_id",
-  //           "value": "6663ff145e0e219c18b665a1"
-
-  //         } // Update filter to use the entity_id variable
-  //     };
-  //     const { pages, totalPages }=    await PaginatedPages({...variables})
-
-  //     if (pages) {
-  //       const headers_gen = Object.keys(pages?.[0] || {}).filter(
-  //         (header) => header !== '_id' && header !== '__v',
-  //       );
-  //       setHeaders(headers_gen);
-  //       setCells(pages);
-  //       setTotalPages(Math.ceil(totalPages / variables.limit));
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching pages:', error);
-  //   } finally {
-  //     setLoading(false);
+  const handleSearch = async (searchCriteria) => {
+    try {
+      console.log('searchCriteria:', searchCriteria);
+      let value = Object.values(searchCriteria)[0];
+      // Call fetchModules with searchCriteria and currentPage
+      await fetchPages(
+        currentPage,
+        4,
+        { field: sortField, order: sortOrder },
+        { field: 'name', value: value },
+        { field: 'entity_id', value: entity_id },
+      );
+      //await fetchPages(searchCriteria, currentPage);
+    } catch (error) {
+      console.error('Error searching modules:', error);
+    }
+  };
+  // const handlePageChange = (newPage) => {
+  //   if (newPage >= 1 && newPage <= totalPages) {
+  //     setCurrentPage(newPage);
+  //     fetchPages(newPage);
   //   }
   // };
-
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
-      fetchPages(newPage);
+      fetchPages(
+        newPage,
+        4,
+        { field: sortField, order: sortOrder },
+        { field: 'name', value: searchCriteria },
+        { field: 'entity_id', value: entity_id },
+      );
+      //fetchPages(newPage, 4, { field: sortField, order: sortOrder }, { field: '', value: '' }, { field: 'entity_id', value: entity_id });
     }
   };
 
@@ -146,7 +182,6 @@ const Pages = () => {
       description: page.description,
       entity_id: page.entity_id,
       form_schema: page.form_schema,
-
       type: page.type,
     });
 
@@ -170,14 +205,32 @@ const Pages = () => {
           hideColumns={[]}
           setHideColumns={() => {}}
           handleHide={() => {}}
-          handleSearch={(value) => fetchPages(currentPage)}
-          searchableHeaders={searchableHeaders}
+          //handleSearch={(value) => fetchPages(currentPage)}
           handleHeaderSelect={() => {}}
           people={{}}
           onNewPage={() => setShowModal(true)}
           entity_id={entity_id}
           isDropDownButton={true}
           onclick={() => {}}
+          handleSearch={handleSearch}
+          SearchableHeaders={SearchableHeaders}
+          setSearchableHeaders={setSearchableHeaders}
+          setHiddenHeaders={setHiddenHeaders}
+          hiddenHeaders={hiddenHeaders}
+          sortField={sortField}
+          sortOrder={sortOrder}
+          //handleSort={handleSort}
+          handleSort={(field, order) => {
+            setSortField(field);
+            setSortOrder(order);
+            fetchPages(
+              1,
+              4,
+              { field, order },
+              { field: 'name', value: searchCriteria },
+              { field: 'entity_id', value: entity_id },
+            );
+          }}
         />
         {loading ? (
           <div className="w-full h-full flex items-center justify-center">
@@ -188,10 +241,11 @@ const Pages = () => {
             data={{ headers, cells }}
             // linkto={`/builder/editor?module_id=${module_id}&editor_id`}
             linkto={`/builder/editor?module_id=${module_id}&entity_id=${entity_id}&page_id`}
+            onEditPage={handleEditPage}
+            hiddenHeaders={hiddenHeaders}
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
-            onEditPage={handleEditPage}
           />
         )}
       </div>

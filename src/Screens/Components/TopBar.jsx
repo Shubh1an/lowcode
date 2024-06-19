@@ -38,6 +38,11 @@ const TopBar = ({
   SearchableHeaders,
   fetchModules, // Add fetchModules as a prop
   FilterHeaders,
+  sortField,
+  sortOrder,
+  handleSort,
+  hiddenHeaders, // Add hiddenHeaders prop
+  setHiddenHeaders, // Add setHiddenHeaders prop
 }) => {
   const handleAddNewButtonClick = () => {
     resetModalState(); // Call resetModalState function
@@ -52,7 +57,7 @@ const TopBar = ({
   const [sortOptions, setSortOptions] = useState(headers); // Add your sort options here
   const [selectedSortOption, setSelectedSortOption] = useState('');
   const [selectedSortOrder, setSelectedSortOrder] = useState('asc');
-  const [hiddenHeaders, setHiddenHeaders] = useState([]);
+  //const [hiddenHeaders, setHiddenHeaders] = useState([]);
 
   const handleHeaderSelect = (value, checked) => {
     if (checked) {
@@ -69,11 +74,11 @@ const TopBar = ({
     setSelectedSortOrder(order);
   };
 
-  const handleSort = (selectedOption, selectedOrder) => {
-    console.log('Sorting by:', selectedOption, selectedOrder);
-    fetchModules({}, 1, 4, { field: selectedOption, order: selectedOrder });
-    // Add your sorting logic here
-  };
+  // const handleSort = (selectedOption, selectedOrder) => {
+  //   console.log('Sorting by:', selectedOption, selectedOrder);
+  //   fetchModules({}, 1, 4, { field: selectedOption, order: selectedOrder });
+  //   // Add your sorting logic here
+  // };
 
   useEffect(() => {
     setSortOptions(headers);
