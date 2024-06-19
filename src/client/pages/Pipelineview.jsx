@@ -114,7 +114,7 @@ const Pipelineview = () => {
             <AiOutlineLeft
               fontSize={18}
               onClick={() =>
-                navigate('../page/raw?+entityId=' + Details?.entityId)
+                navigate(`../page/raw?+entityId=${Details?.entityId} `)
               }
             />
             {/* <AiOutlineLeft fontSize={18} /> */}
