@@ -24,10 +24,13 @@ const Entities = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchCriteria, setSearchCriteria] = useState('');
-  const [SearchableHeaders, setSearchableHeaders] = useState([]);
+
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-
+  const [hiddenHeaders, setHiddenHeaders] = useState([]);
+  const [SearchableHeaders, setSearchableHeaders] = useState(headers);
+  const [sortField, setSortField] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
   // const handleSubmit = async () => {
   //   try {
   //     setLoading(true);
@@ -42,6 +45,16 @@ const Entities = () => {
   //     setLoading(false);
   //   }
   // };
+
+  const handleSearch = async (searchCriteria) => {
+    try {
+      console.log('searchCriteria:', searchCriteria);
+      // Call fetchModules with searchCriteria and currentPage
+      await fetchEntities(searchCriteria, currentPage);
+    } catch (error) {
+      console.error('Error searching modules:', error);
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -80,13 +93,18 @@ const Entities = () => {
     }
   };
 
-  const fetchEntities = async (search = {}, page = 1, limit = 4) => {
+  const fetchEntities = async (
+    search = {},
+    page = 1,
+    limit = 4,
+    sort = { field: 'name', order: 'asc' },
+  ) => {
     try {
       setLoading(true);
       const variables = {
         page,
         limit,
-        sort: { field: 'name', order: 'asc' },
+        sort,
         search,
         filter: { module_id: module_id },
       };
@@ -114,23 +132,24 @@ const Entities = () => {
   // const handlePageChange = (newPage) => {
   //   if (newPage >= 1 && newPage <= totalPages) {
   //     setCurrentPage(newPage);
-  //     fetchEntities({}, newPage);
+  //     fetchEntities({ name: searchCriteria }, newPage);
   //   }
   // };
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
-      fetchEntities({ name: searchCriteria }, newPage);
+
+      fetchEntities({}, newPage, 4, { field: sortField, order: sortOrder });
     }
   };
   // const handleSearch = (searchCriteria) => {
   //   setCurrentPage(1); // Reset to first page on new search
   //   fetchEntities(searchCriteria, 1);
   // };
-  const handleSearch = (value) => {
-    setSearchCriteria(value);
-    fetchEntities({ name: value }, currentPage);
-  };
+  // const handleSearch = (value) => {
+  //   setSearchCriteria(value);
+  //   fetchEntities({ name: value }, currentPage);
+  // };
   useEffect(() => {
     fetchEntities();
   }, []);
@@ -156,10 +175,22 @@ const Entities = () => {
           headers={headers}
           handleSearch={handleSearch}
           // handleSearch={(value) => fetchEntities({ name: value }, currentPage)}
-          SearchableHeaders={headers}
+          //SearchableHeaders={headers}
           setView={() => {}}
           view={true}
           handleSubmit={handleSubmit}
+          setHiddenHeaders={setHiddenHeaders}
+          hiddenHeaders={hiddenHeaders}
+          setSearchableHeaders={setSearchableHeaders}
+          SearchableHeaders={SearchableHeaders}
+          sortField={sortField}
+          sortOrder={sortOrder}
+          //handleSort={handleSort}
+          handleSort={(field, order) => {
+            setSortField(field);
+            setSortOrder(order);
+            fetchEntities({}, 1, 4, { field, order });
+          }}
           modalComponent={
             <ModalComponent
               closeModal={setShowModal}
@@ -172,6 +203,10 @@ const Entities = () => {
         <TableView
           data={{ headers, cells }}
           linkto={`/builder/pages?module_id=${module_id}&entity_id`}
+          hiddenHeaders={hiddenHeaders}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
         />
       </div>
       <Toast

@@ -4,7 +4,7 @@ import TopBar from './Components/TopBar';
 import { getPaginatedModules, saveModule } from '../Requests/module';
 import TableView from './Components/MiniComponents/Grid';
 import Toast from './Components/Toaster';
-
+import CustomHide from './Components/MiniComponents/CustomHide';
 const Modules = () => {
   const [showModal, setShowModal] = useState(false);
 
@@ -12,6 +12,7 @@ const Modules = () => {
     name: '',
     description: '',
   });
+
   const [headers, setHeaders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [cachedData, setCachedData] = useState(null);
@@ -20,7 +21,8 @@ const Modules = () => {
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-
+  const [sortField, setSortField] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
   // Modify handleSearch function to properly pass searchCriteria
   const handleSearch = async (searchCriteria) => {
     try {
@@ -31,6 +33,7 @@ const Modules = () => {
       console.error('Error searching modules:', error);
     }
   };
+
   const [view, setView] = useState(true);
   const [cells, setCells] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -87,10 +90,17 @@ const Modules = () => {
     }
   };
 
+  // const handlePageChange = (newPage) => {
+  //   if (newPage >= 1 && newPage <= totalPages) {
+  //     setCurrentPage(newPage);
+  //     fetchModules({}, newPage);
+  //   }
+  // };
+
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
-      fetchModules({}, newPage);
+      fetchModules({}, newPage, 4, { field: sortField, order: sortOrder });
     }
   };
 
@@ -137,6 +147,14 @@ const Modules = () => {
           fetchModules={fetchModules}
           setHiddenHeaders={setHiddenHeaders}
           hiddenHeaders={hiddenHeaders}
+          sortField={sortField}
+          sortOrder={sortOrder}
+          //handleSort={handleSort}
+          handleSort={(field, order) => {
+            setSortField(field);
+            setSortOrder(order);
+            fetchModules({}, 1, 4, { field, order });
+          }}
           modalComponent={
             <ModalComponent
               closeModal={setShowModal}
