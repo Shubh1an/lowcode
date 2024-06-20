@@ -4,7 +4,6 @@ import TopBar from './Components/TopBar';
 import { getPaginatedModules, saveModule } from '../Requests/module';
 import TableView from './Components/MiniComponents/Grid';
 import Toast from './Components/Toaster';
-import CustomHide from './Components/MiniComponents/CustomHide';
 const Modules = () => {
   const [showModal, setShowModal] = useState(false);
 
@@ -40,7 +39,6 @@ const Modules = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const handleSubmit = async () => {
-    console.log(modalForm);
     try {
       await saveModule(modalForm);
       setToastMessage('Module saved successfully.');
@@ -69,9 +67,8 @@ const Modules = () => {
         search,
         filter: {},
       };
-      console.log('vvvv', variables);
+
       const modulesData = await getPaginatedModules(variables);
-      console.log('modulesData', modulesData);
       const data = modulesData.modules;
       if (data) {
         const headers_gen = Object.keys(data?.[0] || {}).filter(
