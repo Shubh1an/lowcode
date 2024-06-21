@@ -38,6 +38,7 @@ const Modules = () => {
   const [cells, setCells] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [filters, setFilters] = useState([]);
 
   const handleSubmit = async () => {
     console.log(modalForm);
@@ -67,7 +68,7 @@ const Modules = () => {
         limit,
         sort,
         search,
-        filter: {},
+        filter: filters,
       };
       console.log('vvvv', variables);
       const modulesData = await getPaginatedModules(variables);
@@ -106,7 +107,7 @@ const Modules = () => {
 
   useEffect(() => {
     fetchModules();
-  }, []);
+  }, [filters]);
 
   const resetModalState = () => {
     setModalForm({
@@ -123,6 +124,10 @@ const Modules = () => {
     console.log('M1', modalForm);
     console.log('M1', view);
   }, []);
+
+  const applyFilter = (newFilters) => {
+    setFilters(newFilters);
+  };
 
   return (
     <div className="w-full h-full bg-[#FCF9EE] flex flex-col p-4">
@@ -163,6 +168,7 @@ const Modules = () => {
               handleSubmit={handleSubmit}
             />
           }
+          applyFilter={applyFilter}
         />
         {loading ? (
           <div className="w-full h-full flex items-center justify-center">
