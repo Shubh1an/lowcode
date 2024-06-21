@@ -41,7 +41,7 @@ function App() {
           <CustomTopLoader />
           <Routes>
             <Route
-              path="/builder/*"
+              path="/builder/"
               element={
                 <LayoutChild>
                   <Builder />
@@ -71,7 +71,7 @@ function App() {
                 <ClientLayout>
                   {
                     <Routes>
-                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/" element={<Dashboard />} />
                       <Route path="/page/pipeline" element={<Raw />} />
                       <Route
                         path="/page/contactview"

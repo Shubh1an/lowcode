@@ -1,10 +1,4 @@
-import {
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-  from,
-} from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, from } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -16,7 +10,10 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 const link = from([
   errorLink,
-  new HttpLink({ uri: 'http://localhost:4000/graphql' }),
+  new HttpLink({
+    uri: 'http://localhost:9966/graphql',
+    // uri: 'https://quikitbackend.moreyeahs.in/graphql'
+  }),
 ]);
 const client = new ApolloClient({
   link: link,

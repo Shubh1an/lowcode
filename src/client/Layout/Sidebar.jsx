@@ -107,7 +107,7 @@ const Sidebar = () => {
   }, []);
 
   const redirectto = () => {
-    navigate('/dashboard');
+    navigate('/');
   };
 
   return (
