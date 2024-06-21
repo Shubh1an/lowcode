@@ -12,7 +12,7 @@
 
 // }) => {
 //   const { headers, cells } = data;
-// debugger;
+//
 //   return (
 //     <div className="w-full flex flex-col overflow-auto px-4">
 //       <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]">
@@ -84,7 +84,6 @@ const TableView = ({
     (header) => !hiddenHeaders.includes(header),
   );
 
-  debugger;
   return (
     <div className="w-full flex flex-col overflow-auto px-4">
       <div className="w-full flex flex-row px-[2px] pt-[12px] sticky top-0 bg-[#fff]">

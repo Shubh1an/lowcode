@@ -103,7 +103,6 @@ const Pages = () => {
     search = { field: '', value: '' },
     filter = { field: 'entity_id', value: entity_id },
   ) => {
-    debugger;
     console.log('Fetching pages', page);
     try {
       console.log('Fetching with parameters:', {
@@ -113,7 +112,7 @@ const Pages = () => {
         search,
         filter,
       });
-      debugger;
+
       const variables = { page, limit, sort, search, filter };
       console.log('Fetching', variables);
       const { pages, totalPages } = await PaginatedPages(variables);

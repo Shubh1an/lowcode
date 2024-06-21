@@ -160,7 +160,6 @@ export const PAGINATED_FILLED_DATA = gql`
 
 export const getPaginatedFilledData = async (variables) => {
   try {
-    debugger;
     return await client
       .query({
         query: PAGINATED_FILLED_DATA,
@@ -168,7 +167,6 @@ export const getPaginatedFilledData = async (variables) => {
         variables: variables,
       })
       .then((res) => {
-        debugger;
         return res.data.paginatedFilledData;
       });
   } catch (error) {

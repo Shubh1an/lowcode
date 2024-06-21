@@ -88,7 +88,6 @@ const Editor = () => {
   };
 
   const handleDrop = ({ label }) => {
-    debugger;
     if (!isChildHovering) {
       console.log('Properties-----> ', controlls(label)?.properties);
 
@@ -612,7 +611,6 @@ const LookupColumnComponent = ({
   const [page, setPage] = useState([]);
 
   useEffect(() => {
-    debugger;
     let pageDetailId = pageData[selectedControl]?.properties?.entity?.value;
     if (pageDetailId) {
       getPagebyEntityid(pageDetailId).then((data) => {

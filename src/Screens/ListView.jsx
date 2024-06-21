@@ -17,7 +17,7 @@ const ListView = () => {
   let page_id = location.search.split('=')[1];
   // const location = useLocation();
   // const params = new URLSearchParams(location.search);
-  // debugger;
+  //
   // const page_id = params.get('id');
   const [forms, setForms] = useState([]);
   const [formsToRender, setFormsToRender] = useState([]);
@@ -43,7 +43,7 @@ const ListView = () => {
 
   // const getviewPage = async (page_id) => {
   //   try {
-  //     debugger;
+  //
   //     const res = await getFilledData(page_id);
   //     console.log('dhvh', res);
   //     let high_index = 0;
@@ -82,7 +82,7 @@ const ListView = () => {
         search,
         filter: { field: 'page_id', value: page_id },
       };
-      debugger;
+
       console.log('Fetching data with variables:', variables);
       const res = await getPaginatedFilledData(variables);
       console.log('Fetched data:', res);
@@ -104,7 +104,7 @@ const ListView = () => {
         });
         return row;
       });
-      debugger;
+
       setHeaders(headers);
       setRenderHeaders(headers);
       setData(data_array);
